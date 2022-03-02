@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:urooster/ui/SignInPage.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: MyApp()
-  ));
+  runApp(MaterialApp(home: SignIn()));
 }
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-
