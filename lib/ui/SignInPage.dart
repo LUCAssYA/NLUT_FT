@@ -10,7 +10,7 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: style.mainMargin,
+        margin: style.margin(context),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -19,15 +19,6 @@ class SignIn extends StatelessWidget {
           ],
         ),
       )
-      // SizedBox(
-      //   child: Column(
-      //     children: [
-      //       SignInHeader(),
-      //       SignInBody()
-      //     ],
-      //   ),
-      //
-      // )
     );
   }
 }
