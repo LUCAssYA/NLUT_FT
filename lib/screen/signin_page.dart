@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:urooster/style/SigninPageStyle.dart' as style;
+import 'package:urooster/style/signin_page_style.dart' as style;
 
 
 class SignInPage extends StatelessWidget {
