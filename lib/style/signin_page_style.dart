@@ -13,10 +13,11 @@ var margin = (context) {
   var width = MediaQuery.of(context).size.width;
   var height = MediaQuery.of(context).size.height;
 
-  return EdgeInsets.symmetric(horizontal: width*0.1, vertical: height*0.2  );
+  return EdgeInsets.symmetric(horizontal: width*0.1, vertical: height*0.2 );
 };
 
 var headerRowMargin = EdgeInsets.fromLTRB(0, 5, 0, 10);
 var bodyColumnMargin = EdgeInsets.symmetric(vertical: 5);
-var buttonWidth = 500.0;
-var buttonHeight = 30.0;
+
+var signinButtonSize = {"buttonWidth": 500.0, "buttonHeight": 30.0};
+var signinButtonStyle = ElevatedButton.styleFrom(primary: Colors.black54, onPrimary: Colors.white);

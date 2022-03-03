@@ -1,10 +1,11 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:urooster/style/SigninPageStyle.dart' as style;
 
 
-class SignIn extends StatelessWidget {
-  SignIn({Key? key}) : super(key: key);
+class SignInPage extends StatelessWidget {
+  SignInPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +56,9 @@ class SignInBody extends StatelessWidget {
           margin: style.bodyColumnMargin,
         ),
         Container(
-          width: style.buttonWidth,
-          height: style.buttonHeight,
-          child: ElevatedButton(onPressed: (){} , child: Text("Sign in")),
+          width: style.signinButtonSize['buttonWidth'],
+          height: style.signinButtonSize['buttonHeight'],
+          child: ElevatedButton(onPressed: (){} , child: Text("Sign in"), style: style.signinButtonStyle),
           margin: style.bodyColumnMargin
         )
       ],
