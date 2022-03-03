@@ -35,6 +35,7 @@ class SignInBody extends StatelessWidget {
       children: [
         Container(
           child: TextField(
+            controller: emailController,
             decoration: InputDecoration(
                 labelText: "Email", border: OutlineInputBorder()),
           ),
@@ -42,6 +43,7 @@ class SignInBody extends StatelessWidget {
         ),
         Container(
           child: TextField(
+            controller: passwordController,
             decoration: InputDecoration(
                 labelText: "Password", border: OutlineInputBorder()),
           ),
