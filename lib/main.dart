@@ -7,7 +7,7 @@ import 'package:urooster/screen/signin_page.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (c) => SignInProvider())],
+    providers: [ChangeNotifierProvider(create: (c) => AuthProvider())],
     child: MaterialApp(home: SignInPage(), routes: {
       "/signIn": (BuildContext context) => SignInPage(),
       "/findPassword": (BuildContext context) => FindPasswordPage(),

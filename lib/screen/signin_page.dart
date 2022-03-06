@@ -40,7 +40,7 @@ class SignInBody extends StatelessWidget {
               child: TextFormField(
                 controller: emailController,
                 validator: (text) =>
-                    context.read<SignInProvider>().signInValidator(text),
+                    context.read<AuthProvider>().textValidator(text),
                 decoration: InputDecoration(
                     labelText: "Email", border: OutlineInputBorder()),
               ),
@@ -50,7 +50,7 @@ class SignInBody extends StatelessWidget {
               child: TextFormField(
                 controller: passwordController,
                 validator: (text) =>
-                    context.read<SignInProvider>().signInValidator(text),
+                    context.read<AuthProvider>().textValidator(text),
                 decoration: InputDecoration(
                     labelText: "Password", border: OutlineInputBorder(),),
                 obscureText: true,
@@ -71,7 +71,7 @@ class SignInBody extends StatelessWidget {
                 height: style.signinButtonSize['buttonHeight'],
                 child: ElevatedButton(
                     onPressed: () => {
-                          context.read<SignInProvider>().signIn(
+                          context.read<AuthProvider>().signIn(
                               emailController.text,
                               passwordController.text,
                               formKey)

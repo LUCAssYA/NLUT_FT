@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:urooster/model/signin_model.dart';
 import "package:urooster/utils/constants.dart" as constant;
 
-class SignInProvider with ChangeNotifier {
+class AuthProvider with ChangeNotifier {
   String? token;
 
   Future<void> signIn(String email, String password, GlobalKey<FormState> formKey) async {
@@ -25,10 +25,21 @@ class SignInProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  String? signInValidator(text) {
+  String? textValidator(text) {
     if(text == null || text.isEmpty) {
       return "Can't be empty";
     }
     return null;
+  }
+
+  Future<void> findPassword(String email, GlobalKey<FormState> formKey) async{
+    if(formKey.currentState!.validate()) {
+      var header = {"content-type": "application/json"};
+      var body = {"email": email};
+      var response = await http.post(Uri.parse(constant.findPasswordUrl),
+      body: jsonEncode(body),
+      headers: header);
+      print(response.body);
+    }
   }
 }
