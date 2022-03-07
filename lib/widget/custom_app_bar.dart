@@ -1,5 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:urooster/style/widget_style.dart' as style;
 
-tesxFormField(@required String label, @required FormFieldSetter onSaved, @required FormFieldValidator validator) {
+PreferredSizeWidget customAppBar(BuildContext context) {
+  return AppBar(
+      backgroundColor: style.appBarBackgroundColor,
+      elevation: 0,
+      automaticallyImplyLeading: false, actions: [
+    IconButton(
+        onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
 
+  ]
+  );
 }

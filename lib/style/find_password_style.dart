@@ -15,3 +15,9 @@ var buttonWidth = (context) {
 };
 
 var itemMargin = EdgeInsets.symmetric(vertical:20, horizontal: 0);
+var buttonStyle = ElevatedButton.styleFrom(primary: Colors.black54, onPrimary: Colors.white);
+
+var itemTextStyle = TextStyle(
+  fontSize: 20,
+  height: 1.2
+);
