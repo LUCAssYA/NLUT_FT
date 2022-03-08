@@ -101,7 +101,7 @@ class SignInHeader extends StatelessWidget {
               margin: style.headerRowMargin,
             ),
             Container(
-                child: TextButton(onPressed: () {}, child: Text("register")),
+                child: TextButton(onPressed: () => Navigator.pushNamed(context, '/register'), child: Text("register")),
                 margin: style.headerRowMargin)
           ],
         )
