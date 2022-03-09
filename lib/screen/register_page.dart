@@ -71,7 +71,7 @@ class Body extends StatelessWidget {
         ),
         SelectBox(
           validator: context.read<RegisterProvider>().defaultValidator,
-          items: context.read<RegisterProvider>().faculties,
+          items: Provider.of<RegisterProvider>(context).faculties,
           onChange: () {},
         )
       ],
