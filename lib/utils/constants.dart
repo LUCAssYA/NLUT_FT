@@ -7,5 +7,7 @@ final getDetailUrl = baseUrl+"users/user_info";
 final findPasswordUrl = baseUrl+"users/find-password";
 final changePasswordUrl = baseUrl+"users/change-password";
 final getUniversitiesUrl = baseUrl+"university";
+final emailAuthUrl = baseUrl+"auth";
+final verifyCodeUrl = baseUrl+"verifyCode";
 
 final tokenHeaderName = "x-auth-token";

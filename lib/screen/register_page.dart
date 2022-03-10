@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/register_provider.dart';
+import 'package:urooster/widget/button.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/widget/text_field.dart';
 import 'package:urooster/style/register_style.dart' as style;
@@ -27,7 +28,9 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: customAppBar(context),
       body: SingleChildScrollView(
           child: Container(
+            margin: style.contextMargin(context),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [Header(), Body()],
         ),
       )),
@@ -41,7 +44,8 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("Register"),
+      margin: style.headerMargin,
+      child: Text("Register", style: style.headerStyle,),
     );
   }
 }
@@ -50,31 +54,95 @@ class Body extends StatelessWidget {
   Body({Key? key}) : super(key: key);
 
   final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final verifyController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmController = TextEditingController();
+  final nickNameController = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CustomTextFormField(
-          validator: context.read<RegisterProvider>().defaultValidator,
-          label: "name",
-          margin: style.textMargin,
-          controller: nameController,
-          obscure: false,
-          suggestion: true,
-          autoCorrect: true,
-        ),
-        SelectBox(
-          validator: context.read<RegisterProvider>().defaultValidator,
-          items: context.read<RegisterProvider>().universities.keys.toList(),
-          onChange: context.read<RegisterProvider>().uniOnChange,
-        ),
-        SelectBox(
-          validator: context.read<RegisterProvider>().defaultValidator,
-          items: Provider.of<RegisterProvider>(context).faculties,
-          onChange: () {},
-        )
-      ],
-    );
+    return Form(
+        key: formKey,
+        child: Column(
+          children: [
+            SelectBox(
+              validator: context.read<RegisterProvider>().defaultValidator,
+              items:
+                  context.read<RegisterProvider>().universities.keys.toList(),
+              onChange: context.read<RegisterProvider>().uniOnChange,
+              label: "University",
+              margin: style.textMargin,
+            ),
+            SelectBox(
+              validator: context.read<RegisterProvider>().defaultValidator,
+              items: context.watch<RegisterProvider>().faculties,
+              onChange: context.read<RegisterProvider>().facultyOnChange,
+              label: "Faculty",
+              margin: style.textMargin,
+            ),
+            EmailTextField(
+                validator: context.read<RegisterProvider>().emailValidator,
+                label: "Email",
+                margin: style.textMargin,
+                controller: emailController,
+                domain: context.watch<RegisterProvider>().domain,
+                buttonOnPress: () => context.read<RegisterProvider>().sendVerifitionCode(emailController.text, context)),
+            TextFormFieldWithButton(
+              controller: verifyController,
+              validator: context.read<RegisterProvider>().emailValidator,
+              label: "Code",
+              buttonOnPress: () => context.read<RegisterProvider>().verifyCode(emailController.text, verifyController.text, context),
+              margin: style.textMargin,
+            ),
+            CustomTextFormField(
+                validator: context.read<RegisterProvider>().defaultValidator,
+                label: "Password",
+                controller: passwordController,
+                margin: style.textMargin,
+                obscure: true,
+                suggestion: false,
+                autoCorrect: false,
+                onChange: context.read<RegisterProvider>().passwordChange),
+            CustomTextFormField(
+              validator: context.read<RegisterProvider>().passwordValidator,
+              label: "Confirm Password",
+              controller: confirmController,
+              margin: style.textMargin,
+              obscure: true,
+              suggestion: false,
+              autoCorrect: false,
+            ),
+            CustomTextFormField(
+              validator: context.read<RegisterProvider>().defaultValidator,
+              label: "name",
+              margin: style.textMargin,
+              controller: nameController,
+              obscure: false,
+              suggestion: true,
+              autoCorrect: true,
+            ),
+            CustomTextFormField(
+                validator: context.read<RegisterProvider>().defaultValidator,
+                label: "Nickname",
+                margin: style.textMargin,
+                controller: nickNameController,
+                obscure: false,
+                suggestion: true,
+                autoCorrect: true),
+            SubmitButton(
+              label: "Register",
+              onPress: () => context.read<RegisterProvider>().onButtonPress(
+                  emailController.text,
+                  passwordController.text,
+                  nameController.text,
+                  nickNameController.text,
+                  formKey,
+                  context),
+            )
+          ],
+        ));
   }
 }
