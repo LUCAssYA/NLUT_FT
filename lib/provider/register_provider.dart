@@ -80,14 +80,20 @@ class RegisterProvider with ChangeNotifier {
       GlobalKey<FormState> formKey,
       BuildContext context) async {
     if (formKey.currentState!.validate()) {
+
       var result = await http.post(Uri.parse(constant.signUpUrl),
           headers: header,
           body: jsonEncode(RegisterModel(email + "@" + domain!, name, faculty!,
               uni!, nickName, password)));
+
       var body = jsonDecode(result.body);
 
-      if (result.statusCode == 200)
+      if (result.statusCode == 200){
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Register Success")));
         Navigator.pushNamed(context, "/signIn");
+      }
+
       else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(body['error'])));
@@ -96,24 +102,32 @@ class RegisterProvider with ChangeNotifier {
   }
 
   Future<void> sendVerifitionCode(String email, BuildContext context) async {
+    print("aa");
     if (domain != null || domain!.isNotEmpty) {
-      var result = await http.post(Uri.parse(constant.emailAuthUrl),
+      var result = await http.post(Uri.parse(constant.emailAuthUrl+"/auth"),
           headers: header, body: jsonEncode({"email": email + "@" + domain!}));
+      print("bb");
       var body = jsonDecode(result.body);
+      print(result.statusCode);
+      print(result.body);
       if (result.statusCode != 200) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(body['error'])));
+            .showSnackBar(SnackBar(content: Text(body['error']['message'])));
       }
     }
   }
 
   Future<void> verifyCode(String email, String code, BuildContext context) async{
-    var result = await http.post(Uri.parse(constant.verifyCodeUrl), headers: header, body: jsonEncode({"email": email, "code": code}));
+    var result = await http.post(Uri.parse(constant.emailAuthUrl+"/verifyCode"), headers: header, body: jsonEncode({"email": email+"@"+domain!, "code": code}));
     
     if(result.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
+      verified = true;
+
+      notifyListeners();
     }
     else {
+      print(result.body);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Verify Failed")));
     }
   }

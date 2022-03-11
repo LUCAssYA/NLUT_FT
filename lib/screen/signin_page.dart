@@ -52,17 +52,20 @@ class SignInBody extends StatelessWidget {
                 validator: (text) =>
                     context.read<AuthProvider>().textValidator(text),
                 decoration: InputDecoration(
-                    labelText: "Password", border: OutlineInputBorder(),),
+                  labelText: "Password",
+                  border: OutlineInputBorder(),
+                ),
                 obscureText: true,
                 enableSuggestions: false,
                 autocorrect: false,
               ),
               margin: style.bodyColumnMargin,
-
             ),
             Container(
-              child:
-                  TextButton(onPressed: () => Navigator.pushNamed(context, "/findPassword"), child: Text("Forgot password?")),
+              child: TextButton(
+                  onPressed: () =>
+                      Navigator.pushNamed(context, "/findPassword"),
+                  child: Text("Forgot password?")),
               alignment: Alignment.bottomRight,
               margin: style.bodyColumnMargin,
             ),
@@ -74,7 +77,8 @@ class SignInBody extends StatelessWidget {
                           context.read<AuthProvider>().signIn(
                               emailController.text,
                               passwordController.text,
-                              formKey)
+                              formKey,
+                              context)
                         },
                     child: Text("Sign in"),
                     style: style.signinButtonStyle),
@@ -101,7 +105,9 @@ class SignInHeader extends StatelessWidget {
               margin: style.headerRowMargin,
             ),
             Container(
-                child: TextButton(onPressed: () => Navigator.pushNamed(context, '/register'), child: Text("register")),
+                child: TextButton(
+                    onPressed: () => Navigator.pushNamed(context, '/register'),
+                    child: Text("register")),
                 margin: style.headerRowMargin)
           ],
         )

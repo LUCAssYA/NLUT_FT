@@ -8,7 +8,7 @@ import "package:urooster/utils/constants.dart" as constant;
 class AuthProvider with ChangeNotifier {
   String? token;
 
-  Future<void> signIn(String email, String password, GlobalKey<FormState> formKey) async {
+  Future<void> signIn(String email, String password, GlobalKey<FormState> formKey, BuildContext context) async {
     if(formKey.currentState!.validate()) {
       var header = {"content-type": "application/json"};
       var result = await http.post(Uri.parse(constant.signInUrl),
@@ -16,6 +16,8 @@ class AuthProvider with ChangeNotifier {
           headers: header);
       token = result.headers[constant.tokenHeaderName];
       notifyListeners();
+
+      Navigator.pushNamed(context, "/home");
     }
 
   }

@@ -84,13 +84,18 @@ class Body extends StatelessWidget {
               margin: style.textMargin,
             ),
             EmailTextField(
+              buttonTheme: style.buttonTheme,
                 validator: context.read<RegisterProvider>().emailValidator,
+                itemMargin: style.itemMargin,
                 label: "Email",
                 margin: style.textMargin,
                 controller: emailController,
                 domain: context.watch<RegisterProvider>().domain,
+                textStyle: style.domainTextStyle,
                 buttonOnPress: () => context.read<RegisterProvider>().sendVerifitionCode(emailController.text, context)),
             TextFormFieldWithButton(
+              buttonTheme: style.buttonTheme,
+              itemMargin: style.itemMargin,
               controller: verifyController,
               validator: context.read<RegisterProvider>().emailValidator,
               label: "Code",
@@ -133,7 +138,10 @@ class Body extends StatelessWidget {
                 suggestion: true,
                 autoCorrect: true),
             SubmitButton(
+              buttonTheme: style.buttonTheme,
               label: "Register",
+              width: style.buttonSize(context),
+              margin: style.buttonMargin,
               onPress: () => context.read<RegisterProvider>().onButtonPress(
                   emailController.text,
                   passwordController.text,

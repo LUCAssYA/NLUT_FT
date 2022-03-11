@@ -49,7 +49,9 @@ class TextFormFieldWithButton extends StatelessWidget {
       this.validator,
       this.label,
       this.buttonOnPress,
-      this.margin})
+      this.margin,
+      this.itemMargin,
+      this.buttonTheme})
       : super(key: key);
 
   final controller;
@@ -57,6 +59,8 @@ class TextFormFieldWithButton extends StatelessWidget {
   final label;
   final buttonOnPress;
   final margin;
+  final itemMargin;
+  final buttonTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +68,22 @@ class TextFormFieldWithButton extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
+              flex: 4,
               child: TextFormField(
-            controller: controller,
-            validator: validator,
-            decoration:
-                InputDecoration(labelText: label, border: OutlineInputBorder()),
-          )),
+                controller: controller,
+                validator: validator,
+                decoration: InputDecoration(
+                    labelText: label, border: OutlineInputBorder()),
+              )),
           Expanded(
-              child: ElevatedButton(
-                  onPressed: buttonOnPress, child: Text("Verify")))
+              flex: 1,
+              child: Container(
+                margin: itemMargin,
+                child: ElevatedButton(
+                    style: buttonTheme,
+                    onPressed: buttonOnPress,
+                    child: Text("Verify")),
+              ))
         ],
       ),
       margin: margin,
@@ -81,7 +92,13 @@ class TextFormFieldWithButton extends StatelessWidget {
 }
 
 class SelectBox extends StatelessWidget {
-  SelectBox({Key? key, this.validator, this.onChange, this.items, this.label, this.margin})
+  SelectBox(
+      {Key? key,
+      this.validator,
+      this.onChange,
+      this.items,
+      this.label,
+      this.margin})
       : super(key: key);
   final validator;
   final onChange;
@@ -100,10 +117,8 @@ class SelectBox extends StatelessWidget {
                 DropdownMenuItem<String?>(child: Text(item), value: item))
             .toList(),
         onChanged: (Object? value) => onChange(value),
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder()
-        ),
+        decoration:
+            InputDecoration(labelText: label, border: OutlineInputBorder()),
       ),
     );
   }
@@ -117,7 +132,10 @@ class EmailTextField extends StatelessWidget {
       this.margin,
       this.controller,
       this.domain,
-      this.buttonOnPress})
+      this.buttonOnPress,
+      this.itemMargin,
+      this.textStyle,
+      this.buttonTheme})
       : super(key: key);
 
   final validator;
@@ -126,6 +144,9 @@ class EmailTextField extends StatelessWidget {
   final controller;
   final domain;
   final buttonOnPress;
+  final itemMargin;
+  final textStyle;
+  final buttonTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -133,19 +154,32 @@ class EmailTextField extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
+              flex: 2,
               child: TextFormField(
-            controller: controller,
-            validator: (text) => validator(text),
-            decoration: InputDecoration(
-              labelText: label,
-              border: OutlineInputBorder(),
-            ),
-          )),
-          Expanded(child: Text('@' + domain)),
+                controller: controller,
+                validator: (text) => validator(text),
+                decoration: InputDecoration(
+                  labelText: label,
+                  border: OutlineInputBorder(),
+                ),
+              )),
           Expanded(
-              child: ElevatedButton(
-                  onPressed: buttonOnPress,
-                  child: Text("Get Code")))
+              flex: 2,
+              child: Container(
+                  margin: itemMargin,
+                  child: Text(
+                    '@' + domain,
+                    style: textStyle,
+                  ))),
+          Expanded(
+              flex: 1,
+              child: Container(
+                margin: itemMargin,
+                child: ElevatedButton(
+                    style: buttonTheme,
+                    onPressed: buttonOnPress,
+                    child: Text("Get Code")),
+              ))
         ],
       ),
       margin: margin,
