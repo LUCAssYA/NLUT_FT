@@ -7,7 +7,7 @@ var contextMargin = (context) {
   var width = MediaQuery.of(context).size.width;
   var height = MediaQuery.of(context).size.height;
 
-  return EdgeInsets.symmetric(horizontal: width*0.1, vertical: height*0.1 );
+  return EdgeInsets.symmetric(horizontal: width*0.05, vertical: 0 );
 };
 
 var headerStyle = TextStyle(color: Colors.black54, fontSize: 30);
@@ -19,3 +19,4 @@ var buttonSize = (context) {
 };
 var buttonMargin = EdgeInsets.fromLTRB(0, 15, 0, 0);
 var buttonTheme = ElevatedButton.styleFrom(primary: Colors.black54, onPrimary: Colors.white);
+var buttonTextStyle = TextStyle(fontSize: 13);

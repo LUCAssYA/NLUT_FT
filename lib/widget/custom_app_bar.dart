@@ -13,3 +13,11 @@ PreferredSizeWidget customAppBar(BuildContext context) {
   ]
   );
 }
+
+PreferredSizeWidget blankAppBar() {
+  return AppBar(
+    backgroundColor: style.appBarBackgroundColor,
+    elevation: 0,
+    automaticallyImplyLeading: false,
+  );
+}

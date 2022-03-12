@@ -28,7 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: customAppBar(context),
       body: SingleChildScrollView(
           child: Container(
-            margin: style.contextMargin(context),
+        margin: style.contextMargin(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [Header(), Body()],
@@ -45,7 +45,10 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: style.headerMargin,
-      child: Text("Register", style: style.headerStyle,),
+      child: Text(
+        "Register",
+        style: style.headerStyle,
+      ),
     );
   }
 }
@@ -84,7 +87,7 @@ class Body extends StatelessWidget {
               margin: style.textMargin,
             ),
             EmailTextField(
-              buttonTheme: style.buttonTheme,
+                buttonTheme: style.buttonTheme,
                 validator: context.read<RegisterProvider>().emailValidator,
                 itemMargin: style.itemMargin,
                 label: "Email",
@@ -92,15 +95,20 @@ class Body extends StatelessWidget {
                 controller: emailController,
                 domain: context.watch<RegisterProvider>().domain,
                 textStyle: style.domainTextStyle,
-                buttonOnPress: () => context.read<RegisterProvider>().sendVerifitionCode(emailController.text, context)),
+                buttonOnPress: () => context
+                    .read<RegisterProvider>()
+                    .sendVerifitionCode(emailController.text, context),
+                buttonTextStyle: style.buttonTextStyle),
             TextFormFieldWithButton(
               buttonTheme: style.buttonTheme,
               itemMargin: style.itemMargin,
               controller: verifyController,
               validator: context.read<RegisterProvider>().emailValidator,
               label: "Code",
-              buttonOnPress: () => context.read<RegisterProvider>().verifyCode(emailController.text, verifyController.text, context),
+              buttonOnPress: () => context.read<RegisterProvider>().verifyCode(
+                  emailController.text, verifyController.text, context),
               margin: style.textMargin,
+              buttonTextStyle: style.buttonTextStyle
             ),
             CustomTextFormField(
                 validator: context.read<RegisterProvider>().defaultValidator,

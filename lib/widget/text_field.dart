@@ -25,6 +25,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 50,
       child: TextFormField(
         controller: controller,
         validator: (text) => validator(text),
@@ -51,7 +52,8 @@ class TextFormFieldWithButton extends StatelessWidget {
       this.buttonOnPress,
       this.margin,
       this.itemMargin,
-      this.buttonTheme})
+      this.buttonTheme,
+      this.buttonTextStyle})
       : super(key: key);
 
   final controller;
@@ -61,10 +63,12 @@ class TextFormFieldWithButton extends StatelessWidget {
   final margin;
   final itemMargin;
   final buttonTheme;
+  final buttonTextStyle;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 50,
       child: Row(
         children: [
           Expanded(
@@ -76,13 +80,13 @@ class TextFormFieldWithButton extends StatelessWidget {
                     labelText: label, border: OutlineInputBorder()),
               )),
           Expanded(
-              flex: 1,
+              flex: 2,
               child: Container(
                 margin: itemMargin,
                 child: ElevatedButton(
                     style: buttonTheme,
                     onPressed: buttonOnPress,
-                    child: Text("Verify")),
+                    child: Text("Verify", style: buttonTextStyle)),
               ))
         ],
       ),
@@ -109,6 +113,7 @@ class SelectBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 50,
       margin: margin,
       child: DropdownButtonFormField<String?>(
         validator: (text) => validator(text),
@@ -135,7 +140,8 @@ class EmailTextField extends StatelessWidget {
       this.buttonOnPress,
       this.itemMargin,
       this.textStyle,
-      this.buttonTheme})
+      this.buttonTheme,
+      this.buttonTextStyle})
       : super(key: key);
 
   final validator;
@@ -147,14 +153,16 @@ class EmailTextField extends StatelessWidget {
   final itemMargin;
   final textStyle;
   final buttonTheme;
+  final buttonTextStyle;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 50,
       child: Row(
         children: [
           Expanded(
-              flex: 2,
+              flex: 3,
               child: TextFormField(
                 controller: controller,
                 validator: (text) => validator(text),
@@ -172,13 +180,13 @@ class EmailTextField extends StatelessWidget {
                     style: textStyle,
                   ))),
           Expanded(
-              flex: 1,
+              flex: 2,
               child: Container(
                 margin: itemMargin,
                 child: ElevatedButton(
                     style: buttonTheme,
                     onPressed: buttonOnPress,
-                    child: Text("Get Code")),
+                    child: Text("Get Code", style: buttonTextStyle,)),
               ))
         ],
       ),
