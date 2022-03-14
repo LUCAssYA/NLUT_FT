@@ -8,5 +8,7 @@ final findPasswordUrl = baseUrl+"users/find-password";
 final changePasswordUrl = baseUrl+"users/change-password";
 final getUniversitiesUrl = baseUrl+"university";
 final emailAuthUrl = baseUrl+"email";
+final friendUrl = baseUrl+"/friend";
+final scheduleUrl = baseUrl+"/schedule";
 
 final tokenHeaderName = "x-auth-token";

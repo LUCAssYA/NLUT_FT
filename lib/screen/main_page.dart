@@ -13,3 +13,39 @@ class MainPage extends StatelessWidget {
     );
   }
 }
+
+
+class TodaySchedule extends StatelessWidget {
+  TodaySchedule({Key? key, this.label}) : super(key: key);
+  final label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(child: Column(
+      children: [
+        Text(label),
+        ListView.builder(itemBuilder: (c, i){})
+      ],
+    ),);
+  }
+}
+
+class Friend extends StatelessWidget {
+  const Friend({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+
+class Dday extends StatelessWidget {
+  Dday({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+

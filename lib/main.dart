@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/auth_provider.dart';
+import 'package:urooster/provider/home_provider.dart';
 import 'package:urooster/provider/register_provider.dart';
 import 'package:urooster/screen/find_password_page.dart';
 import 'package:urooster/screen/main_page.dart';
@@ -11,7 +14,11 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (c) => AuthProvider()),
-      ChangeNotifierProvider(create: (c) => RegisterProvider())
+      ChangeNotifierProvider(create: (c) => RegisterProvider()),
+      ChangeNotifierProxyProvider<AuthProvider, HomeProvider>(
+        create: (_) => HomeProvider(),
+        update: (_, auth, home) => home!.update(auth),
+      )
     ],
     child: MaterialApp(home: SignInPage(), routes: {
       "/signIn": (BuildContext context) => SignInPage(),
