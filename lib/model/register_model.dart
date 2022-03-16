@@ -1,8 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'register_model.g.dart';
-
-@JsonSerializable()
 class RegisterModel {
   String email;
   String name;
@@ -14,8 +9,20 @@ class RegisterModel {
   RegisterModel(this.email, this.name, this.faculty, this.university,
       this.nickName, this.credential);
 
-  factory RegisterModel.fromJson(Map<String, dynamic> json) =>
-      _$RegisterModelFromJson(json);
+  RegisterModel.fromJson(Map<String, dynamic> json)
+      : email = json["email"],
+        name = json['name'],
+        faculty = json['faculty'],
+        university = json['university'],
+        nickName = json['nickName'],
+        credential = json['credential'];
 
-  Map<String, dynamic> toJson() => _$RegisterModelToJson(this);
+  Map<String, dynamic> toJson() => {
+    "email": email,
+    "name": name,
+    "faculty": faculty,
+    "university": university,
+    "nickName": nickName,
+    "credential":credential
+  };
 }
