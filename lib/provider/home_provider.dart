@@ -40,6 +40,10 @@ class HomeProvider with ChangeNotifier {
       notifyListeners();
     }
 
+    else {
+      print(response.body);
+    }
+
   }
 
   Future<void> getFriends() async{
@@ -59,6 +63,9 @@ class HomeProvider with ChangeNotifier {
       });
 
       notifyListeners();
+    }
+    else{
+      print(response.body);
     }
 
 
@@ -81,7 +88,9 @@ class HomeProvider with ChangeNotifier {
 
 
     }
-
+    else {
+      print(response.body);
+    }
   }
 
   void checkToken(http.Response response) {

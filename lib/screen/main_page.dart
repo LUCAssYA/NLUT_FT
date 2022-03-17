@@ -51,15 +51,18 @@ class TodayScheduleList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Today's Schedule"),
-          ListView.builder(
-              itemCount: context.watch<HomeProvider>().schedule.length,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: (c, i) {
-                return TodaySchedule(
-                    schedule: context.watch<HomeProvider>().schedule[i]);
-              })
+          Container(height: style.labelHeight,child: Text("Today's Schedule", style: style.labelTextStyle,)),
+          Container(
+            margin: style.listMargin,
+            child: ListView.builder(
+                itemCount: context.watch<HomeProvider>().schedule.length,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemBuilder: (c, i) {
+                  return TodaySchedule(
+                      schedule: context.watch<HomeProvider>().schedule[i]);
+                }),
+          )
         ],
       ),
     );
@@ -99,17 +102,20 @@ class Friend extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Friend"),
+              Container(height: style.labelHeight,child: Text("Friend", style: style.labelTextStyle,)),
               Container(height: 16,child: IconButton(padding: EdgeInsets.all(0), onPressed: () {}, icon: Icon(Icons.edit, size: 16,)))
             ],
           ),
-          ListView.builder(
-              itemCount: context.watch<HomeProvider>().friend.length,
-              itemBuilder: (c, i) {
-                return Text(context.watch<HomeProvider>().friend[i]['name']);
-              },
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true)
+          Container(
+            margin: style.listMargin,
+            child: ListView.builder(
+                itemCount: context.watch<HomeProvider>().friend.length,
+                itemBuilder: (c, i) {
+                  return Text(context.watch<HomeProvider>().friend[i]['name']);
+                },
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true),
+          )
         ],
       ),
     );
@@ -128,15 +134,18 @@ class DdayList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("D-Day"),
-          ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: context.watch<HomeProvider>().dday.length,
-              itemBuilder: (c, i) {
-                return Dday(
-                    index: i, data: context.watch<HomeProvider>().dday[i]);
-              })
+          Container(height: style.labelHeight,child: Text("D-Day", style: style.labelTextStyle,)),
+          Container(
+            margin: style.listMargin,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: context.watch<HomeProvider>().dday.length,
+                itemBuilder: (c, i) {
+                  return Dday(
+                      index: i, data: context.watch<HomeProvider>().dday[i]);
+                }),
+          )
         ],
       ),
     );

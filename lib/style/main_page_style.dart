@@ -13,9 +13,16 @@ BoxDecoration containerDecoration() {
 var contextMargin = (context) {
   var width = MediaQuery.of(context).size.width;
   var height = MediaQuery.of(context).size.height;
+  print(height*0.03);
 
-  return EdgeInsets.symmetric(horizontal: width*0.05, vertical: 0 );
+  return EdgeInsets.fromLTRB(width*0.05, 0, width*0.05, height*0.05);
+
 };
 
 var itemMargin = EdgeInsets.symmetric(vertical: 3);
 var itemPadding = EdgeInsets.all(10);
+var labelHeight = (context) {
+  return MediaQuery.of(context).size.height*0.05;
+};
+var labelTextStyle = TextStyle(color: Colors.black54, fontSize: 16);
+var listMargin = EdgeInsets.symmetric(vertical: 3);
