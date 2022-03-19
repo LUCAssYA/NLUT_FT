@@ -51,7 +51,7 @@ class TodayScheduleList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(height: style.labelHeight,child: Text("Today's Schedule", style: style.labelTextStyle,)),
+          Container(height: style.labelHeight(context),child: Text("Today's Schedule", style: style.labelTextStyle,)),
           Container(
             margin: style.listMargin,
             child: ListView.builder(
@@ -102,7 +102,7 @@ class Friend extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(height: style.labelHeight,child: Text("Friend", style: style.labelTextStyle,)),
+              Container(height: style.labelHeight(context),child: Text("Friend", style: style.labelTextStyle,)),
               Container(height: 16,child: IconButton(padding: EdgeInsets.all(0), onPressed: () {}, icon: Icon(Icons.edit, size: 16,)))
             ],
           ),
@@ -134,7 +134,7 @@ class DdayList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(height: style.labelHeight,child: Text("D-Day", style: style.labelTextStyle,)),
+          Container(height: style.labelHeight(context),child: Text("D-Day", style: style.labelTextStyle,)),
           Container(
             margin: style.listMargin,
             child: ListView.builder(
