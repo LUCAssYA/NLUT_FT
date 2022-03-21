@@ -20,8 +20,7 @@ var contextMargin = (context) {
 
 var itemMargin = EdgeInsets.symmetric(vertical: 3);
 var itemPadding = EdgeInsets.all(10);
-var labelHeight = (context) {
-  return MediaQuery.of(context).size.height*0.05;
-};
+var labelHeight = 35.0;
 var labelTextStyle = TextStyle(color: Colors.black54, fontSize: 16);
 var listMargin = EdgeInsets.symmetric(vertical: 3);
+var ddayText = TextStyle(color:  Colors.red, letterSpacing: 1.5);

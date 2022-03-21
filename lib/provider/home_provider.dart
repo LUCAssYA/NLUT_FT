@@ -27,6 +27,7 @@ class HomeProvider with ChangeNotifier {
 
   Future<void> getDday() async{
     var response = await http.get(Uri.parse(constants.scheduleUrl+"/dday"), headers: header);
+    dday = [];
 
     if(response.statusCode == 200) {
       List dDayResponse = jsonDecode(response.body)['response'];
@@ -47,6 +48,8 @@ class HomeProvider with ChangeNotifier {
   }
 
   Future<void> getFriends() async{
+    friend = [];
+    requestedFriend = [];
     var response = await http.get(Uri.parse(constants.friendUrl+"/list"), headers: header);
 
     if(response.statusCode == 200) {
@@ -74,6 +77,7 @@ class HomeProvider with ChangeNotifier {
 
   Future<void> getToday() async{
     var response = await http.get(Uri.parse(constants.scheduleUrl), headers: header);
+    schedule = [];
 
     if(response.statusCode == 200) {
       checkToken(response);
@@ -99,6 +103,29 @@ class HomeProvider with ChangeNotifier {
     if(auth?.token != token && token != null) {
       auth?.changeToken(token);
     }
+  }
+
+  Future<void> deleteDday(int index) async{
+    var response = await http.put(Uri.parse(constants.scheduleUrl+"/dday/delete/"+dday[index].groupId.toString()+"/"+dday[index].lectureId.toString()),
+        headers: header);
+
+    if(response.statusCode == 200) {
+      dday = [];
+
+      List dDayResponse = jsonDecode(response.body)['response'];
+
+      checkToken(response);
+
+      dDayResponse.forEach((element) {
+        dday.add(DdayModel.fromJson(element));
+      });
+
+      notifyListeners();
+    }
+    else {
+      print(response.body);
+    }
+
   }
 
 

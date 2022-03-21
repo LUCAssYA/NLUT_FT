@@ -1,19 +1,16 @@
-
 class DdayModel {
-  int id;
+  int groupId;
+  int lectureId;
   String name;
-  int dday;
+  String dday;
 
-  DdayModel(this.id, this.name, this.dday);
+  DdayModel(this.groupId, this.lectureId, this.name, this.dday);
 
-  DdayModel.fromJson(Map<String, dynamic> json) :
-    id = json['id'],
-    name = json['name'],
-    dday = json['dday'];
+  DdayModel.fromJson(Map<String, dynamic> json)
+      : groupId = json['groupId'],
+        lectureId = json['lectureId'],
+        name = json['name'],
+        dday = json['dday'];
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "dday": dday
-  };
+  Map<String, dynamic> toJson() => {"groupId": groupId, "lectureId": lectureId, "name": name, "dday": dday};
 }
