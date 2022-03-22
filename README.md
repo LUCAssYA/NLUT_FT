@@ -1,4 +1,4 @@
-# urooster
+# URooster
 
 A new Flutter project.
 

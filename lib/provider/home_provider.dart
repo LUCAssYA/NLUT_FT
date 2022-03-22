@@ -128,5 +128,31 @@ class HomeProvider with ChangeNotifier {
 
   }
 
+  Future<void> deleteFriend(BuildContext context, int index) async {
+    var response = await http.delete(Uri.parse(constants.friendUrl+"/delete/"+friend[index]['id'].toString()), headers: header);
+
+    if(response.statusCode == 200) {
+      List friends = jsonDecode(response.body)['response'];
+      friend = [];
+
+      checkToken(response);
+
+
+      friends.forEach((f){
+        if(f['status'] == 'REQUESTED')
+          requestedFriend.add(f);
+        else
+          friend.add(f);
+      });
+
+      notifyListeners();
+    }
+    else{
+      print(response.body);
+    }
+
+    Navigator.pop(context);
+
+  }
 
 }

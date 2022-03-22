@@ -38,7 +38,7 @@ class _MainPageState extends State<MainPage> {
                 flex: 1,
               ),
               Expanded(
-                child: Friend(),
+                child: FriendList(),
                 flex: 1,
               )
             ],
@@ -66,17 +66,24 @@ class TodayScheduleList extends StatelessWidget {
                 "Today's Schedule",
                 style: style.labelTextStyle,
               )),
-          Container(
+          Expanded(
+              child: Container(
             margin: style.listMargin,
-            child: ListView.builder(
-                itemCount: context.watch<HomeProvider>().schedule.length,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (c, i) {
-                  return TodaySchedule(
-                      schedule: context.watch<HomeProvider>().schedule[i]);
-                }),
-          )
+            child: CustomScrollView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              slivers: [
+                SliverFixedExtentList(
+                    delegate: SliverChildBuilderDelegate((c, i) {
+                      return TodaySchedule(
+                          schedule: context.watch<HomeProvider>().schedule[i]);
+                    },
+                        childCount:
+                            context.watch<HomeProvider>().schedule.length),
+                    itemExtent: style.labelHeight)
+              ],
+            ),
+          ))
         ],
       ),
     );
@@ -98,11 +105,12 @@ class TodaySchedule extends StatelessWidget {
           flex: 2,
         ),
         Expanded(
-          child: Text(schedule.startTime + "~" + schedule.endTime),
-          flex: 1,
-        ),
-        Expanded(
-          child: Text(schedule.loaction),
+          child: Text(schedule.startTime +
+              "~" +
+              schedule.endTime +
+              "(" +
+              schedule.location +
+              ")"),
           flex: 1,
         )
       ],
@@ -111,7 +119,47 @@ class TodaySchedule extends StatelessWidget {
 }
 
 class Friend extends StatelessWidget {
-  const Friend({Key? key}) : super(key: key);
+  const Friend({Key? key, this.index, this.data}) : super(key: key);
+
+  final data;
+  final index;
+
+  void removeFriend(BuildContext context) {
+    showDialog(context: context, barrierDismissible:false, builder: (BuildContext context){
+      return AlertDialog(
+        title: Text("Remove friend?"),
+        content: Text("Are you sure want to remove "+data+" as your friend?"),
+        actions: [
+          TextButton(onPressed: ()=>Navigator.pop(context), child: Text("Cancel")),
+          TextButton(onPressed: () => context.read<HomeProvider>().deleteFriend(context, index), child: Text("OK"))
+        ],
+      );
+    },);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: style.labelHeight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(child: Text(data)),
+          Container(
+              child: IconButton(
+            onPressed: () {removeFriend(context);},
+            icon: Icon(Icons.person_remove),
+            iconSize: 16,
+          ))
+        ],
+      ),
+    );
+  }
+}
+
+class FriendList extends StatelessWidget {
+  FriendList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -134,25 +182,31 @@ class Friend extends StatelessWidget {
                   height: 16,
                   child: IconButton(
                       padding: EdgeInsets.all(0),
-                      onPressed: () {},
+                      onPressed: () =>
+                          Navigator.pushNamed(context, "/editFriend"),
                       icon: Icon(
-                        Icons.edit,
+                        Icons.add,
                         size: 16,
                       )))
             ],
           ),
           Expanded(
-              child: CustomScrollView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            slivers: [
-              SliverFixedExtentList(
-                  delegate: SliverChildBuilderDelegate((c, i) {
-                    return Text(
-                        context.watch<HomeProvider>().friend[i]['name']);
-                  }, childCount: context.watch<HomeProvider>().friend.length),
-                  itemExtent: style.labelHeight)
-            ],
+              child: Container(
+            margin: style.listMargin,
+            child: CustomScrollView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              slivers: [
+                SliverFixedExtentList(
+                    delegate: SliverChildBuilderDelegate((c, i) {
+                      return Friend(
+                          index: i,
+                          data: context.watch<HomeProvider>().friend[i]
+                              ['name']);
+                    }, childCount: context.watch<HomeProvider>().friend.length),
+                    itemExtent: style.labelHeight)
+              ],
+            ),
           ))
         ]));
   }
@@ -179,19 +233,23 @@ class DdayList extends StatelessWidget {
                   style: style.labelTextStyle,
                 )),
             Expanded(
-                child: CustomScrollView(
-              controller: scrollController,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              slivers: [
-                SliverFixedExtentList(
-                  delegate: SliverChildBuilderDelegate((c, i) {
-                    return Dday(
-                        index: i, data: context.watch<HomeProvider>().dday[i]);
-                  }, childCount: context.watch<HomeProvider>().dday.length),
-                  itemExtent: style.labelHeight,
-                )
-              ],
+                child: Container(
+              margin: style.listMargin,
+              child: CustomScrollView(
+                controller: scrollController,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                slivers: [
+                  SliverFixedExtentList(
+                    delegate: SliverChildBuilderDelegate((c, i) {
+                      return Dday(
+                          index: i,
+                          data: context.watch<HomeProvider>().dday[i]);
+                    }, childCount: context.watch<HomeProvider>().dday.length),
+                    itemExtent: style.labelHeight,
+                  )
+                ],
+              ),
             ))
           ],
         ));
@@ -220,7 +278,8 @@ class Dday extends StatelessWidget {
                 children: [
                   Text("D" + data.dday.toString(), style: style.ddayText),
                   IconButton(
-                    onPressed: () => context.read<HomeProvider>().deleteDday(index),
+                    onPressed: () =>
+                        context.read<HomeProvider>().deleteDday(index),
                     icon: Icon(Icons.delete),
                     iconSize: 16,
                   )
