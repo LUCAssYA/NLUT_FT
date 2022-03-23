@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/model/dday_model.dart';
 import 'package:urooster/model/today_schedule_model.dart';
@@ -152,6 +153,24 @@ class HomeProvider with ChangeNotifier {
     }
 
     Navigator.pop(context);
+
+  }
+  
+  Future<void> addFriend(BuildContext context, String text) async {
+    var response = await http.post(Uri.parse(constants.friendUrl+"/request"), headers: header, body: jsonEncode({"email": text}));
+    var body = jsonDecode(response.body)['response'];
+
+    if(response.statusCode == 200) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Request Complete")));
+      Navigator.pop(context);
+    }
+    else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(body["error"])));
+      Navigator.pop(context);
+    }
+
 
   }
 

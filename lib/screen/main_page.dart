@@ -95,6 +95,8 @@ class TodaySchedule extends StatelessWidget {
 
   final schedule;
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -125,18 +127,26 @@ class Friend extends StatelessWidget {
   final index;
 
   void removeFriend(BuildContext context) {
-    showDialog(context: context, barrierDismissible:false, builder: (BuildContext context){
-      return AlertDialog(
-        title: Text("Remove friend?"),
-        content: Text("Are you sure want to remove "+data+" as your friend?"),
-        actions: [
-          TextButton(onPressed: ()=>Navigator.pop(context), child: Text("Cancel")),
-          TextButton(onPressed: () => context.read<HomeProvider>().deleteFriend(context, index), child: Text("OK"))
-        ],
-      );
-    },);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Remove friend?"),
+          content:
+              Text("Are you sure want to remove " + data + " as your friend?"),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context), child: Text("Cancel")),
+            TextButton(
+                onPressed: () =>
+                    context.read<HomeProvider>().deleteFriend(context, index),
+                child: Text("OK"))
+          ],
+        );
+      },
+    );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +158,9 @@ class Friend extends StatelessWidget {
           Container(child: Text(data)),
           Container(
               child: IconButton(
-            onPressed: () {removeFriend(context);},
+            onPressed: () {
+              removeFriend(context);
+            },
             icon: Icon(Icons.person_remove),
             iconSize: 16,
           ))
@@ -160,6 +172,36 @@ class Friend extends StatelessWidget {
 
 class FriendList extends StatelessWidget {
   FriendList({Key? key}) : super(key: key);
+  
+
+  void addFriend(BuildContext context) {
+
+    final controller = TextEditingController();
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Enter the friend's email you want to add"),
+            content: Container(
+              margin: style.addFriendfieldMargin,
+              height: 40,
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancel")),
+              TextButton(onPressed: () => context.read<HomeProvider>().addFriend(context, controller.text), child: Text("OK"))
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,8 +224,7 @@ class FriendList extends StatelessWidget {
                   height: 16,
                   child: IconButton(
                       padding: EdgeInsets.all(0),
-                      onPressed: () =>
-                          Navigator.pushNamed(context, "/editFriend"),
+                      onPressed: () =>addFriend(context),
                       icon: Icon(
                         Icons.add,
                         size: 16,
