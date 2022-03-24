@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/home_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
-import 'package:urooster/widget/custom_bottom_bar.dart';
 import 'package:urooster/style/main_page_style.dart' as style;
 
 class MainPage extends StatefulWidget {
@@ -43,8 +42,7 @@ class _MainPageState extends State<MainPage> {
               )
             ],
           ),
-        ),
-        bottomNavigationBar: CustomBottom());
+        ));
   }
 }
 

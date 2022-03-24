@@ -7,6 +7,7 @@ import 'package:urooster/screen/find_password_page.dart';
 import 'package:urooster/screen/main_page.dart';
 import 'package:urooster/screen/register_page.dart';
 import 'package:urooster/screen/signin_page.dart';
+import 'package:urooster/style/skeleton_page.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -18,12 +19,12 @@ void main() {
         update: (_, auth, home) => home!.update(auth),
       )
     ],
-    child: MaterialApp(home: SignInPage(), routes: {
+    child: MaterialApp(debugShowCheckedModeBanner: false,home: SignInPage(), routes: {
       "/signIn": (BuildContext context) => SignInPage(),
       "/findPassword": (BuildContext context) => FindPasswordPage(),
       "/resetComplete": (BuildContext context) => SendComplete(),
       "/register": (BuildContext context) => RegisterPage(),
-      "/home": (BuildContext context) => MainPage()
+      "/home": (BuildContext context) => SkeletonPage()
     }),
   ));
 }
