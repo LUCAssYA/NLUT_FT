@@ -1,8 +1,8 @@
 class ScheduleModel {
   int id;
   String name;
-  int start;
-  int end;
+  DateTime start;
+  DateTime end;
 
   ScheduleModel(this.id, this.name, this.start, this.end);
 
