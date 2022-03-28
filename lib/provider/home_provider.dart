@@ -160,7 +160,9 @@ class HomeProvider with ChangeNotifier {
     var response = await http.post(Uri.parse(constants.friendUrl+"/request"), headers: header, body: jsonEncode({"email": text}));
     var body = jsonDecode(response.body)['response'];
 
+
     if(response.statusCode == 200) {
+      checkToken(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request Complete")));
       Navigator.pop(context);

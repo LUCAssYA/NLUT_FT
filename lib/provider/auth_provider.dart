@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:urooster/model/signin_model.dart';
 import "package:urooster/utils/constants.dart" as constant;
@@ -14,10 +15,20 @@ class AuthProvider with ChangeNotifier {
       var result = await http.post(Uri.parse(constant.signInUrl),
           body: jsonEncode(SignInModel(email, password).toJson()),
           headers: header);
-      token = result.headers[constant.tokenHeaderName] ?? "";
-      notifyListeners();
 
-      Navigator.pushNamed(context, "/home");
+      var body = jsonDecode(result.body);
+
+      if(result.statusCode == 200) {
+        token = result.headers[constant.tokenHeaderName] ?? "";
+        notifyListeners();
+
+        Navigator.pushNamed(context, "/home");
+      }
+      else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(body['error']['message'])));
+      }
+
     }
 
   }

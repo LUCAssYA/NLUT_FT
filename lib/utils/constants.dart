@@ -10,5 +10,6 @@ final getUniversitiesUrl = baseUrl+"university";
 final emailAuthUrl = baseUrl+"email";
 final friendUrl = baseUrl+"friend";
 final scheduleUrl = baseUrl+"schedule";
+final groupUrl = baseUrl+"schedule-group";
 
 final tokenHeaderName = "x-auth-token";
