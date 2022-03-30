@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:urooster/model/schedule_data_source.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/schedule_style.dart' as style;
@@ -30,6 +31,7 @@ class _SchedulePageState extends State<SchedulePage> {
       body: Container(
         margin: style.contextMargin(context),
         child: SfCalendar(
+          dataSource: ScheduleDataSource(context.watch<ScheduleProvider>().schedules),
           view: CalendarView.workWeek,
           monthViewSettings: MonthViewSettings(
             showAgenda: true,
@@ -49,8 +51,7 @@ class _SchedulePageState extends State<SchedulePage> {
           minDate: context.watch<ScheduleProvider>().currentGroup.startDate,
           maxDate: context.watch<ScheduleProvider>().currentGroup.endDate,
           onViewChanged: (ViewChangedDetails details){
-            print(details.visibleDates.first);
-            print(details.visibleDates.last);
+            context.read<ScheduleProvider>().getLectures(details.visibleDates.first, details.visibleDates.last);
           },
         ),
       ),

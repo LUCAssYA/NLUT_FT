@@ -10,8 +10,8 @@ class ScheduleModel {
       :
         id = json['id'],
         name = json['name'],
-        start = json['start'],
-        end = json['end'];
+        start = DateTime.parse(json['start'] as String),
+        end = DateTime.parse(json['end'] as String);
 
   Map<String, dynamic> toJson() => {"id": id, "name": name, "start": start, "end": end};
 

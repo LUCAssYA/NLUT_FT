@@ -88,6 +88,7 @@ class HomeProvider with ChangeNotifier {
       today.forEach((element) {
         schedule.add(TodayScheduleModel.fromJson(element));
       });
+      print(schedule);
 
       notifyListeners();
 
