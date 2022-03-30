@@ -53,6 +53,7 @@ class ScheduleProvider with ChangeNotifier {
     print("response");
     if(response.statusCode == 200) {
       checkToken(response);
+      schedules = [];
       var body = jsonDecode(response.body)['response'];
       print(body);
 

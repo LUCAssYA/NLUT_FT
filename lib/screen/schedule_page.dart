@@ -31,6 +31,8 @@ class _SchedulePageState extends State<SchedulePage> {
       body: Container(
         margin: style.contextMargin(context),
         child: SfCalendar(
+          cellEndPadding: 0,
+          todayHighlightColor: Colors.black54,
           dataSource: ScheduleDataSource(context.watch<ScheduleProvider>().schedules),
           view: CalendarView.workWeek,
           monthViewSettings: MonthViewSettings(
