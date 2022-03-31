@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:urooster/model/schedule_model.dart';
 
@@ -24,6 +26,11 @@ class ScheduleDataSource extends CalendarDataSource {
   @override
   bool isAllday(int index) {
     return false;
+  }
+
+  @override
+  Color getColor(int index) {
+    return _getScheduleData(index).color;
   }
 
 
