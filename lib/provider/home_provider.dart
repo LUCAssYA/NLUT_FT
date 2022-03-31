@@ -88,7 +88,6 @@ class HomeProvider with ChangeNotifier {
       today.forEach((element) {
         schedule.add(TodayScheduleModel.fromJson(element));
       });
-      print(schedule);
 
       notifyListeners();
 
@@ -108,13 +107,14 @@ class HomeProvider with ChangeNotifier {
   }
 
   Future<void> deleteDday(int index) async{
-    var response = await http.put(Uri.parse(constants.scheduleUrl+"/dday/delete/"+dday[index].groupId.toString()+"/"+dday[index].lectureId.toString()),
+    var response = await http.put(Uri.parse(constants.scheduleUrl+"/dday/delete/"+dday[index].id.toString()),
         headers: header);
 
     if(response.statusCode == 200) {
       dday = [];
 
       List dDayResponse = jsonDecode(response.body)['response'];
+      print(dDayResponse);
 
       checkToken(response);
 
