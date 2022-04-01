@@ -9,9 +9,10 @@ class ScheduleModel {
   String staff;
   String location;
   String note;
+  bool dday;
 
   ScheduleModel(this.id, this.name, this.start, this.end, this.color,
-      this.staff, this.location, this.note);
+      this.staff, this.location, this.note, this.dday);
 
   ScheduleModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -21,8 +22,18 @@ class ScheduleModel {
         color = Color(json['color']),
         staff = json['staff'],
         location = json['location'],
-        note = json['note'];
+        note = json['note'],
+        dday = json['dday'];
 
-  Map<String, dynamic> toJson() =>
-      {"id": id, "name": name, "start": start, "end": end, "color": color, "staff": staff, "location": location, "note": note};
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "start": start,
+        "end": end,
+        "color": color,
+        "staff": staff,
+        "location": location,
+        "note": note,
+        "dday": dday
+      };
 }

@@ -9,6 +9,7 @@ import 'package:urooster/model/schedule_model.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/schedule_style.dart' as style;
+import 'package:urooster/utils/format.dart' as format;
 
 class SchedulePage extends StatefulWidget {
   SchedulePage({Key? key}) : super(key: key);
@@ -19,26 +20,14 @@ class SchedulePage extends StatefulWidget {
 
 class _SchedulePageState extends State<SchedulePage> {
   void showLectureDetail(ScheduleModel schedule, context) {
+    bool dday = schedule.dday;
+
     showModalBottomSheet(
-      shape: style.modalShape,
+        shape: style.modalShape,
         context: context,
         builder: (BuildContext context) {
-          return Container(
-            padding: style.modalContainerPadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(schedule.name, style: style.modalHeaderTextStyle,),
-                Text(schedule.start.toString() +
-                    "~" +
-                    schedule.end.toString() +
-                    "(" +
-                    schedule.location +
-                    ")", style: style.modalItemTextStyle,),
-                Text(schedule.staff, style: style.modalItemTextStyle,),
-                Text(schedule.note, style: style.modalItemTextStyle),
-              ],
-            ),
+          return BottomModal(
+            schedule: schedule
           );
         });
   }
@@ -94,5 +83,76 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
       ),
     );
+  }
+}
+
+class BottomModal extends StatefulWidget {
+  BottomModal({Key? key, this.schedule})
+      : super(key: key);
+
+  final schedule;
+
+
+  @override
+  State<BottomModal> createState() => _BottomModalState();
+}
+
+class _BottomModalState extends State<BottomModal> {
+
+  late bool dday = widget.schedule.dday;
+
+  @override
+  Widget build(BuildContext context) {
+    String date = format.ddMMMMyyyy.format(widget.schedule.start);
+    String start = format.hhmm.format(widget.schedule.start);
+    String end = format.hhmm.format(widget.schedule.end);
+
+    return Container(
+      padding: style.modalContainerPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.schedule.name,
+            style: style.modalHeaderTextStyle,
+          ),
+          Text(date.toString(), style: style.modalItemTextStyle),
+          Text(
+            start.toString() +
+                "~" +
+                end.toString() +
+                "(" +
+                widget.schedule.location +
+                ")",
+            style: style.modalItemTextStyle,
+          ),
+          Text(
+            widget.schedule.staff,
+            style: style.modalItemTextStyle,
+          ),
+          Text(widget.schedule.note, style: style.modalItemTextStyle),
+          Row(
+            children: [
+              Icon(Icons.calendar_month),
+              Text("D-Day"),
+              Switch(
+                  value: dday,
+                  onChanged: (value) {
+                    setState(() {
+                      dday = value;
+                    });
+                  })
+            ],
+          ),
+         ElevatedButton(onPressed: (){}, child: Row(
+           children: [
+             Icon(Icons.delete),
+             Text("Remove schedule")
+           ],
+         ))
+        ],
+      ),
+    );
+    ;
   }
 }
