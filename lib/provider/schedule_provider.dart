@@ -45,17 +45,12 @@ class ScheduleProvider with ChangeNotifier {
   }
 
   Future<void> getLectures(DateTime start, DateTime end) async{
-    print("response");
-    print(start);
     DateFormat format = DateFormat("yyyy-MM-dd");
-    print(format.format(start).toString());
     var response = await http.post(Uri.parse(constants.scheduleUrl+"/"+currentGroup.id.toString()), headers: header, body: jsonEncode({"start": format.format(start).toString(), "end": format.format(end).toString()}));
-    print("response");
     if(response.statusCode == 200) {
       checkToken(response);
       schedules = [];
       var body = jsonDecode(response.body)['response'];
-      print(body);
 
       body.forEach((element) {
         schedules.add(ScheduleModel.fromJson(element));
