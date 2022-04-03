@@ -26,9 +26,7 @@ class _SchedulePageState extends State<SchedulePage> {
         shape: style.modalShape,
         context: context,
         builder: (BuildContext context) {
-          return BottomModal(
-            schedule: schedule
-          );
+          return BottomModal(schedule: schedule);
         });
   }
 
@@ -87,18 +85,15 @@ class _SchedulePageState extends State<SchedulePage> {
 }
 
 class BottomModal extends StatefulWidget {
-  BottomModal({Key? key, this.schedule})
-      : super(key: key);
+  BottomModal({Key? key, this.schedule}) : super(key: key);
 
   final schedule;
-
 
   @override
   State<BottomModal> createState() => _BottomModalState();
 }
 
 class _BottomModalState extends State<BottomModal> {
-
   late bool dday = widget.schedule.dday;
 
   @override
@@ -108,16 +103,20 @@ class _BottomModalState extends State<BottomModal> {
     String end = format.hhmm.format(widget.schedule.end);
 
     return Container(
+      height: style.modalHeight(context),
       padding: style.modalContainerPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          Expanded(
+              child: Text(
             widget.schedule.name,
             style: style.modalHeaderTextStyle,
-          ),
-          Text(date.toString(), style: style.modalItemTextStyle),
-          Text(
+          )),
+          Expanded(
+              child: Text(date.toString(), style: style.modalItemTextStyle)),
+          Expanded(
+              child: Text(
             start.toString() +
                 "~" +
                 end.toString() +
@@ -125,31 +124,65 @@ class _BottomModalState extends State<BottomModal> {
                 widget.schedule.location +
                 ")",
             style: style.modalItemTextStyle,
-          ),
-          Text(
+          )),
+          Expanded(
+              child: Text(
             widget.schedule.staff,
             style: style.modalItemTextStyle,
-          ),
-          Text(widget.schedule.note, style: style.modalItemTextStyle),
-          Row(
+          )),
+          Expanded(
+              child:
+                  Text(widget.schedule.note, style: style.modalItemTextStyle)),
+          Expanded(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(Icons.calendar_month),
-              Text("D-Day"),
-              Switch(
-                  value: dday,
-                  onChanged: (value) {
-                    setState(() {
-                      dday = value;
-                    });
-                  })
+              Expanded(flex: 1, child: Icon(Icons.calendar_month)),
+              Expanded(
+                  flex: 15,
+                  child: Container(
+                    margin: style.modalTextMargin,
+                      child: Text(
+                    "D-Day",
+                    style: style.modalItemTextStyle,
+                  ))),
+              Expanded(
+                  flex: 1,
+                  child: Switch(
+                      value: dday,
+                      onChanged: (value) {
+                        setState(() {
+                          dday = value;
+                        });
+                      }))
+            ],
+          )),
+          Expanded(
+              child: ElevatedButton(
+                  style: style.removeButtonStyle,
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete),
+                      Container(
+                        margin: style.modalTextMargin,
+                          child: Text(
+                        "Remove schedule",
+                        style: style.modalItemTextStyle,
+                      ))
+                    ],
+                  ))),
+          Expanded(
+              child: Container(
+                margin: style.modalButtonMargin,
+                child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+                TextButton(onPressed: () {}, child: Text("Cancel", style: style.modalItemTextStyle,)),
+                TextButton(onPressed: () {}, child: Text("OK", style: style.modalItemTextStyle,))
             ],
           ),
-         ElevatedButton(onPressed: (){}, child: Row(
-           children: [
-             Icon(Icons.delete),
-             Text("Remove schedule")
-           ],
-         ))
+              ))
         ],
       ),
     );
