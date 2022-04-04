@@ -111,7 +111,7 @@ class _BottomModalState extends State<BottomModal> {
   Widget build(BuildContext context) {
     String date = format.ddMMMMyyyy.format(widget.schedule.start);
     String start = format.hhmm.format(widget.schedule.start);
-
+    String end = format.hhmm.format(widget.schedule.end);
     return Container(
       height: style.modalHeight(context),
       padding: style.modalContainerPadding,
