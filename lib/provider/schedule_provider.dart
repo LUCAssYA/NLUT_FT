@@ -71,4 +71,22 @@ class ScheduleProvider with ChangeNotifier {
       auth?.changeToken(token);
     }
   }
+  Future<void> changeDday(schedule, dday, context) async{
+    var response = await http.put(Uri.parse(constants.scheduleUrl+"/dday/"+schedule.id.toString()), headers: header, body: jsonEncode({"dDay":dday}));
+
+    if(response.statusCode == 200) {
+      schedule.dday = dday;
+    }
+    else
+      print(response.body);
+    Navigator.pop(context);
+  }
+
+  Future<void> removeSchedule(schedule, context, checked) async{
+      schedules.remove(schedule);
+      notifyListeners();
+
+      Navigator.pop(context);
+      Navigator.pop(context);
+  }
 }

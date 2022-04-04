@@ -95,12 +95,22 @@ class BottomModal extends StatefulWidget {
 
 class _BottomModalState extends State<BottomModal> {
   late bool dday = widget.schedule.dday;
+  bool check = false;
+
+  void removeMessage(schedule) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+            return RemoveDialog(schedule: schedule);
+          },);
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     String date = format.ddMMMMyyyy.format(widget.schedule.start);
     String start = format.hhmm.format(widget.schedule.start);
-    String end = format.hhmm.format(widget.schedule.end);
 
     return Container(
       height: style.modalHeight(context),
@@ -137,15 +147,15 @@ class _BottomModalState extends State<BottomModal> {
               child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(flex: 1, child: Icon(Icons.calendar_month)),
+              Expanded(flex: 1, child: Icon(Icons.calendar_today)),
               Expanded(
                   flex: 15,
                   child: Container(
-                    margin: style.modalTextMargin,
+                      margin: style.modalTextMargin,
                       child: Text(
-                    "D-Day",
-                    style: style.modalItemTextStyle,
-                  ))),
+                        "D-Day",
+                        style: style.modalItemTextStyle,
+                      ))),
               Expanded(
                   flex: 1,
                   child: Switch(
@@ -160,32 +170,88 @@ class _BottomModalState extends State<BottomModal> {
           Expanded(
               child: ElevatedButton(
                   style: style.removeButtonStyle,
-                  onPressed: () {},
+                  onPressed: () => removeMessage(widget.schedule),
                   child: Row(
                     children: [
                       Icon(Icons.delete),
                       Container(
-                        margin: style.modalTextMargin,
+                          margin: style.modalTextMargin,
                           child: Text(
-                        "Remove schedule",
-                        style: style.modalItemTextStyle,
-                      ))
+                            "Remove schedule",
+                            style: style.modalItemTextStyle,
+                          ))
                     ],
                   ))),
           Expanded(
               child: Container(
-                margin: style.modalButtonMargin,
-                child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-                TextButton(onPressed: () {}, child: Text("Cancel", style: style.modalItemTextStyle,)),
-                TextButton(onPressed: () {}, child: Text("OK", style: style.modalItemTextStyle,))
-            ],
-          ),
-              ))
+            margin: style.modalButtonMargin,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      "Cancel",
+                      style: style.modalItemTextStyle,
+                    )),
+                TextButton(
+                    onPressed: () => context
+                        .read<ScheduleProvider>()
+                        .changeDday(widget.schedule, dday, context),
+                    child: Text(
+                      "OK",
+                      style: style.modalItemTextStyle,
+                    ))
+              ],
+            ),
+          ))
         ],
       ),
     );
     ;
   }
 }
+
+class RemoveDialog extends StatefulWidget {
+  const RemoveDialog({Key? key, this.schedule}) : super(key: key);
+
+  final schedule;
+  @override
+  State<RemoveDialog> createState() => _RemoveDialogState();
+}
+
+class _RemoveDialogState extends State<RemoveDialog> {
+  bool checked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Do you want to remove this schedule?"),
+      content: Row(children: [
+        Expanded(
+            child: CheckboxListTile(
+              title: Text("Remove all this schedule from your schedule"),
+              value: checked,
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (bool? value) {
+
+                setState(() {
+                  checked = value!;
+                });
+              },
+            ))
+      ]),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel")),
+        TextButton(
+            onPressed: () => context
+                .read<ScheduleProvider>()
+                .removeSchedule(widget.schedule, context, checked),
+            child: Text("OK"))
+      ],
+    );
+  }
+}
+
