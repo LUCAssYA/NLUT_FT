@@ -21,7 +21,7 @@ PreferredSizeWidget blankAppBar() {
   );
 }
 
-PreferredSizeWidget scheduleAppBar(String title) {
+PreferredSizeWidget scheduleAppBar(title, setting) {
   return AppBar(
     primary: false,
     title: Text(title, style: style.titleStyle),
@@ -35,7 +35,7 @@ PreferredSizeWidget scheduleAppBar(String title) {
         color: style.appBarIconColor,
       ),
       IconButton(
-        onPressed: () {},
+        onPressed: () => setting(),
         icon: Icon(Icons.settings),
         color: style.appBarIconColor,
       ),

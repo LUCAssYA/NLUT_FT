@@ -19,6 +19,9 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
+  DateTime? start;
+  DateTime? end;
+
   void showLectureDetail(ScheduleModel schedule, context) {
     bool dday = schedule.dday;
 
@@ -37,11 +40,22 @@ class _SchedulePageState extends State<SchedulePage> {
     context.read<ScheduleProvider>().getGroups();
   }
 
+  void showSetting() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return GroupScope();
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          scheduleAppBar(context.watch<ScheduleProvider>().currentGroup.name),
+      appBar: scheduleAppBar(
+          context.watch<ScheduleProvider>().currentGroup.name, showSetting),
       body: Container(
         margin: style.contextMargin(context),
         child: SfCalendar(
@@ -101,9 +115,11 @@ class _BottomModalState extends State<BottomModal> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
-            return RemoveDialog(schedule: schedule);
-          },);
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return RemoveDialog(schedule: schedule);
+            },
+          );
         });
   }
 
@@ -159,6 +175,7 @@ class _BottomModalState extends State<BottomModal> {
               Expanded(
                   flex: 1,
                   child: Switch(
+                      activeColor: style.switchColor,
                       value: dday,
                       onChanged: (value) {
                         setState(() {
@@ -216,6 +233,7 @@ class RemoveDialog extends StatefulWidget {
   const RemoveDialog({Key? key, this.schedule}) : super(key: key);
 
   final schedule;
+
   @override
   State<RemoveDialog> createState() => _RemoveDialogState();
 }
@@ -230,28 +248,90 @@ class _RemoveDialogState extends State<RemoveDialog> {
       content: Row(children: [
         Expanded(
             child: CheckboxListTile(
-              title: Text("Remove all this schedule from your schedule"),
-              value: checked,
-              controlAffinity: ListTileControlAffinity.leading,
-              onChanged: (bool? value) {
-
-                setState(() {
-                  checked = value!;
-                });
-              },
-            ))
+          title: Text("Remove all this schedule from your schedule"),
+          value: checked,
+          controlAffinity: ListTileControlAffinity.leading,
+          onChanged: (bool? value) {
+            setState(() {
+              checked = value!;
+            });
+          },
+        ))
       ]),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel")),
+            onPressed: () => Navigator.pop(context), child: Text("Cancel")),
         TextButton(
-            onPressed: () => context
-                .read<ScheduleProvider>()
-                .removeSchedule(widget.schedule, context, checked),
+            onPressed: () {
+              if (checked)
+                context
+                    .read<ScheduleProvider>()
+                    .removeAllSchedule(widget.schedule, context);
+              else
+                context
+                    .read<ScheduleProvider>()
+                    .removeOneSchedule(widget.schedule, context);
+            },
             child: Text("OK"))
       ],
     );
   }
 }
 
+class GroupScope extends StatefulWidget {
+  GroupScope({Key? key, this.scope}) : super(key: key);
+
+  final scope;
+
+  @override
+  State<GroupScope> createState() => _GroupScopeState();
+}
+
+class _GroupScopeState extends State<GroupScope> {
+  String _scope = "PRIVATE";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scope = context.read<ScheduleProvider>().currentGroup.scope;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(context.watch<ScheduleProvider>().currentGroup.name),
+      content: Row(
+        children: [
+          Expanded(
+              child: RadioListTile(
+            title: Text("Public"),
+            onChanged: (value) {
+              setState(() {
+                _scope = (value as String?)!;
+              });
+            },
+            groupValue: _scope,
+            value: "PUBLIC",
+          )),
+          Expanded(
+              child: RadioListTile(
+            title: Text("Private"),
+            onChanged: (value) {
+              setState(() {
+                _scope = (value as String?)!;
+              });
+            },
+            groupValue: _scope,
+            value: "PRIVATE",
+          ))
+        ],
+      ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(context), child: Text("Cancel")),
+        TextButton(onPressed: () => context.read<ScheduleProvider>().updateScope(_scope, context), child: Text("OK"))
+      ],
+    );
+  }
+}

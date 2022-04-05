@@ -7,6 +7,7 @@ import 'package:urooster/model/group_list_model.dart';
 import 'package:urooster/provider/auth_provider.dart';
 import 'package:urooster/utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
+import 'package:urooster/utils/format.dart' as format;
 
 import '../model/schedule_model.dart';
 
@@ -16,22 +17,28 @@ class ScheduleProvider with ChangeNotifier {
   GroupDetail currentGroup = GroupDetail(-1, "", "0", "0", "0", null, null);
   List<GroupList> groupList = [];
   List<ScheduleModel> schedules = <ScheduleModel>[];
-  
+  DateTime? start;
+  DateTime? end;
+
   ScheduleProvider update(AuthProvider auth) {
     this.auth = auth;
-    header = {'content-type': 'application/json', constants.tokenHeaderName: auth.token};
+    header = {
+      'content-type': 'application/json',
+      constants.tokenHeaderName: auth.token
+    };
     return this;
   }
 
-  Future<void> getGroups() async{
-    var response = await http.get(Uri.parse(constants.groupUrl+"/group-list"), headers: header);
-    
-    if(response.statusCode == 200) {
+  Future<void> getGroups() async {
+    var response = await http.get(Uri.parse(constants.groupUrl + "/group-list"),
+        headers: header);
+
+    if (response.statusCode == 200) {
       checkToken(response);
       var body = jsonDecode(response.body)['response'];
       currentGroup = GroupDetail.fromJson(body['currentGroup']);
 
-      if(groupList.length != body['groups'].length) {
+      if (groupList.length != body['groups'].length) {
         groupList = [];
         body['groups'].forEach((element) {
           groupList.add(GroupList.fromJson(element));
@@ -39,15 +46,22 @@ class ScheduleProvider with ChangeNotifier {
       }
 
       notifyListeners();
-    }
-    else
+    } else
       print(response.body);
   }
 
-  Future<void> getLectures(DateTime start, DateTime end) async{
-    DateFormat format = DateFormat("yyyy-MM-dd");
-    var response = await http.post(Uri.parse(constants.scheduleUrl+"/"+currentGroup.id.toString()), headers: header, body: jsonEncode({"start": format.format(start).toString(), "end": format.format(end).toString()}));
-    if(response.statusCode == 200) {
+  Future<void> getLectures(DateTime start, DateTime end) async {
+    this.start = start;
+    this.end = end;
+
+    var response = await http.post(
+        Uri.parse(constants.scheduleUrl + "/" + currentGroup.id.toString()),
+        headers: header,
+        body: jsonEncode({
+          "start": format.yyyyMMdd.format(start).toString(),
+          "end": format.yyyyMMdd.format(end).toString()
+        }));
+    if (response.statusCode == 200) {
       checkToken(response);
       schedules = [];
       var body = jsonDecode(response.body)['response'];
@@ -55,38 +69,90 @@ class ScheduleProvider with ChangeNotifier {
       body.forEach((element) {
         schedules.add(ScheduleModel.fromJson(element));
       });
-      notifyListeners();
-
-    }
-    else
+    } else
       print(response.body);
 
-
+    notifyListeners();
   }
 
   void checkToken(http.Response response) {
     String? token = response.headers[constants.tokenHeaderName];
 
-    if(auth?.token != token && token != null) {
+    if (auth?.token != token && token != null) {
       auth?.changeToken(token);
     }
   }
-  Future<void> changeDday(schedule, dday, context) async{
-    var response = await http.put(Uri.parse(constants.scheduleUrl+"/dday/"+schedule.id.toString()), headers: header, body: jsonEncode({"dDay":dday}));
 
-    if(response.statusCode == 200) {
+  Future<void> changeDday(schedule, dday, context) async {
+    var response = await http.put(
+        Uri.parse(constants.scheduleUrl + "/dday/" + schedule.id.toString()),
+        headers: header,
+        body: jsonEncode({"dDay": dday}));
+
+    if (response.statusCode == 200) {
+      checkToken(response);
       schedule.dday = dday;
-    }
-    else
+    } else
       print(response.body);
     Navigator.pop(context);
   }
 
-  Future<void> removeSchedule(schedule, context, checked) async{
+  Future<void> removeOneSchedule(schedule, context) async{
+    var response =  await http.delete(
+        Uri.parse(constants.scheduleUrl + "/" + schedule.id.toString()),
+        headers: header);
+    if(response.statusCode == 200) {
+      checkToken(response);
       schedules.remove(schedule);
-      notifyListeners();
+    }
+    else
+      print(response.body);
+    notifyListeners();
 
-      Navigator.pop(context);
-      Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
+
+  Future<void> removeAllSchedule(schedule, context) async {
+    var response = await http.post(
+        Uri.parse(constants.scheduleUrl + "/all/" + schedule.id.toString()),
+        headers: header,
+        body: jsonEncode({
+          "start": format.yyyyMMdd.format(start!).toString(),
+          "end": format.yyyyMMdd.format(end!).toString()
+        }));
+
+    if (response.statusCode == 200) {
+      checkToken(response);
+      schedules = [];
+      var body = jsonDecode(response.body)['response'];
+
+      body.forEach((element) {
+        schedules.add(ScheduleModel.fromJson(element));
+      });
+    }
+    else
+      print(response.body);
+    notifyListeners();
+
+    Navigator.pop(context);
+    Navigator.pop(context);
+  }
+
+  Future<void> updateScope(String scope, BuildContext context) async{
+    var response = await http.patch(Uri.parse(constants.groupUrl+"/update-scope/"+currentGroup.id.toString()), headers: header, body: jsonEncode({"scope": scope}));
+
+    if(response.statusCode == 200){
+      checkToken(response);
+      var body = jsonDecode(response.body)['response'];
+      currentGroup = GroupDetail.fromJson(body);
+    }
+    else
+      print(response.body);
+
+    notifyListeners();
+    Navigator.pop(context);
+  }
+
+
 }

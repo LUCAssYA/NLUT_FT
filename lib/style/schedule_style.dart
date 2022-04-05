@@ -30,3 +30,4 @@ var modalHeight = (context) {
   return height * 0.5;
 };
 var modalButtonMargin = EdgeInsets.fromLTRB(0, 10, 0, 5);
+var switchColor = Colors.indigo;
