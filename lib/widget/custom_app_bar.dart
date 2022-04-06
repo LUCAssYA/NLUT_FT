@@ -21,7 +21,7 @@ PreferredSizeWidget blankAppBar() {
   );
 }
 
-PreferredSizeWidget scheduleAppBar(title, setting) {
+PreferredSizeWidget scheduleAppBar(title, setting, list) {
   return AppBar(
     primary: false,
     title: Text(title, style: style.titleStyle),
@@ -40,10 +40,23 @@ PreferredSizeWidget scheduleAppBar(title, setting) {
         color: style.appBarIconColor,
       ),
       IconButton(
-        onPressed: () {},
+        onPressed: () => list(),
         icon: Icon(Icons.list),
         color: style.appBarIconColor,
       )
     ],
   );
+}
+
+PreferredSizeWidget textWithCloseButton(String title, BuildContext context) {
+  return AppBar(
+    centerTitle: true,
+      backgroundColor: style.appBarBackgroundColor,
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      title: Text(title, style: style.titleStyle,),
+      actions: [
+        IconButton(
+            onPressed: () => Navigator.pop(context), icon: Icon(Icons.close, color: style.appBarIconColor,)),
+      ]);
 }

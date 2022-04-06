@@ -7,6 +7,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:urooster/model/schedule_data_source.dart';
 import 'package:urooster/model/schedule_model.dart';
 import 'package:urooster/provider/schedule_provider.dart';
+import 'package:urooster/screen/group_list_page.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/schedule_style.dart' as style;
 import 'package:urooster/utils/format.dart' as format;
@@ -21,6 +22,7 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   DateTime? start;
   DateTime? end;
+  CalendarController _calendarController = CalendarController();
 
   void showLectureDetail(ScheduleModel schedule, context) {
     bool dday = schedule.dday;
@@ -33,11 +35,24 @@ class _SchedulePageState extends State<SchedulePage> {
         });
   }
 
+  void showGroupList() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => GroupPage(controller: _calendarController,)));
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<ScheduleProvider>().getGroups();
+    if (context.read<ScheduleProvider>().currentGroup.id == -1) {
+      context.read<ScheduleProvider>().getGroups();
+      _calendarController.displayDate = DateTime.now();
+    }
+    else {
+      _calendarController.displayDate =
+          context.read<ScheduleProvider>().currentDate != null
+              ? context.read<ScheduleProvider>().currentDate
+              : DateTime.now();
+    }
   }
 
   void showSetting() {
@@ -55,10 +70,13 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: scheduleAppBar(
-          context.watch<ScheduleProvider>().currentGroup.name, showSetting),
+          context.watch<ScheduleProvider>().currentGroup.name,
+          showSetting,
+          showGroupList),
       body: Container(
         margin: style.contextMargin(context),
         child: SfCalendar(
+          controller: _calendarController,
           cellEndPadding: 0,
           todayHighlightColor: style.defaultColor,
           dataSource:
@@ -81,11 +99,14 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
           appointmentTextStyle: style.appointmentTextStyle,
           showDatePickerButton: true,
+          initialDisplayDate: context.watch<ScheduleProvider>().currentDate,
           minDate: context.watch<ScheduleProvider>().currentGroup.startDate,
           maxDate: context.watch<ScheduleProvider>().currentGroup.endDate,
           onViewChanged: (ViewChangedDetails details) {
+            print(details.visibleDates);
             context.read<ScheduleProvider>().getLectures(
-                details.visibleDates.first, details.visibleDates.last);
+                details.visibleDates.first, details.visibleDates.last).then((_) {_calendarController.displayDate = context.read<ScheduleProvider>().currentDate;});
+
           },
           onTap: (CalendarTapDetails details) {
             dynamic appointments = details.appointments;
@@ -330,7 +351,10 @@ class _GroupScopeState extends State<GroupScope> {
       actions: [
         TextButton(
             onPressed: () => Navigator.pop(context), child: Text("Cancel")),
-        TextButton(onPressed: () => context.read<ScheduleProvider>().updateScope(_scope, context), child: Text("OK"))
+        TextButton(
+            onPressed: () =>
+                context.read<ScheduleProvider>().updateScope(_scope, context),
+            child: Text("OK"))
       ],
     );
   }

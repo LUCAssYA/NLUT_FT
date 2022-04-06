@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:urooster/model/group_detail_model.dart';
 import 'package:urooster/model/group_list_model.dart';
 import 'package:urooster/provider/auth_provider.dart';
@@ -14,11 +15,12 @@ import '../model/schedule_model.dart';
 class ScheduleProvider with ChangeNotifier {
   AuthProvider? auth;
   var header = {"content-type": "application/json"};
-  GroupDetail currentGroup = GroupDetail(-1, "", "0", "0", "0", null, null);
+  GroupDetail currentGroup = GroupDetail(-1, "", "0", "0", "0", DateTime.now().add(Duration(days: -50)), DateTime.now().add(Duration(days:50)));
   List<GroupList> groupList = [];
   List<ScheduleModel> schedules = <ScheduleModel>[];
   DateTime? start;
   DateTime? end;
+  DateTime? currentDate;
 
   ScheduleProvider update(AuthProvider auth) {
     this.auth = auth;
@@ -53,6 +55,8 @@ class ScheduleProvider with ChangeNotifier {
   Future<void> getLectures(DateTime start, DateTime end) async {
     this.start = start;
     this.end = end;
+    if(currentGroup.endDate.isAfter(end))
+      this.currentDate = start;
 
     var response = await http.post(
         Uri.parse(constants.scheduleUrl + "/" + currentGroup.id.toString()),
@@ -152,6 +156,27 @@ class ScheduleProvider with ChangeNotifier {
 
     notifyListeners();
     Navigator.pop(context);
+  }
+
+  Future<void> getGroupDetail(int id, BuildContext context, CalendarController controller) async{
+    var response = await http.get(Uri.parse(constants.groupUrl+"/detail/"+id.toString()), headers: header);
+
+    if(response.statusCode == 200) {
+      checkToken(response);
+      currentGroup = GroupDetail.fromJson(jsonDecode(response.body)['response']);
+    }
+    else
+      print(response.body);
+    if(currentGroup.startDate.isBefore(DateTime.now()) && currentGroup.endDate.isAfter(DateTime.now()))
+      currentDate = DateTime.now();
+    else
+      currentDate = currentGroup.startDate;
+
+    notifyListeners();
+    Navigator.pop(context);
+    print(currentDate);
+    controller.displayDate = currentDate;
+
   }
 
 

@@ -5,6 +5,7 @@ import 'package:urooster/provider/home_provider.dart';
 import 'package:urooster/provider/register_provider.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/screen/find_password_page.dart';
+import 'package:urooster/screen/group_list_page.dart';
 import 'package:urooster/screen/main_page.dart';
 import 'package:urooster/screen/register_page.dart';
 import 'package:urooster/screen/signin_page.dart';

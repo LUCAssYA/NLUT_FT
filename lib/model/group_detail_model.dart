@@ -4,8 +4,8 @@ class GroupDetail {
   String year;
   String semester;
   String scope;
-  DateTime? startDate;
-  DateTime? endDate;
+  DateTime startDate;
+  DateTime endDate;
 
   GroupDetail(this.id, this.name, this.year, this.semester, this.scope,
       this.startDate, this.endDate);
