@@ -20,7 +20,7 @@ class ScheduleProvider with ChangeNotifier {
   List<ScheduleModel> schedules = <ScheduleModel>[];
   DateTime? start;
   DateTime? end;
-  DateTime? currentDate;
+  DateTime currentDate = DateTime.now();
 
   ScheduleProvider update(AuthProvider auth) {
     this.auth = auth;
@@ -158,7 +158,7 @@ class ScheduleProvider with ChangeNotifier {
     Navigator.pop(context);
   }
 
-  Future<void> getGroupDetail(int id, BuildContext context, CalendarController controller) async{
+  Future<void> getGroupDetail(int id, BuildContext context) async{
     var response = await http.get(Uri.parse(constants.groupUrl+"/detail/"+id.toString()), headers: header);
 
     if(response.statusCode == 200) {
@@ -174,8 +174,6 @@ class ScheduleProvider with ChangeNotifier {
 
     notifyListeners();
     Navigator.pop(context);
-    print(currentDate);
-    controller.displayDate = currentDate;
 
   }
 

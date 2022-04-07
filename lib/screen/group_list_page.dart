@@ -22,7 +22,7 @@ class GroupPage extends StatelessWidget {
               SliverFixedExtentList(
                   delegate: SliverChildBuilderDelegate((c, i) {
                     return ListPage(
-                        group: context.watch<ScheduleProvider>().groupList[i], controller: controller,);
+                        group: context.watch<ScheduleProvider>().groupList[i], controller: controller);
                   },
                       childCount:
                           context.watch<ScheduleProvider>().groupList.length),
@@ -55,7 +55,7 @@ class ListPage extends StatelessWidget {
           ));
     } else {
       return OutlinedButton(
-        onPressed: () => context.read<ScheduleProvider>().getGroupDetail(group.id, context, controller),
+        onPressed: () => context.read<ScheduleProvider>().getGroupDetail(group.id, context),
         child: Container(
             margin: style.buttonTextMargin,
             child: Row(children: [Text(group.name, style: style.defaultTextStyle,)])),
