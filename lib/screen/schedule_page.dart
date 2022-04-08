@@ -45,8 +45,7 @@ class _SchedulePageState extends State<SchedulePage> {
             builder: (context) => GroupPage(controller: _calendarController, changeGroup: changeGroup,)));
   }
 
-  void changeGroup() {
-    print("change Group");
+  void changeGroup(currentDate) {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(() {
         start = context.read<ScheduleProvider>().currentGroup.startDate;
@@ -55,8 +54,8 @@ class _SchedulePageState extends State<SchedulePage> {
 
       });
       SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-        print("after build");
-        _calendarController.displayDate = context.read<ScheduleProvider>().currentDate;
+        print(context.read<ScheduleProvider>().currentDate);
+        _calendarController.displayDate = currentDate;
         _calendarController.view = CalendarView.workWeek;
       });
     });
@@ -67,8 +66,12 @@ class _SchedulePageState extends State<SchedulePage> {
     // TODO: implement initState
     super.initState();
     if (context.read<ScheduleProvider>().currentGroup.id == -1) {
-      print("aa");
-      context.read<ScheduleProvider>().getGroups();
+      context.read<ScheduleProvider>().getGroups().then((value){
+        setState(() {
+          start = context.read<ScheduleProvider>().currentGroup.startDate;
+          end = context.read<ScheduleProvider>().currentGroup.endDate;
+        });
+      });
     }
   }
 
@@ -120,14 +123,12 @@ class _CalendarState extends State<Calendar> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("init start:");
     controller = widget.calendarController;
   }
 
   @override
   Widget build(BuildContext context) {
-    print("build");
-    print("start: ${widget.start}"+"  end: ${widget.end}");
+
     return Container(
         margin: style.contextMargin(context),
         child: SfCalendar(
@@ -136,7 +137,7 @@ class _CalendarState extends State<Calendar> {
           todayHighlightColor: style.defaultColor,
           dataSource:
               ScheduleDataSource(context.watch<ScheduleProvider>().schedules),
-          view: CalendarView.week,
+          view: CalendarView.workWeek,
           scheduleViewSettings: ScheduleViewSettings(),
           monthViewSettings: MonthViewSettings(
             showAgenda: true,
@@ -158,11 +159,8 @@ class _CalendarState extends State<Calendar> {
           maxDate: widget.end,
           showCurrentTimeIndicator: false,
           onViewChanged: (ViewChangedDetails details) {
-            print(details.visibleDates);
             context.read<ScheduleProvider>().getLectures(
                 details.visibleDates.first, details.visibleDates.last);
-            print(
-                "display: " + widget.calendarController.displayDate.toString());
           },
           onTap: (CalendarTapDetails details) {
             dynamic appointments = details.appointments;

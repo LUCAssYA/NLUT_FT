@@ -57,7 +57,9 @@ class ListPage extends StatelessWidget {
           ));
     } else {
       return OutlinedButton(
-        onPressed: () => context.read<ScheduleProvider>().getGroupDetail(group.id, context).then((value) => changeGroup()),
+        onPressed: () => context.read<ScheduleProvider>().getGroupDetail(group.id, context).then((value)  {
+          changeGroup(context.read<ScheduleProvider>().currentDate);
+        }),
         child: Container(
             margin: style.buttonTextMargin,
             child: Row(children: [Text(group.name, style: style.defaultTextStyle,)])),

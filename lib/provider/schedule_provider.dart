@@ -172,6 +172,7 @@ class ScheduleProvider with ChangeNotifier {
       currentDate = DateTime.now();
     else
       currentDate = currentGroup.startDate;
+
     notifyListeners();
     Navigator.pop(context);
 
