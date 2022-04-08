@@ -7,8 +7,9 @@ import '../provider/schedule_provider.dart';
 import '../widget/custom_app_bar.dart';
 
 class GroupPage extends StatelessWidget {
-  GroupPage({Key? key, this.controller}) : super(key: key);
+  GroupPage({Key? key, this.controller, this.changeGroup}) : super(key: key);
   final controller;
+  final changeGroup;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class GroupPage extends StatelessWidget {
               SliverFixedExtentList(
                   delegate: SliverChildBuilderDelegate((c, i) {
                     return ListPage(
-                        group: context.watch<ScheduleProvider>().groupList[i], controller: controller);
+                        group: context.watch<ScheduleProvider>().groupList[i], controller: controller, changeGroup: changeGroup,);
                   },
                       childCount:
                           context.watch<ScheduleProvider>().groupList.length),
@@ -34,10 +35,11 @@ class GroupPage extends StatelessWidget {
 }
 
 class ListPage extends StatelessWidget {
-  ListPage({Key? key, this.group, this.controller}) : super(key: key);
+  ListPage({Key? key, this.group, this.controller, this.changeGroup}) : super(key: key);
 
   final group;
   final controller;
+  final changeGroup;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,7 @@ class ListPage extends StatelessWidget {
           ));
     } else {
       return OutlinedButton(
-        onPressed: () => context.read<ScheduleProvider>().getGroupDetail(group.id, context),
+        onPressed: () => context.read<ScheduleProvider>().getGroupDetail(group.id, context).then((value) => changeGroup()),
         child: Container(
             margin: style.buttonTextMargin,
             child: Row(children: [Text(group.name, style: style.defaultTextStyle,)])),

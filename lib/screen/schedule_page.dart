@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:urooster/model/schedule_data_source.dart';
@@ -41,18 +42,31 @@ class _SchedulePageState extends State<SchedulePage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => GroupPage(
-                controller: _calendarController)));
+            builder: (context) => GroupPage(controller: _calendarController, changeGroup: changeGroup,)));
+  }
+
+  void changeGroup() {
+    print("change Group");
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+      setState(() {
+        start = context.read<ScheduleProvider>().currentGroup.startDate;
+        end = context.read<ScheduleProvider>().currentGroup.endDate;
+        _calendarController.view = CalendarView.day;
+
+      });
+      SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+        print("after build");
+        _calendarController.displayDate = context.read<ScheduleProvider>().currentDate;
+        _calendarController.view = CalendarView.workWeek;
+      });
+    });
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (context
-        .read<ScheduleProvider>()
-        .currentGroup
-        .id == -1) {
+    if (context.read<ScheduleProvider>().currentGroup.id == -1) {
       print("aa");
       context.read<ScheduleProvider>().getGroups();
     }
@@ -76,17 +90,24 @@ class _SchedulePageState extends State<SchedulePage> {
           context.watch<ScheduleProvider>().currentGroup.name,
           showSetting,
           showGroupList),
-      body: new Calendar(calendarController: _calendarController, showLectureDetail: showLectureDetail,),
+      body: Calendar(
+        calendarController: _calendarController,
+        showLectureDetail: showLectureDetail,
+        start: start,
+        end: end,
+      ),
     );
   }
 }
 
 class Calendar extends StatefulWidget {
-  Calendar({Key? key, this.calendarController, this.showLectureDetail}) : super(key: key);
+  Calendar({Key? key, this.calendarController, this.showLectureDetail, this.start, this.end})
+      : super(key: key);
 
   final calendarController;
   final showLectureDetail;
-
+  final start;
+  final end;
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -94,7 +115,6 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   late CalendarController controller;
-  DateTime? init;
 
   @override
   void initState() {
@@ -103,71 +123,55 @@ class _CalendarState extends State<Calendar> {
     print("init start:");
     controller = widget.calendarController;
   }
+
   @override
   Widget build(BuildContext context) {
-
-    print("build: ");
-    setState(() {
-      init = context.read<ScheduleProvider>().currentDate;
-    });
-    return  Container(
-      margin: style.contextMargin(context),
-      child: SfCalendar(
-        controller: widget.calendarController,
-        cellEndPadding: 0,
-        todayHighlightColor: style.defaultColor,
-        dataSource:
-        ScheduleDataSource(context.watch<ScheduleProvider>().schedules),
-        initialDisplayDate: init,
-        initialSelectedDate: context.watch<ScheduleProvider>().currentDate,
-        view: CalendarView.workWeek,
-        scheduleViewSettings: ScheduleViewSettings(),
-        monthViewSettings: MonthViewSettings(
-          showAgenda: true,
-        ),
-        timeSlotViewSettings: TimeSlotViewSettings(
-          startHour: 8.5,
-          endHour: 18,
-          nonWorkingDays: <int>[
-            DateTime.saturday,
-            DateTime.sunday,
-          ],
-          timeInterval: Duration(minutes: 30),
-          timeFormat: 'h:mm',
-          timeIntervalHeight: -1,
-        ),
-        appointmentTextStyle: style.appointmentTextStyle,
-        showDatePickerButton: true,
-        minDate: context.read<ScheduleProvider>().currentGroup.startDate.add(Duration(days: -1)),
-        maxDate: context.read<ScheduleProvider>().currentGroup.endDate.add(Duration(days:1)),
-        showCurrentTimeIndicator: false,
-        onViewChanged: (ViewChangedDetails details) {
-          print(details.visibleDates);
-          context
-              .read<ScheduleProvider>()
-              .getLectures(
-              details.visibleDates.first, details.visibleDates.last)
-              .then((_) {
-                setState(() {
-                  widget.calendarController.displayDate =
-                      context.read<ScheduleProvider>().currentDate;
-                  widget.calendarController.selectedDate = context.read<ScheduleProvider>().currentDate;
-                });
-                print("display: "+widget.calendarController.displayDate.toString());
-
-          });
-        },
-        onTap: (CalendarTapDetails details) {
-          controller.forward!();
-          dynamic appointments = details.appointments;
-          if (appointments != null)
-            widget.showLectureDetail(appointments[0], context);
-        },
-      ),
-    );
+    print("build");
+    print("start: ${widget.start}"+"  end: ${widget.end}");
+    return Container(
+        margin: style.contextMargin(context),
+        child: SfCalendar(
+          controller: widget.calendarController,
+          cellEndPadding: 0,
+          todayHighlightColor: style.defaultColor,
+          dataSource:
+              ScheduleDataSource(context.watch<ScheduleProvider>().schedules),
+          view: CalendarView.week,
+          scheduleViewSettings: ScheduleViewSettings(),
+          monthViewSettings: MonthViewSettings(
+            showAgenda: true,
+          ),
+          timeSlotViewSettings: TimeSlotViewSettings(
+            startHour: 8.5,
+            endHour: 18,
+            nonWorkingDays: <int>[
+              DateTime.saturday,
+              DateTime.sunday,
+            ],
+            timeInterval: Duration(minutes: 30),
+            timeFormat: 'h:mm',
+            timeIntervalHeight: -1,
+          ),
+          appointmentTextStyle: style.appointmentTextStyle,
+          showDatePickerButton: true,
+          minDate: widget.start,
+          maxDate: widget.end,
+          showCurrentTimeIndicator: false,
+          onViewChanged: (ViewChangedDetails details) {
+            print(details.visibleDates);
+            context.read<ScheduleProvider>().getLectures(
+                details.visibleDates.first, details.visibleDates.last);
+            print(
+                "display: " + widget.calendarController.displayDate.toString());
+          },
+          onTap: (CalendarTapDetails details) {
+            dynamic appointments = details.appointments;
+            if (appointments != null)
+              widget.showLectureDetail(appointments[0], context);
+          },
+        ));
   }
 }
-
 
 class BottomModal extends StatefulWidget {
   BottomModal({Key? key, this.schedule}) : super(key: key);

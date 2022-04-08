@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:urooster/model/group_detail_model.dart';
@@ -171,7 +172,6 @@ class ScheduleProvider with ChangeNotifier {
       currentDate = DateTime.now();
     else
       currentDate = currentGroup.startDate;
-
     notifyListeners();
     Navigator.pop(context);
 
