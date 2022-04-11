@@ -31,7 +31,13 @@ class _LectureModalState extends State<LectureModal> {
         shrinkWrap: true,
         slivers: [
           SliverFixedExtentList(delegate: SliverChildBuilderDelegate((ci, i){
-            return Container();
+            return Container(
+              child: Column(
+                children: [
+                  Text
+                ],
+              ),
+            );
           }), itemExtent:( MediaQuery.of(context).size.height*0.5)/8)
         ]
       ),
