@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/auth_provider.dart';
 import 'package:urooster/provider/home_provider.dart';
+import 'package:urooster/provider/lecture_provider.dart';
 import 'package:urooster/provider/register_provider.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/screen/find_password_page.dart';
@@ -20,14 +21,20 @@ void main() {
         create: (_) => HomeProvider(),
         update: (_, auth, home) => home!.update(auth),
       ),
-      ChangeNotifierProxyProvider<AuthProvider, ScheduleProvider>(create: (_) => ScheduleProvider(), update: (_, auth, schedule) => schedule!.update(auth))
+      ChangeNotifierProxyProvider<AuthProvider, ScheduleProvider>(
+          create: (_) => ScheduleProvider(),
+          update: (_, auth, schedule) => schedule!.update(auth)),
+      ChangeNotifierProxyProvider<AuthProvider, LectureProvider>(create: (_) => LectureProvider(), update: (_, auth, lecture) => lecture!.update(auth))
     ],
-    child: MaterialApp(debugShowCheckedModeBanner: false,home: SignInPage(), routes: {
-      "/signIn": (BuildContext context) => SignInPage(),
-      "/findPassword": (BuildContext context) => FindPasswordPage(),
-      "/resetComplete": (BuildContext context) => SendComplete(),
-      "/register": (BuildContext context) => RegisterPage(),
-      "/home": (BuildContext context) => SkeletonPage()
-    }),
+    child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SignInPage(),
+        routes: {
+          "/signIn": (BuildContext context) => SignInPage(),
+          "/findPassword": (BuildContext context) => FindPasswordPage(),
+          "/resetComplete": (BuildContext context) => SendComplete(),
+          "/register": (BuildContext context) => RegisterPage(),
+          "/home": (BuildContext context) => SkeletonPage()
+        }),
   ));
 }
