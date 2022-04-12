@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:urooster/style/widget_style.dart' as style;
+import 'package:urooster/widget/text_field.dart';
 
 PreferredSizeWidget customAppBar(BuildContext context) {
   return AppBar(
@@ -59,4 +60,25 @@ PreferredSizeWidget textWithCloseButton(String title, BuildContext context) {
         IconButton(
             onPressed: () => Navigator.pop(context), icon: Icon(Icons.close, color: style.appBarIconColor,)),
       ]);
+}
+
+PreferredSizeWidget lectureListAppBar(facultyItem, facultyOnChange, courseItem, courseOnChange) {
+  return AppBar(
+    actions: [
+      SelectBox(
+        validator: null,
+        items: facultyItem,
+        onChange: facultyOnChange,
+        label: "Faculty",
+        margin: null,
+      ),
+      SelectBox(
+        validator: null,
+        items: courseItem,
+        onChange: courseOnChange,
+        label: "Courses",
+        margin: null
+      )
+    ],
+  );
 }

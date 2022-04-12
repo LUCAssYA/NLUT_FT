@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:urooster/model/lecture_list_model.dart';
 import 'package:urooster/provider/auth_provider.dart';
@@ -6,6 +8,11 @@ import 'package:http/http.dart' as http;
 
 class LectureProvider with ChangeNotifier{
   List<LectureListModel> lectureList = [];
+  Map currentFaculty = {};
+  List facultyList = [];
+  List courses = [];
+  Map currentCourse = {};
+
   int tempIndex = 0;
   AuthProvider? auth;
   var header = {"content-type": "application/json"};
@@ -31,6 +38,40 @@ class LectureProvider with ChangeNotifier{
     if (auth?.token != token && token != null) {
       auth?.changeToken(token);
     }
+  }
+
+  Future<void> getFaculty() async{
+    var response = await http.get(Uri.parse(constants.getUniversitiesUrl+"/faculty"), headers: header);
+
+    if(response.statusCode == 200) {
+      checkToken(response);
+
+      var body = jsonDecode(response.body)['response'];
+      facultyList = body['facultyList'];
+      currentFaculty = body['userFaculty'];
+    }
+    notifyListeners();
+  }
+
+  Future<void> getTimeTable() async {
+    var response = await http.get(Uri.parse(constants.timeTableUrl+"/"+currentFaculty['id'].toString()), headers: header);
+
+    if(response.statusCode == 200){
+      checkToken(response);
+
+      courses = jsonDecode(response.body)['response'];
+
+    }
+
+    notifyListeners();
+  }
+
+  void facultyOnChange(value) {
+
+  }
+
+  void courseOnChange(value) {
+
   }
 
 }

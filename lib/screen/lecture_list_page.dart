@@ -2,15 +2,48 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/lecture_provider.dart';
+import 'package:urooster/widget/custom_app_bar.dart';
 
-class LectureModal extends StatefulWidget {
-  LectureModal({Key? key}) : super(key: key);
+class LectureListPage extends StatefulWidget {
+  const LectureListPage({Key? key}) : super(key: key);
 
   @override
-  State<LectureModal> createState() => _LectureModalState();
+  State<LectureListPage> createState() => _LectureListPageState();
 }
 
-class _LectureModalState extends State<LectureModal> {
+class _LectureListPageState extends State<LectureListPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (context.read<LectureProvider>().currentFaculty == {}) {
+      context.read<LectureProvider>().getFaculty().then((value) {
+        context.read<LectureProvider>().getTimeTable();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: lectureListAppBar(
+          context.read<LectureProvider>().facultyList,
+          context.read<LectureProvider>().getTimeTable,
+          context.read<LectureProvider>().courses,
+          context.read<LectureProvider>().courseOnChange),
+      body: LectureList(),
+    );
+  }
+}
+
+class LectureList extends StatefulWidget {
+  LectureList({Key? key}) : super(key: key);
+
+  @override
+  State<LectureList> createState() => _LectureList();
+}
+
+class _LectureList extends State<LectureList> {
   final scrollController = ScrollController();
 
   @override
