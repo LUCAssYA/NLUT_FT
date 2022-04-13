@@ -30,6 +30,8 @@ class LectureProvider with ChangeNotifier{
     tempIndex = i;
 
 
+
+
   }
 
   void checkToken(http.Response response) {
@@ -54,6 +56,10 @@ class LectureProvider with ChangeNotifier{
   }
 
   Future<void> getTimeTable() async {
+
+    if(currentFaculty == {})
+      return;
+
     var response = await http.get(Uri.parse(constants.timeTableUrl+"/"+currentFaculty['id'].toString()), headers: header);
 
     if(response.statusCode == 200){
@@ -67,11 +73,17 @@ class LectureProvider with ChangeNotifier{
   }
 
   void facultyOnChange(value) {
+    print(value);
+
+    currentFaculty = value;
+    getTimeTable();
 
   }
 
   void courseOnChange(value) {
-
+    print(value);
+    currentCourse = value;
+    getLecture(0);
   }
 
 }
