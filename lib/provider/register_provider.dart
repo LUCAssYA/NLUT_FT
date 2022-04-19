@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:urooster/model/register_model.dart';
+import 'package:urooster/model/simple_model.dart';
+import 'package:urooster/model/university_model.dart';
 import 'package:urooster/utils/constants.dart' as constant;
 
 class RegisterProvider with ChangeNotifier {
   bool verified = false;
-  List universities = [];
-  List faculties = [];
+  List<UniversityModel> universities = [];
+  List<SimpleModel> faculties = [];
   String? domain = "";
   int? faculty;
   String? password;
@@ -23,10 +25,8 @@ class RegisterProvider with ChangeNotifier {
     var body = jsonDecode(response.body)['response'];
 
     body.forEach((element) {
-      universities.add(element);
+      universities.add(UniversityModel.fromJson(element));
     });
-
-    print(universities);
 
     notifyListeners();
   }
@@ -39,13 +39,18 @@ class RegisterProvider with ChangeNotifier {
   }
 
   Future<void> uniOnChange(value) async {
-    if (value != null && value.isNotEmpty) {
+    if (value != null) {
       var response = await http.get(
-          Uri.parse(constant.getUniversitiesUrl + "/" + value['id']),
+          Uri.parse(constant.getUniversitiesUrl + "/" + value.id.toString()),
           headers: header);
-      faculties = jsonDecode(response.body)['response'];
-      domain = value['domain'];
-      uni = value['id'];
+      var body = jsonDecode(response.body)['response'];
+      faculties = [];
+      print(body);
+      body.forEach((element){
+        faculties.add(SimpleModel.fromJson(element));
+      });
+      domain = value.domain;
+      uni = value.id;
       notifyListeners();
     }
   }
@@ -104,14 +109,10 @@ class RegisterProvider with ChangeNotifier {
   }
 
   Future<void> sendVerifitionCode(String email, BuildContext context) async {
-    print("aa");
     if (domain != null || domain!.isNotEmpty) {
       var result = await http.post(Uri.parse(constant.emailAuthUrl+"/auth"),
           headers: header, body: jsonEncode({"email": email + "@" + domain!}));
-      print("bb");
       var body = jsonDecode(result.body);
-      print(result.statusCode);
-      print(result.body);
       if (result.statusCode != 200) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(body['error']['message'])));

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:urooster/model/university_model.dart';
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField(
@@ -116,11 +117,11 @@ class SelectBox extends StatelessWidget {
     return Container(
       height: 50,
       margin: margin,
-      child: DropdownButtonFormField<String?>(
+      child: DropdownButtonFormField<Object?>(
         validator: (text) => validator(text),
         items: items
-            .map<DropdownMenuItem<String?>>((item) =>
-                DropdownMenuItem<String?>(child: Text(item['name'] as String), value: item))
+            .map<DropdownMenuItem<Object?>>((item) =>
+                DropdownMenuItem<Object?>(child: Text(item.name), value: item))
             .toList(),
         onChanged: (Object? value) => onChange(value),
         decoration:
