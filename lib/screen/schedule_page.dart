@@ -10,6 +10,7 @@ import 'package:urooster/model/schedule_data_source.dart';
 import 'package:urooster/model/schedule_model.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/screen/group_list_page.dart';
+import 'package:urooster/screen/lecture_list_page.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/schedule_style.dart' as style;
 import 'package:urooster/utils/format.dart' as format;
@@ -42,7 +43,15 @@ class _SchedulePageState extends State<SchedulePage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => GroupPage(controller: _calendarController, changeGroup: changeGroup,)));
+            builder: (context) => GroupPage(
+                  controller: _calendarController,
+                  changeGroup: changeGroup,
+                )));
+  }
+
+  void showAddLecture() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LectureListPage()));
   }
 
   void changeGroup(currentDate) {
@@ -51,7 +60,6 @@ class _SchedulePageState extends State<SchedulePage> {
         start = context.read<ScheduleProvider>().currentGroup.startDate;
         end = context.read<ScheduleProvider>().currentGroup.endDate;
         _calendarController.view = CalendarView.day;
-
       });
       SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
         print(context.read<ScheduleProvider>().currentDate);
@@ -66,7 +74,7 @@ class _SchedulePageState extends State<SchedulePage> {
     // TODO: implement initState
     super.initState();
     if (context.read<ScheduleProvider>().currentGroup.id == -1) {
-      context.read<ScheduleProvider>().getGroups().then((value){
+      context.read<ScheduleProvider>().getGroups().then((value) {
         setState(() {
           start = context.read<ScheduleProvider>().currentGroup.startDate;
           end = context.read<ScheduleProvider>().currentGroup.endDate;
@@ -92,7 +100,8 @@ class _SchedulePageState extends State<SchedulePage> {
       appBar: scheduleAppBar(
           context.watch<ScheduleProvider>().currentGroup.name,
           showSetting,
-          showGroupList),
+          showGroupList,
+          showAddLecture),
       body: Calendar(
         calendarController: _calendarController,
         showLectureDetail: showLectureDetail,
@@ -104,7 +113,12 @@ class _SchedulePageState extends State<SchedulePage> {
 }
 
 class Calendar extends StatefulWidget {
-  Calendar({Key? key, this.calendarController, this.showLectureDetail, this.start, this.end})
+  Calendar(
+      {Key? key,
+      this.calendarController,
+      this.showLectureDetail,
+      this.start,
+      this.end})
       : super(key: key);
 
   final calendarController;
@@ -128,7 +142,6 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
         margin: style.contextMargin(context),
         child: SfCalendar(

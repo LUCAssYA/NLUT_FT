@@ -74,7 +74,7 @@ class Body extends StatelessWidget {
             SelectBox(
               validator: context.read<RegisterProvider>().defaultValidator,
               items:
-                  context.read<RegisterProvider>().universities.keys.toList(),
+                  context.read<RegisterProvider>().universities,
               onChange: context.read<RegisterProvider>().uniOnChange,
               label: "University",
               margin: style.textMargin,

@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:urooster/provider/lecture_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 
+import '../widget/text_field.dart';
+
 class LectureListPage extends StatefulWidget {
   const LectureListPage({Key? key}) : super(key: key);
 
@@ -16,7 +18,8 @@ class _LectureListPageState extends State<LectureListPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (context.read<LectureProvider>().currentFaculty == {}) {
+    if (context.read<LectureProvider>().currentFaculty.isEmpty) {
+
       context.read<LectureProvider>().getFaculty().then((value) {
         context.read<LectureProvider>().getTimeTable();
       });
@@ -26,12 +29,44 @@ class _LectureListPageState extends State<LectureListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: lectureListAppBar(
-          context.read<LectureProvider>().facultyList,
-          context.read<LectureProvider>().getTimeTable,
-          context.read<LectureProvider>().courses,
-          context.read<LectureProvider>().courseOnChange),
-      body: LectureList(),
+      body:
+          Container(child: Column(children: [SelectFaculty(), LectureList()])),
+    );
+  }
+}
+
+
+
+class SelectFaculty extends StatelessWidget {
+  SelectFaculty({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+                child: SelectBox(
+              validator: null,
+              items: context.watch<LectureProvider>().facultyList,
+              onChange: context.read<LectureProvider>().getTimeTable,
+              label: "Faculty",
+              margin: null,
+            )),
+          ),
+          Expanded(
+              child: Container(
+                  child: SelectBox(
+                      validator: null,
+                      items: context.watch<LectureProvider>().courses,
+                      onChange: context.read<LectureProvider>().courseOnChange,
+                      label: "Courses",
+                      margin: null))),
+          IconButton(
+              onPressed: () => Navigator.pop(context), icon: Icon(Icons.close))
+        ],
+      ),
     );
   }
 }

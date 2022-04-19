@@ -8,12 +8,12 @@ import 'package:urooster/utils/constants.dart' as constant;
 
 class RegisterProvider with ChangeNotifier {
   bool verified = false;
-  Map<String, String> universities = new Map();
-  List<String> faculties = [];
+  List universities = [];
+  List faculties = [];
   String? domain = "";
-  String? faculty;
+  int? faculty;
   String? password;
-  String? uni;
+  int? uni;
 
   var header = {"content-type": "application/json"};
 
@@ -23,8 +23,10 @@ class RegisterProvider with ChangeNotifier {
     var body = jsonDecode(response.body)['response'];
 
     body.forEach((element) {
-      universities[element['name'] as String] = element['domain'] as String;
+      universities.add(element);
     });
+
+    print(universities);
 
     notifyListeners();
   }
@@ -39,11 +41,11 @@ class RegisterProvider with ChangeNotifier {
   Future<void> uniOnChange(value) async {
     if (value != null && value.isNotEmpty) {
       var response = await http.get(
-          Uri.parse(constant.getUniversitiesUrl + "/" + value),
+          Uri.parse(constant.getUniversitiesUrl + "/" + value['id']),
           headers: header);
-      faculties = jsonDecode(response.body)['response'].cast<String>();
-      domain = universities[value];
-      uni = value;
+      faculties = jsonDecode(response.body)['response'];
+      domain = value['domain'];
+      uni = value['id'];
       notifyListeners();
     }
   }

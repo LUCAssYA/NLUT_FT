@@ -22,7 +22,7 @@ PreferredSizeWidget blankAppBar() {
   );
 }
 
-PreferredSizeWidget scheduleAppBar(title, setting, list) {
+PreferredSizeWidget scheduleAppBar(title, setting, list, add) {
   return AppBar(
     primary: false,
     title: Text(title, style: style.titleStyle),
@@ -31,7 +31,7 @@ PreferredSizeWidget scheduleAppBar(title, setting, list) {
     automaticallyImplyLeading: false,
     actions: [
       IconButton(
-        onPressed: () {},
+        onPressed: () => add(),
         icon: Icon(Icons.add),
         color: style.appBarIconColor,
       ),
@@ -51,34 +51,65 @@ PreferredSizeWidget scheduleAppBar(title, setting, list) {
 
 PreferredSizeWidget textWithCloseButton(String title, BuildContext context) {
   return AppBar(
-    centerTitle: true,
+      centerTitle: true,
       backgroundColor: style.appBarBackgroundColor,
       elevation: 0,
       automaticallyImplyLeading: false,
-      title: Text(title, style: style.titleStyle,),
+      title: Text(
+        title,
+        style: style.titleStyle,
+      ),
       actions: [
         IconButton(
-            onPressed: () => Navigator.pop(context), icon: Icon(Icons.close, color: style.appBarIconColor,)),
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.close,
+              color: style.appBarIconColor,
+            )),
       ]);
 }
 
-PreferredSizeWidget lectureListAppBar(facultyItem, facultyOnChange, courseItem, courseOnChange) {
+PreferredSizeWidget lectureListAppBar(
+    facultyItem, facultyOnChange, courseItem, courseOnChange, context) {
   return AppBar(
-    actions: [
-      SelectBox(
-        validator: null,
-        items: facultyItem,
-        onChange: facultyOnChange,
-        label: "Faculty",
-        margin: null,
+    backgroundColor: style.appBarBackgroundColor,
+    primary: false,
+    elevation: 0,
+    automaticallyImplyLeading: false,
+    title: Container(
+      margin: style.appBarMargin,
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              margin: style.selectBoxMargin,
+                child: SelectBox(
+              validator: null,
+              items: facultyItem,
+              onChange: facultyOnChange,
+              label: "Faculty",
+              margin: null,
+            )),
+          ),
+          Expanded(
+              child: Container(
+                margin: style.selectBoxMargin,
+                  child: SelectBox(
+                      validator: null,
+                      items: courseItem,
+                      onChange: courseOnChange,
+                      label: "Courses",
+                      margin: null))),
+        ],
       ),
-      SelectBox(
-        validator: null,
-        items: courseItem,
-        onChange: courseOnChange,
-        label: "Courses",
-        margin: null
-      )
+    ),
+    actions: [
+      IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(
+            Icons.close,
+            color: style.appBarIconColor,
+          ))
     ],
   );
 }

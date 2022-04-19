@@ -29,7 +29,19 @@ class LectureProvider with ChangeNotifier{
   Future<void> getLecture(int i) async{
     tempIndex = i;
 
+    var response = await http.get(Uri.parse(constants.lectureUrl+"/list"));
 
+    if(response.statusCode == 200) {
+      checkToken(response);
+
+      lectureList = [];
+
+      jsonDecode(response.body)['response'].forEach((element){
+        lectureList.add(LectureListModel.fromJson(element));
+      });
+    }
+
+    notifyListeners();
 
 
   }
@@ -49,9 +61,12 @@ class LectureProvider with ChangeNotifier{
       checkToken(response);
 
       var body = jsonDecode(response.body)['response'];
+      print(body);
       facultyList = body['facultyList'];
       currentFaculty = body['userFaculty'];
     }
+    else
+      print(response.body);
     notifyListeners();
   }
 

@@ -1,8 +1,8 @@
 class RegisterModel {
   String email;
   String name;
-  String faculty;
-  String university;
+  int faculty;
+  int university;
   String nickName;
   String credential;
 

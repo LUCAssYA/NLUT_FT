@@ -12,5 +12,6 @@ final friendUrl = baseUrl+"friend";
 final scheduleUrl = baseUrl+"schedule";
 final groupUrl = baseUrl+"schedule-group";
 final timeTableUrl = baseUrl+"timetable";
+final lectureUrl = baseUrl+"lecture";
 
 final tokenHeaderName = "x-auth-token";

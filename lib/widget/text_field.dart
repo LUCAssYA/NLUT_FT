@@ -112,6 +112,7 @@ class SelectBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(items);
     return Container(
       height: 50,
       margin: margin,
@@ -119,7 +120,7 @@ class SelectBox extends StatelessWidget {
         validator: (text) => validator(text),
         items: items
             .map<DropdownMenuItem<String?>>((item) =>
-                DropdownMenuItem<String?>(child: Text(item), value: item))
+                DropdownMenuItem<String?>(child: Text(item['name'] as String), value: item))
             .toList(),
         onChanged: (Object? value) => onChange(value),
         decoration:
