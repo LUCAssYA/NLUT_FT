@@ -2,22 +2,27 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:urooster/model/lecture_list_model.dart';
+import 'package:urooster/model/simple_model.dart';
 import 'package:urooster/provider/auth_provider.dart';
+import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 
 class LectureProvider with ChangeNotifier{
   List<LectureListModel> lectureList = [];
-  Map currentFaculty = {};
-  List facultyList = [];
-  List courses = [];
-  Map currentCourse = {};
+  SimpleModel? currentFaculty;
+  List<SimpleModel> facultyList = [];
+  List<SimpleModel> courses = [];
+  SimpleModel? currentCourse;
 
   int tempIndex = 0;
   AuthProvider? auth;
+  ScheduleProvider? scheduleProvider;
+
   var header = {"content-type": "application/json"};
 
-  LectureProvider update(AuthProvider auth) {
+  LectureProvider update(AuthProvider auth, ScheduleProvider scheduleProvider) {
+    this.scheduleProvider = scheduleProvider;
     this.auth = auth;
     header = {
       'content-type': 'application/json',
@@ -29,7 +34,9 @@ class LectureProvider with ChangeNotifier{
   Future<void> getLecture(int i) async{
     tempIndex = i;
 
-    var response = await http.get(Uri.parse(constants.lectureUrl+"/list"));
+    var body = {"timetable": currentCourse?.id, "year": scheduleProvider?.currentGroup.year, "semester": scheduleProvider?.currentGroup.semester};
+
+    var response = await http.post(Uri.parse(constants.lectureUrl+"/list?page="+tempIndex.toString()+"&size=20"), headers: header, body: jsonEncode(body));
 
     if(response.statusCode == 200) {
       checkToken(response);
@@ -40,6 +47,8 @@ class LectureProvider with ChangeNotifier{
         lectureList.add(LectureListModel.fromJson(element));
       });
     }
+    else
+      print(response.body);
 
     notifyListeners();
 
@@ -61,9 +70,12 @@ class LectureProvider with ChangeNotifier{
       checkToken(response);
 
       var body = jsonDecode(response.body)['response'];
-      print(body);
-      facultyList = body['facultyList'];
-      currentFaculty = body['userFaculty'];
+      facultyList = [];
+      body['facultyList'].forEach((element){
+        facultyList.add(SimpleModel.fromJson(element));
+      });
+      print(facultyList);
+      currentFaculty = SimpleModel.fromJson(body['userFaculty']);
     }
     else
       print(response.body);
@@ -75,14 +87,19 @@ class LectureProvider with ChangeNotifier{
     if(currentFaculty == {})
       return;
 
-    var response = await http.get(Uri.parse(constants.timeTableUrl+"/"+currentFaculty['id'].toString()), headers: header);
+    var response = await http.get(Uri.parse(constants.timeTableUrl+"/"+currentFaculty!.id.toString()), headers: header);
 
     if(response.statusCode == 200){
       checkToken(response);
 
-      courses = jsonDecode(response.body)['response'];
+      courses = [];
+      jsonDecode(response.body)['response'].forEach((element){
+        courses.add(SimpleModel.fromJson(element));
+      });
 
     }
+    else
+      print(response);
 
     notifyListeners();
   }

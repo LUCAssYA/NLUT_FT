@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/lecture_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
+import 'package:urooster/style/lecture_list_style.dart' as style;
 
 import '../widget/text_field.dart';
 
@@ -18,8 +19,7 @@ class _LectureListPageState extends State<LectureListPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (context.read<LectureProvider>().currentFaculty.isEmpty) {
-
+    if (context.read<LectureProvider>().currentFaculty == null) {
       context.read<LectureProvider>().getFaculty().then((value) {
         context.read<LectureProvider>().getTimeTable();
       });
@@ -35,14 +35,13 @@ class _LectureListPageState extends State<LectureListPage> {
   }
 }
 
-
-
 class SelectFaculty extends StatelessWidget {
   SelectFaculty({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: style.selectBoxMargin,
       child: Row(
         children: [
           Expanded(
@@ -50,7 +49,7 @@ class SelectFaculty extends StatelessWidget {
                 child: SelectBox(
               validator: null,
               items: context.watch<LectureProvider>().facultyList,
-              onChange: context.read<LectureProvider>().getTimeTable,
+              onChange: context.read<LectureProvider>().facultyOnChange,
               label: "Faculty",
               margin: null,
             )),
@@ -96,6 +95,7 @@ class _LectureList extends State<LectureList> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: style.listMargin,
       child: CustomScrollView(
           controller: scrollController,
           scrollDirection: Axis.vertical,
@@ -104,23 +104,35 @@ class _LectureList extends State<LectureList> {
             SliverFixedExtentList(
                 delegate: SliverChildBuilderDelegate((c, i) {
                   return Container(
-                    child: Column(
-                      children: [
-                        Text(context
-                            .watch<LectureProvider>()
-                            .lectureList[i]
-                            .name),
-                        Text(context
-                            .watch<LectureProvider>()
-                            .lectureList[i]
-                            .staff)
-                      ],
-                    ),
-                  );
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                context
+                                    .watch<LectureProvider>()
+                                    .lectureList[i]
+                                    .name,
+                                style: style.lectureText
+                              ),
+                              Text(context
+                                  .watch<LectureProvider>()
+                                  .lectureList[i]
+                                  .staff,
+                                style: style.staffText,
+                              )
+                            ],
+                          ),
+                          ElevatedButton(onPressed: (){}, child: Text("Add", style: style.buttonTextStyle), style: style.buttonStyle,)
+                        ],
+                      ));
                 },
                     childCount:
                         context.watch<LectureProvider>().lectureList.length),
-                itemExtent: (MediaQuery.of(context).size.height * 0.5) / 8)
+                itemExtent: (MediaQuery.of(context).size.height * 0.8) / 8)
           ]),
     );
   }

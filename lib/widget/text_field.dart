@@ -26,7 +26,6 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
       child: TextFormField(
         controller: controller,
         validator: (text) => validator(text),
@@ -69,7 +68,6 @@ class TextFormFieldWithButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
       child: Row(
         children: [
           Expanded(
@@ -113,11 +111,10 @@ class SelectBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(items);
     return Container(
-      height: 50,
       margin: margin,
       child: DropdownButtonFormField<Object?>(
+        itemHeight: 60,
         validator: (text) => validator(text),
         items: items
             .map<DropdownMenuItem<Object?>>((item) =>
@@ -160,7 +157,6 @@ class EmailTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
       child: Row(
         children: [
           Expanded(

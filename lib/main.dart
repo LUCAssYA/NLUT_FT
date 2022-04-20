@@ -24,7 +24,7 @@ void main() {
       ChangeNotifierProxyProvider<AuthProvider, ScheduleProvider>(
           create: (_) => ScheduleProvider(),
           update: (_, auth, schedule) => schedule!.update(auth)),
-      ChangeNotifierProxyProvider<AuthProvider, LectureProvider>(create: (_) => LectureProvider(), update: (_, auth, lecture) => lecture!.update(auth))
+      ChangeNotifierProxyProvider2<AuthProvider, ScheduleProvider, LectureProvider>(create: (_)=>LectureProvider(), update: (_, auth, schedule, lecture) =>lecture!.update(auth, schedule))
     ],
     child: MaterialApp(
         debugShowCheckedModeBanner: false,

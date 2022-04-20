@@ -24,6 +24,8 @@ class RegisterProvider with ChangeNotifier {
         await http.get(Uri.parse(constant.getUniversitiesUrl), headers: header);
     var body = jsonDecode(response.body)['response'];
 
+
+    universities = [];
     body.forEach((element) {
       universities.add(UniversityModel.fromJson(element));
     });
@@ -32,7 +34,10 @@ class RegisterProvider with ChangeNotifier {
   }
 
   String? defaultValidator(text) {
-    if (text == null || text.isEmpty) {
+    if (text == null) {
+      return "*required";
+    }
+    if(text is String && text.isEmpty) {
       return "*required";
     }
     return null;
@@ -56,7 +61,7 @@ class RegisterProvider with ChangeNotifier {
   }
 
   void facultyOnChange(value) {
-    faculty = value;
+    faculty = value.id;
     notifyListeners();
   }
 
@@ -68,6 +73,7 @@ class RegisterProvider with ChangeNotifier {
   }
 
   String? passwordValidator(text) {
+    print(text);
     if (text == null || text.isEmpty)
       return "*required";
     else if (text != password) return "Password does not match";
