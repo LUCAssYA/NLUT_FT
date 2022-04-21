@@ -53,18 +53,28 @@ class ScheduleProvider with ChangeNotifier {
       print(response.body);
   }
 
-  Future<void> getLectures(DateTime start, DateTime end) async {
-    this.start = start;
-    this.end = end;
-    if(currentGroup.endDate.isAfter(end))
-      this.currentDate = start;
+  Future<void> getLectures(DateTime? start, DateTime? end) async {
+    if(start == null && this.start == null)
+      return;
+
+    if(start != null && end != null) {
+      this.start = start;
+      this.end = end;
+    }
+
+    print(this.start);
+    print(this.end);
+
+
+    if(currentGroup.endDate.isAfter(end!))
+      this.currentDate = this.start!;
 
     var response = await http.post(
         Uri.parse(constants.scheduleUrl + "/" + currentGroup.id.toString()),
         headers: header,
         body: jsonEncode({
-          "start": format.yyyyMMdd.format(start).toString(),
-          "end": format.yyyyMMdd.format(end).toString()
+          "start": format.yyyyMMdd.format(this.start!).toString(),
+          "end": format.yyyyMMdd.format(this.end!).toString()
         }));
     if (response.statusCode == 200) {
       checkToken(response);

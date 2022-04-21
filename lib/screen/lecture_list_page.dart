@@ -52,11 +52,15 @@ class SelectFaculty extends StatelessWidget {
               onChange: context.read<LectureProvider>().facultyOnChange,
               label: "Faculty",
               margin: null,
+              value: context.read<LectureProvider>().facultyList.length == 0
+                  ? null
+                  : context.read<LectureProvider>().currentFaculty as Object?,
             )),
           ),
           Expanded(
               child: Container(
                   child: SelectBox(
+                      value: context.read<LectureProvider>().currentCourse,
                       validator: null,
                       items: context.watch<LectureProvider>().courses,
                       onChange: context.read<LectureProvider>().courseOnChange,
@@ -105,30 +109,34 @@ class _LectureList extends State<LectureList> {
                 delegate: SliverChildBuilderDelegate((c, i) {
                   return Container(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                context
-                                    .watch<LectureProvider>()
-                                    .lectureList[i]
-                                    .name,
-                                style: style.lectureText
-                              ),
-                              Text(context
+                          Text(
+                              context
                                   .watch<LectureProvider>()
                                   .lectureList[i]
-                                  .staff,
-                                style: style.staffText,
-                              )
-                            ],
-                          ),
-                          ElevatedButton(onPressed: (){}, child: Text("Add", style: style.buttonTextStyle), style: style.buttonStyle,)
+                                  .name,
+                              style: style.lectureText),
+                          Text(
+                            context
+                                .watch<LectureProvider>()
+                                .lectureList[i]
+                                .staff,
+                            style: style.staffText,
+                          )
                         ],
-                      ));
+                      ),
+                      ElevatedButton(
+                        onPressed: () => context.read<LectureProvider>().addLecture(i, context),
+                        child: Text("Add", style: style.buttonTextStyle),
+                        style: style.buttonStyle,
+                      )
+                    ],
+                  ));
                 },
                     childCount:
                         context.watch<LectureProvider>().lectureList.length),

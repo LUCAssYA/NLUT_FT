@@ -70,12 +70,12 @@ class LectureProvider with ChangeNotifier{
       checkToken(response);
 
       var body = jsonDecode(response.body)['response'];
+      print(body);
       facultyList = [];
       body['facultyList'].forEach((element){
         facultyList.add(SimpleModel.fromJson(element));
       });
-      print(facultyList);
-      currentFaculty = SimpleModel.fromJson(body['userFaculty']);
+      currentFaculty = facultyList[body['idx'] as int];
     }
     else
       print(response.body);
@@ -105,9 +105,10 @@ class LectureProvider with ChangeNotifier{
   }
 
   void facultyOnChange(value) {
-    print(value);
+    print(value.name);
 
     currentFaculty = value;
+    currentCourse = null;
     getTimeTable();
 
   }
@@ -116,6 +117,17 @@ class LectureProvider with ChangeNotifier{
     print(value);
     currentCourse = value;
     getLecture(0);
+  }
+
+  Future<void> addLecture(int idx, BuildContext context) async {
+    var body = {"group": scheduleProvider!.currentGroup.id, "lecture": lectureList[idx].id};
+    var response = await http.post(Uri.parse(constants.scheduleUrl), body: jsonEncode(body), headers: header);
+
+    if(response.statusCode != 200)
+      print(response.body);
+
+    scheduleProvider?.getLectures(null, null);
+    Navigator.pop(context);
   }
 
 }

@@ -101,19 +101,22 @@ class SelectBox extends StatelessWidget {
       this.onChange,
       this.items,
       this.label,
-      this.margin})
+      this.margin,
+      this.value})
       : super(key: key);
   final validator;
   final onChange;
   final items;
   final label;
   final margin;
+  final value;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
       child: DropdownButtonFormField<Object?>(
+        value: value,
         itemHeight: 60,
         validator: (text) => validator(text),
         items: items
