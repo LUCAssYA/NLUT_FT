@@ -62,11 +62,10 @@ class ScheduleProvider with ChangeNotifier {
       this.end = end;
     }
 
-    print(this.start);
-    print(this.end);
 
 
-    if(currentGroup.endDate.isAfter(end!))
+
+    if(currentGroup.endDate.isAfter(this.end!))
       this.currentDate = this.start!;
 
     var response = await http.post(
@@ -86,7 +85,6 @@ class ScheduleProvider with ChangeNotifier {
       });
     } else
       print(response.body);
-
     notifyListeners();
   }
 

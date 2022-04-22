@@ -70,7 +70,6 @@ class LectureProvider with ChangeNotifier{
       checkToken(response);
 
       var body = jsonDecode(response.body)['response'];
-      print(body);
       facultyList = [];
       body['facultyList'].forEach((element){
         facultyList.add(SimpleModel.fromJson(element));
@@ -105,8 +104,6 @@ class LectureProvider with ChangeNotifier{
   }
 
   void facultyOnChange(value) {
-    print(value.name);
-
     currentFaculty = value;
     currentCourse = null;
     getTimeTable();
@@ -114,7 +111,6 @@ class LectureProvider with ChangeNotifier{
   }
 
   void courseOnChange(value) {
-    print(value);
     currentCourse = value;
     getLecture(0);
   }

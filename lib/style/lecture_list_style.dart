@@ -6,3 +6,14 @@ var buttonStyle = ElevatedButton.styleFrom(primary: Colors.black54, onPrimary: C
 var buttonTextStyle = TextStyle(color: Colors.white);
 var lectureText = TextStyle(fontSize: 20);
 var staffText = TextStyle(fontSize: 15);
+var addButtonMargin = EdgeInsets.symmetric(horizontal: 5, vertical: 10);
+var buttonHeight = 45.0;
+var addButtonTextStyle = TextStyle(color: Colors.black, letterSpacing: 1.5, fontSize: 15);
+var addButtonStyle = OutlinedButton.styleFrom(side: BorderSide(
+    width: 3.0,
+    color: Colors.black54,
+    style: BorderStyle.solid
+));
+
+
+

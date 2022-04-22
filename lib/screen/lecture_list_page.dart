@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +31,39 @@ class _LectureListPageState extends State<LectureListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          Container(child: Column(children: [SelectFaculty(), LectureList()])),
+      body: Container(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [SelectFaculty(), Expanded(child: LectureList()), AddCustomLecture()])),
+    );
+  }
+}
+
+class AddCustomLecture extends StatelessWidget {
+  AddCustomLecture({Key? key}) : super(key: key);
+
+  void showAddModal(BuildContext context) {
+    showBottomSheet(context: context, builder: (BuildContext context) {
+      return Container();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: style.addButtonMargin,
+      child: Row(
+        children: [
+          Expanded(
+              child: Container(
+            height: style.buttonHeight,
+            child: OutlinedButton(
+                child: Text("Add by yourself", style: style.addButtonTextStyle),
+                onPressed: () => showAddModal(context),
+                style: style.addButtonStyle),
+          ))
+        ],
+      ),
     );
   }
 }
@@ -131,7 +164,9 @@ class _LectureList extends State<LectureList> {
                         ],
                       ),
                       ElevatedButton(
-                        onPressed: () => context.read<LectureProvider>().addLecture(i, context),
+                        onPressed: () => context
+                            .read<LectureProvider>()
+                            .addLecture(i, context),
                         child: Text("Add", style: style.buttonTextStyle),
                         style: style.buttonStyle,
                       )
