@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +32,11 @@ class _LectureListPageState extends State<LectureListPage> {
       body: Container(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [SelectFaculty(), Expanded(child: LectureList()), AddCustomLecture()])),
+              children: [
+            SelectFaculty(),
+            Expanded(child: LectureList()),
+            AddCustomLecture()
+          ])),
     );
   }
 }
@@ -43,9 +45,44 @@ class AddCustomLecture extends StatelessWidget {
   AddCustomLecture({Key? key}) : super(key: key);
 
   void showAddModal(BuildContext context) {
-    showBottomSheet(context: context, builder: (BuildContext context) {
-      return Container();
-    });
+    showModalBottomSheet(
+        shape: style.modalShape,
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+              padding: style.modalPadding,
+              height: style.modalHeight(context),
+              child: Form(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            decoration: InputDecoration(
+                                labelText: "Lecture",
+                                border: OutlineInputBorder()),
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                                labelText: "Staff",
+                                border: OutlineInputBorder()),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        OutlinedButton(onPressed: () {}, child: Text("Cancel")),
+                        OutlinedButton(onPressed: () {}, child: Text("OK"))
+                      ],
+                    )
+                  ],
+                ),
+              ));
+        });
   }
 
   @override

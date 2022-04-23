@@ -16,4 +16,15 @@ var addButtonStyle = OutlinedButton.styleFrom(side: BorderSide(
 ));
 
 
+var modalHeight = (context) => MediaQuery.of(context).size.height*0.5;
 
+
+
+var modalShape = RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      top: Radius.circular(25.0),
+      bottom: Radius.circular(25.0),
+    )
+);
+
+var modalPadding =EdgeInsets.all(20);
