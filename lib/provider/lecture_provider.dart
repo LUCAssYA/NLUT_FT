@@ -5,6 +5,7 @@ import 'package:urooster/model/lecture_list_model.dart';
 import 'package:urooster/model/simple_model.dart';
 import 'package:urooster/provider/auth_provider.dart';
 import 'package:urooster/provider/schedule_provider.dart';
+import 'package:urooster/screen/lecture_list_page.dart';
 import 'package:urooster/utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 
@@ -14,6 +15,9 @@ class LectureProvider with ChangeNotifier{
   List<SimpleModel> facultyList = [];
   List<SimpleModel> courses = [];
   SimpleModel? currentCourse;
+  List<Map> controllerList = [];
+  List<TimeAndPlace> widgets = [];
+
 
   int tempIndex = 0;
   AuthProvider? auth;

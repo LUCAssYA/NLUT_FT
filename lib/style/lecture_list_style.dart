@@ -15,6 +15,11 @@ var addButtonStyle = OutlinedButton.styleFrom(side: BorderSide(
     style: BorderStyle.solid
 ));
 
+var defaultColor = Colors.black54;
+var colorBlack = Colors.black;
+
+var defaultTextStyle = TextStyle(color: Colors.black87);
+var addTimeAndPlace = TextStyle(color:Colors.deepOrange);
 
 var modalHeight = (context) => MediaQuery.of(context).size.height*0.5;
 
@@ -28,3 +33,4 @@ var modalShape = RoundedRectangleBorder(
 );
 
 var modalPadding =EdgeInsets.all(20);
+var textFieldMargin = EdgeInsets.fromLTRB(0, 5, 0, 5);

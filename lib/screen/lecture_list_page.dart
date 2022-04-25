@@ -41,6 +41,63 @@ class _LectureListPageState extends State<LectureListPage> {
   }
 }
 
+class CustomModal extends StatelessWidget {
+  const CustomModal({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: style.modalPadding,
+        height: style.modalHeight(context),
+        child: Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomTextFormField(
+                      label: "Lecture",
+                      controller: null,
+                      margin: style.textFieldMargin,
+                      obscure: false,
+                      suggestion: true,
+                      autoCorrect: true,
+                    ),
+                    CustomTextFormField(
+                      label: "Staff",
+                      controller: null,
+                      margin: style.textFieldMargin,
+                      obscure: false,
+                      suggestion: true,
+                      autoCorrect: true,
+                    ),
+                    TextButton(
+                        onPressed: () {},
+                        child: Text("Add Time And Place", style: style.addTimeAndPlace))
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                      child: TextButton(
+                          onPressed: () {}, child: Text("Cancel", style: style.defaultTextStyle,))),
+                  Expanded(
+                      child:
+                      TextButton(onPressed: () {}, child: Text("OK", style: style.defaultTextStyle)))
+                ],
+              )
+            ],
+          ),
+        ));
+  }
+}
+
+
 class AddCustomLecture extends StatelessWidget {
   AddCustomLecture({Key? key}) : super(key: key);
 
@@ -49,39 +106,7 @@ class AddCustomLecture extends StatelessWidget {
         shape: style.modalShape,
         context: context,
         builder: (BuildContext context) {
-          return Container(
-              padding: style.modalPadding,
-              height: style.modalHeight(context),
-              child: Form(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            decoration: InputDecoration(
-                                labelText: "Lecture",
-                                border: OutlineInputBorder()),
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                                labelText: "Staff",
-                                border: OutlineInputBorder()),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        OutlinedButton(onPressed: () {}, child: Text("Cancel")),
-                        OutlinedButton(onPressed: () {}, child: Text("OK"))
-                      ],
-                    )
-                  ],
-                ),
-              ));
+          return CustomModal();
         });
   }
 
@@ -104,6 +129,22 @@ class AddCustomLecture extends StatelessWidget {
     );
   }
 }
+
+class TimeAndPlace extends StatelessWidget {
+  const TimeAndPlace({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+
+        ],
+      ),
+    );
+  }
+}
+
 
 class SelectFaculty extends StatelessWidget {
   SelectFaculty({Key? key}) : super(key: key);
@@ -143,6 +184,7 @@ class SelectFaculty extends StatelessWidget {
     );
   }
 }
+
 
 class LectureList extends StatefulWidget {
   LectureList({Key? key}) : super(key: key);
