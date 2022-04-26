@@ -93,8 +93,6 @@ class TodaySchedule extends StatelessWidget {
 
   final schedule;
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -170,10 +168,8 @@ class Friend extends StatelessWidget {
 
 class FriendList extends StatelessWidget {
   FriendList({Key? key}) : super(key: key);
-  
 
   void addFriend(BuildContext context) {
-
     final controller = TextEditingController();
 
     showDialog(
@@ -195,7 +191,11 @@ class FriendList extends StatelessWidget {
               TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: Text("Cancel")),
-              TextButton(onPressed: () => context.read<HomeProvider>().addFriend(context, controller.text), child: Text("OK"))
+              TextButton(
+                  onPressed: () => context
+                      .read<HomeProvider>()
+                      .addFriend(context, controller.text),
+                  child: Text("OK"))
             ],
           );
         });
@@ -222,7 +222,7 @@ class FriendList extends StatelessWidget {
                   height: 16,
                   child: IconButton(
                       padding: EdgeInsets.all(0),
-                      onPressed: () =>addFriend(context),
+                      onPressed: () => addFriend(context),
                       icon: Icon(
                         Icons.add,
                         size: 16,

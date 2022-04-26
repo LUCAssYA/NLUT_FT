@@ -41,74 +41,100 @@ class _LectureListPageState extends State<LectureListPage> {
   }
 }
 
-class CustomModal extends StatelessWidget {
-  const CustomModal({Key? key}) : super(key: key);
+class CustomLectureAdd extends StatelessWidget {
+  CustomLectureAdd({Key? key}) : super(key: key);
+
+  final scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: style.modalPadding,
-        height: style.modalHeight(context),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomTextFormField(
-                      label: "Lecture",
-                      controller: null,
-                      margin: style.textFieldMargin,
-                      obscure: false,
-                      suggestion: true,
-                      autoCorrect: true,
-                    ),
-                    CustomTextFormField(
-                      label: "Staff",
-                      controller: null,
-                      margin: style.textFieldMargin,
-                      obscure: false,
-                      suggestion: true,
-                      autoCorrect: true,
-                    ),
-                    TextButton(
-                        onPressed: () {},
-                        child: Text("Add Time And Place", style: style.addTimeAndPlace))
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Scaffold(
+        appBar: customAppBar(context),
+        body: Container(
+            padding: style.modalPadding,
+            child: Form(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                      child: TextButton(
-                          onPressed: () {}, child: Text("Cancel", style: style.defaultTextStyle,))),
-                  Expanded(
-                      child:
-                      TextButton(onPressed: () {}, child: Text("OK", style: style.defaultTextStyle)))
+                      flex: 20,
+                      child: Container(
+                        alignment: Alignment.topRight,
+                        child: CustomScrollView(
+                          controller: scrollController,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: CustomTextFormField(
+                                label: "Lecture",
+                                controller: null,
+                                margin: style.textFieldMargin,
+                                obscure: false,
+                                suggestion: true,
+                                autoCorrect: true,
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: CustomTextFormField(
+                                label: "Staff",
+                                controller: null,
+                                margin: style.textFieldMargin,
+                                obscure: false,
+                                suggestion: true,
+                                autoCorrect: true,
+                              ),
+                            ),
+                            SliverFixedExtentList(
+                                delegate: SliverChildBuilderDelegate((c, i) {
+                                  return context
+                                      .watch<LectureProvider>()
+                                      .widgets[i];
+                                },
+                                    childCount: context
+                                        .watch<LectureProvider>()
+                                        .widgets
+                                        .length),
+                                itemExtent:
+                                    MediaQuery.of(context).size.height / 5),
+                            SliverToBoxAdapter(
+                                child: Container(
+                              alignment: Alignment.topRight,
+                              child: TextButton(
+                                  onPressed: () => context
+                                      .read<LectureProvider>()
+                                      .onClickAddAndTime(),
+                                  child: Text("Add Time And Place",
+                                      style: style.addTimeAndPlace)),
+                            ))
+                          ],
+                        ),
+                      )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                          child: TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Cancel",
+                                style: style.defaultTextStyle,
+                              ))),
+                      Expanded(
+                          child: TextButton(
+                              onPressed: () {},
+                              child: Text("OK", style: style.defaultTextStyle)))
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+            )));
   }
 }
 
-
 class AddCustomLecture extends StatelessWidget {
   AddCustomLecture({Key? key}) : super(key: key);
-
-  void showAddModal(BuildContext context) {
-    showModalBottomSheet(
-        shape: style.modalShape,
-        context: context,
-        builder: (BuildContext context) {
-          return CustomModal();
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,12 +144,15 @@ class AddCustomLecture extends StatelessWidget {
         children: [
           Expanded(
               child: Container(
-            height: style.buttonHeight,
-            child: OutlinedButton(
-                child: Text("Add by yourself", style: style.addButtonTextStyle),
-                onPressed: () => showAddModal(context),
-                style: style.addButtonStyle),
-          ))
+                  height: style.buttonHeight,
+                  child: OutlinedButton(
+                      child: Text("Add by yourself",
+                          style: style.addButtonTextStyle),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CustomLectureAdd())),
+                      style: style.addButtonStyle))),
         ],
       ),
     );
@@ -131,20 +160,44 @@ class AddCustomLecture extends StatelessWidget {
 }
 
 class TimeAndPlace extends StatelessWidget {
-  const TimeAndPlace({Key? key}) : super(key: key);
+  TimeAndPlace({Key? key}) : super(key: key);
+
+  bool checked = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: style.timeAndPlaceMargin,
+      decoration: style.containerDecoration(),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextFieldWithCalender(
+                  label: "Date",
+                ),
+                Container(
+                    width: style.checkBoxWidth(context),
+                    child: CheckboxListTile(
+                        controlAffinity: ListTileControlAffinity.leading,
+                        title: Text("Every week"),
+                        value: checked,
+                        onChanged: (bool? value) {
+                          checked = value!;
+                        }))
+              ]),
+          Row(
+            children: [
+            ],
+          )
         ],
       ),
     );
   }
 }
-
 
 class SelectFaculty extends StatelessWidget {
   SelectFaculty({Key? key}) : super(key: key);
@@ -184,7 +237,6 @@ class SelectFaculty extends StatelessWidget {
     );
   }
 }
-
 
 class LectureList extends StatefulWidget {
   LectureList({Key? key}) : super(key: key);

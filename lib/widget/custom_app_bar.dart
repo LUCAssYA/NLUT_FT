@@ -10,7 +10,7 @@ PreferredSizeWidget customAppBar(BuildContext context) {
       automaticallyImplyLeading: false,
       actions: [
         IconButton(
-            onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
+            onPressed: () => Navigator.pop(context), icon: Icon(Icons.close, color: style.appBarIconColor,)),
       ]);
 }
 

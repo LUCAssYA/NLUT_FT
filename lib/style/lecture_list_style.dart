@@ -21,7 +21,7 @@ var colorBlack = Colors.black;
 var defaultTextStyle = TextStyle(color: Colors.black87);
 var addTimeAndPlace = TextStyle(color:Colors.deepOrange);
 
-var modalHeight = (context) => MediaQuery.of(context).size.height*0.5;
+var modalHeight = (context) => MediaQuery.of(context).size.height*0.7;
 
 
 
@@ -34,3 +34,17 @@ var modalShape = RoundedRectangleBorder(
 
 var modalPadding =EdgeInsets.all(20);
 var textFieldMargin = EdgeInsets.fromLTRB(0, 5, 0, 5);
+var labelHeight = 35.0;
+var timeAndPlaceMargin = EdgeInsets.symmetric(vertical: 5);
+
+BoxDecoration containerDecoration() {
+  return BoxDecoration(
+      border: Border.all(
+        width: 0.5,
+        color: Colors.black54,
+      ),
+      borderRadius: BorderRadius.circular(10)
+  );
+}
+
+var checkBoxWidth = (context) => MediaQuery.of(context).size.width*0.33;

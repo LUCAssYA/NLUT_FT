@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:urooster/model/university_model.dart';
+import 'package:urooster/style/widget_style.dart' as style;
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField(
@@ -187,11 +188,51 @@ class EmailTextField extends StatelessWidget {
                 child: ElevatedButton(
                     style: buttonTheme,
                     onPressed: buttonOnPress,
-                    child: Text("Get Code", style: buttonTextStyle,)),
+                    child: Text(
+                      "Get Code",
+                      style: buttonTextStyle,
+                    )),
               ))
         ],
       ),
       margin: margin,
+    );
+  }
+}
+
+class TextFieldWithCalender extends StatelessWidget {
+  TextFieldWithCalender(
+      {Key? key, this.checked, this.controller, this.validator, this.label})
+      : super(key: key);
+
+  final controller;
+  final validator;
+  final label;
+  late final checked;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: style.calendarWidth(context),
+      margin: style.calendarMargin,
+      child: Row(
+        children: [
+          Expanded(
+              child: TextFormField(
+            controller: controller,
+            validator: (text) => validator(text),
+            decoration:
+                InputDecoration(labelText: label, border: OutlineInputBorder()),
+            readOnly: true,
+            onTap: () {
+              print("tap");
+            },
+          )),
+          Container(
+              margin: style.iconMargin,
+              child: Icon(Icons.calendar_today_outlined)),
+        ],
+      ),
     );
   }
 }

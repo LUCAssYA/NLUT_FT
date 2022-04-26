@@ -59,6 +59,11 @@ class LectureProvider with ChangeNotifier{
 
   }
 
+  void onClickAddAndTime() {
+    widgets.add(TimeAndPlace());
+    notifyListeners();
+  }
+
   void checkToken(http.Response response) {
     String? token = response.headers[constants.tokenHeaderName];
 
