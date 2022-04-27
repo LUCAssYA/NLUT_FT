@@ -48,3 +48,5 @@ BoxDecoration containerDecoration() {
 }
 
 var checkBoxWidth = (context) => MediaQuery.of(context).size.width*0.33;
+var disabeldTextBox = EdgeInsets.symmetric(horizontal: 10, vertical: 10);
+var locationMargin = EdgeInsets.symmetric(horizontal: 10);

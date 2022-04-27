@@ -236,3 +236,35 @@ class TextFieldWithCalender extends StatelessWidget {
     );
   }
 }
+
+class DisabledTextBox extends StatelessWidget {
+  DisabledTextBox(
+      {Key? key,
+      this.width,
+      this.margin,
+      this.controller,
+      this.label,
+      this.onTap})
+      : super(key: key);
+
+  final width;
+  final margin;
+  final controller;
+  final label;
+  final onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Container(
+      margin: margin,
+      child: TextFormField(
+        controller: controller,
+        decoration:
+            InputDecoration(labelText: label, border: OutlineInputBorder()),
+        readOnly: true,
+        onTap: () => onTap(),
+      ),
+    ));
+  }
+}

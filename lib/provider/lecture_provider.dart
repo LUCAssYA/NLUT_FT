@@ -16,12 +16,19 @@ class LectureProvider with ChangeNotifier{
   List<SimpleModel> courses = [];
   SimpleModel? currentCourse;
   List<Map> controllerList = [];
-  List<TimeAndPlace> widgets = [];
+  Map<int, TimeAndPlace> widgets = {};
+
+  Map<int, Map<String, dynamic>> values = {};
 
 
   int tempIndex = 0;
   AuthProvider? auth;
   ScheduleProvider? scheduleProvider;
+
+  String? customLectureName;
+  String? customLectureLocation;
+
+  int customIndex = 0;
 
   var header = {"content-type": "application/json"};
 
@@ -60,7 +67,8 @@ class LectureProvider with ChangeNotifier{
   }
 
   void onClickAddAndTime() {
-    widgets.add(TimeAndPlace());
+    widgets[customIndex] = TimeAndPlace(index: customIndex);
+    customIndex++;
     notifyListeners();
   }
 
@@ -133,6 +141,18 @@ class LectureProvider with ChangeNotifier{
 
     scheduleProvider?.getLectures(null, null);
     Navigator.pop(context);
+  }
+
+  void removeWidget(int idx) {
+    widgets.remove(idx);
+    notifyListeners();
+  }
+  void lectureNameChange(value) {
+    customLectureName = value;
+  }
+
+  void lectureLocationChange(value) {
+    customLectureLocation = value;
   }
 
 }

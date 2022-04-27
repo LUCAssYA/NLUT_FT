@@ -45,14 +45,16 @@ class CustomLectureAdd extends StatelessWidget {
   CustomLectureAdd({Key? key}) : super(key: key);
 
   final scrollController = ScrollController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: customAppBar(context),
+        appBar: textWithCloseButton("Add By YourSelf",context),
         body: Container(
             padding: style.modalPadding,
             child: Form(
+              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,14 +92,14 @@ class CustomLectureAdd extends StatelessWidget {
                                 delegate: SliverChildBuilderDelegate((c, i) {
                                   return context
                                       .watch<LectureProvider>()
-                                      .widgets[i];
+                                      .widgets.values.toList()[i];
                                 },
                                     childCount: context
                                         .watch<LectureProvider>()
                                         .widgets
                                         .length),
                                 itemExtent:
-                                    MediaQuery.of(context).size.height / 5),
+                                    MediaQuery.of(context).size.height / 4.5),
                             SliverToBoxAdapter(
                                 child: Container(
                               alignment: Alignment.topRight,
@@ -116,7 +118,7 @@ class CustomLectureAdd extends StatelessWidget {
                     children: [
                       Expanded(
                           child: TextButton(
-                              onPressed: () {},
+                              onPressed: () => Navigator.pop(context),
                               child: Text(
                                 "Cancel",
                                 style: style.defaultTextStyle,
@@ -159,9 +161,15 @@ class AddCustomLecture extends StatelessWidget {
   }
 }
 
-class TimeAndPlace extends StatelessWidget {
-  TimeAndPlace({Key? key}) : super(key: key);
+class TimeAndPlace extends StatefulWidget {
+  TimeAndPlace({Key? key, this.index}) : super(key: key);
 
+  final index;
+  @override
+  State<TimeAndPlace> createState() => _TimeAndPlaceState();
+}
+
+class _TimeAndPlaceState extends State<TimeAndPlace> {
   bool checked = false;
 
   @override
@@ -173,26 +181,66 @@ class TimeAndPlace extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextFieldWithCalender(
+                DisabledTextBox(
+                  margin: style.disabeldTextBox,
                   label: "Date",
                 ),
-                Container(
-                    width: style.checkBoxWidth(context),
-                    child: CheckboxListTile(
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Text("Every week"),
-                        value: checked,
-                        onChanged: (bool? value) {
-                          checked = value!;
-                        }))
-              ]),
+                DisabledTextBox(
+                  margin: style.disabeldTextBox,
+                  label: "Start",
+                ),
+                Text("~"),
+                DisabledTextBox(
+                  margin: style.disabeldTextBox,
+                  label: "End",
+                ),
+                // Container(
+                //     width: style.checkBoxWidth(context),
+                //     child: CheckboxListTile(
+                //         controlAffinity: ListTileControlAffinity.leading,
+                //         title: Text("Every week"),
+                //         value: checked,
+                //         onChanged: (bool? value) {
+                //           checked = value!;
+                //         })),
+              ]
+          ),
           Row(
             children: [
+              Expanded(child: CustomTextFormField(
+                label: "Location",
+                controller: null,
+                margin: style.locationMargin,
+                obscure: false,
+                suggestion: true,
+                autoCorrect: true,
+              )),
+              Container(
+                  width: style.checkBoxWidth(context),
+                  child: CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: Text("Every week"),
+                      value: checked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          checked = value!;
+                        });
+
+                      })),
+              Container(
+                margin: style.locationMargin,
+                  child: IconButton(onPressed: () => context.read<LectureProvider>().removeWidget(this.widget.index), icon: Icon(Icons.delete)))
             ],
-          )
+          ),
+          // Row(
+          //   children: [
+          //     CustomTextFormField(),
+          //     Icon(Icons.delete)
+          //   ],
+          // )
         ],
       ),
     );
