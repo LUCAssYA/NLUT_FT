@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:urooster/provider/lecture_provider.dart';
+import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/lecture_list_style.dart' as style;
+import 'package:urooster/utils/format.dart' as format;
 
 import '../widget/text_field.dart';
 
@@ -50,7 +54,7 @@ class CustomLectureAdd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: textWithCloseButton("Add By YourSelf",context),
+        appBar: textWithCloseButton("Add By YourSelf", context),
         body: Container(
             padding: style.modalPadding,
             child: Form(
@@ -92,7 +96,9 @@ class CustomLectureAdd extends StatelessWidget {
                                 delegate: SliverChildBuilderDelegate((c, i) {
                                   return context
                                       .watch<LectureProvider>()
-                                      .widgets.values.toList()[i];
+                                      .widgets
+                                      .values
+                                      .toList()[i];
                                 },
                                     childCount: context
                                         .watch<LectureProvider>()
@@ -165,12 +171,68 @@ class TimeAndPlace extends StatefulWidget {
   TimeAndPlace({Key? key, this.index}) : super(key: key);
 
   final index;
+
   @override
   State<TimeAndPlace> createState() => _TimeAndPlaceState();
 }
 
 class _TimeAndPlaceState extends State<TimeAndPlace> {
   bool checked = false;
+  String? dateTime;
+  String? start;
+  String? end;
+  TextEditingController dateController = TextEditingController();
+  TextEditingController startController = TextEditingController();
+  TextEditingController endController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+
+  void dateModal() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            margin: style.dateModalMargin,
+            height: style.dateModalHeight(context),
+            child: Column(
+              children: [
+                Expanded(
+                    child: SfDateRangePicker(
+                  minDate:
+                      context.watch<ScheduleProvider>().currentGroup.startDate,
+                  maxDate:
+                      context.watch<ScheduleProvider>().currentGroup.endDate,
+                  selectionMode: DateRangePickerSelectionMode.single,
+                  onSelectionChanged: (args) {
+                    setState(() {
+                      dateTime = format.yyyyMMdd.format(args.value);
+                      dateController.value =
+                          TextEditingValue(text: dateTime.toString());
+                    });
+                  },
+                )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          setState(() {
+                            dateTime = null;
+                            dateController.value = TextEditingValue.empty;
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Text("Cancel")),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("OK"),
+                    )
+                  ],
+                )
+              ],
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,36 +249,71 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                 DisabledTextBox(
                   margin: style.disabeldTextBox,
                   label: "Date",
+                  onTap: dateModal,
+                  controller: dateController,
+                  onSave: ()=> context.read<LectureProvider>().lectureDetailChange(this.widget.index, "date", dateTime),
                 ),
                 DisabledTextBox(
                   margin: style.disabeldTextBox,
                   label: "Start",
+                  onTap: () {
+                    Future<TimeOfDay?> selectedTime = showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                        initialEntryMode: TimePickerEntryMode.input);
+
+                    selectedTime.then((timeOfDay) {
+                      String minute = timeOfDay!.minute.toString();
+                      if (minute.length < 2) {
+                        minute = "0" + minute;
+                      }
+                      setState(() {
+                        start = '${timeOfDay.hour}:' + minute;
+                        startController.value =
+                            TextEditingValue(text: start.toString());
+                      });
+                    });
+                  },
+                  controller: startController,
+                  onSave: () => context.read<LectureProvider>().lectureDetailChange(this.widget.index, "start", start),
                 ),
                 Text("~"),
                 DisabledTextBox(
                   margin: style.disabeldTextBox,
                   label: "End",
+                  onTap: () {
+                    Future<TimeOfDay?> selectedTime = showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                        initialEntryMode: TimePickerEntryMode.input);
+
+                    selectedTime.then((timeOfDay) {
+                      String minute = timeOfDay!.minute.toString();
+                      if (minute.length < 2) {
+                        minute = "0" + minute;
+                      }
+                      setState(() {
+                        end = '${timeOfDay.hour}:' + minute;
+                        endController.value =
+                            TextEditingValue(text: end.toString());
+                      });
+                    });
+                  },
+                  controller: endController,
+                  onSave: () => context.read<LectureProvider>().lectureDetailChange(this.widget.index, "end", end),
                 ),
-                // Container(
-                //     width: style.checkBoxWidth(context),
-                //     child: CheckboxListTile(
-                //         controlAffinity: ListTileControlAffinity.leading,
-                //         title: Text("Every week"),
-                //         value: checked,
-                //         onChanged: (bool? value) {
-                //           checked = value!;
-                //         })),
-              ]
-          ),
+              ]),
           Row(
             children: [
-              Expanded(child: CustomTextFormField(
+              Expanded(
+                  child: CustomTextFormField(
                 label: "Location",
-                controller: null,
+                controller: locationController,
                 margin: style.locationMargin,
                 obscure: false,
                 suggestion: true,
                 autoCorrect: true,
+                onSave: () => context.read<LectureProvider>().lectureLocationChange(locationController.text),
               )),
               Container(
                   width: style.checkBoxWidth(context),
@@ -228,11 +325,15 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                         setState(() {
                           checked = value!;
                         });
-
+                        context.read<LectureProvider>().changeEveryweek(this.widget.index, value);
                       })),
               Container(
-                margin: style.locationMargin,
-                  child: IconButton(onPressed: () => context.read<LectureProvider>().removeWidget(this.widget.index), icon: Icon(Icons.delete)))
+                  margin: style.locationMargin,
+                  child: IconButton(
+                      onPressed: () => context
+                          .read<LectureProvider>()
+                          .removeWidget(this.widget.index),
+                      icon: Icon(Icons.delete)))
             ],
           ),
           // Row(

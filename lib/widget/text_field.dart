@@ -13,7 +13,8 @@ class CustomTextFormField extends StatelessWidget {
       this.obscure,
       this.suggestion,
       this.autoCorrect,
-      this.onChange})
+      this.onChange,
+      this.onSave})
       : super(key: key);
   final validator;
   final label;
@@ -23,6 +24,7 @@ class CustomTextFormField extends StatelessWidget {
   final suggestion;
   final autoCorrect;
   final onChange;
+  final onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class CustomTextFormField extends StatelessWidget {
         obscureText: obscure,
         enableSuggestions: suggestion,
         autocorrect: autoCorrect,
+        onSaved: (value) => onSave(),
       ),
       margin: margin,
     );
@@ -244,7 +247,8 @@ class DisabledTextBox extends StatelessWidget {
       this.margin,
       this.controller,
       this.label,
-      this.onTap})
+      this.onTap,
+      this.onSave})
       : super(key: key);
 
   final width;
@@ -252,6 +256,7 @@ class DisabledTextBox extends StatelessWidget {
   final controller;
   final label;
   final onTap;
+  final onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -264,6 +269,7 @@ class DisabledTextBox extends StatelessWidget {
             InputDecoration(labelText: label, border: OutlineInputBorder()),
         readOnly: true,
         onTap: () => onTap(),
+        onSaved: (value) => onSave(),
       ),
     ));
   }

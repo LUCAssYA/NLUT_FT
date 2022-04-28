@@ -145,6 +145,7 @@ class LectureProvider with ChangeNotifier{
 
   void removeWidget(int idx) {
     widgets.remove(idx);
+    values.remove(idx);
     notifyListeners();
   }
   void lectureNameChange(value) {
@@ -154,5 +155,17 @@ class LectureProvider with ChangeNotifier{
   void lectureLocationChange(value) {
     customLectureLocation = value;
   }
+
+  void lectureDetailChange(index, name, value) {
+    if(!values.keys.contains(index))
+      values[index] = {};
+    values[index]![name] = value;
+  }
+  void changeEveryweek(index, value) {
+    if(!values.keys.contains(index))
+      values[index] = {};
+    values[index]!["everyWeek"] = value;
+  }
+
 
 }
