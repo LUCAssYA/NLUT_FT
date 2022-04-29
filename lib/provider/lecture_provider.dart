@@ -167,5 +167,17 @@ class LectureProvider with ChangeNotifier{
     values[index]!["everyWeek"] = value;
   }
 
+  Future<void> customSave(GlobalKey<FormState> formKey) async{
+    formKey.currentState!.save();
+    List<Map<String, dynamic>> details = [];
+    List<int> keys = values.keys.toList();
+
+    for(int i : keys)
+
+
+
+
+  }
+
 
 }
