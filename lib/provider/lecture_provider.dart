@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:urooster/model/custom_lecture_model.dart';
 import 'package:urooster/model/lecture_list_model.dart';
 import 'package:urooster/model/simple_model.dart';
 import 'package:urooster/provider/auth_provider.dart';
@@ -26,8 +27,7 @@ class LectureProvider with ChangeNotifier{
   ScheduleProvider? scheduleProvider;
 
   String? customLectureName;
-  String? customLectureLocation;
-
+  String? customLectureStaff;
   int customIndex = 0;
 
   var header = {"content-type": "application/json"};
@@ -152,8 +152,8 @@ class LectureProvider with ChangeNotifier{
     customLectureName = value;
   }
 
-  void lectureLocationChange(value) {
-    customLectureLocation = value;
+  void lectureStaffChange(value) {
+    customLectureStaff =  value;
   }
 
   void lectureDetailChange(index, name, value) {
@@ -167,15 +167,28 @@ class LectureProvider with ChangeNotifier{
     values[index]!["everyWeek"] = value;
   }
 
-  Future<void> customSave(GlobalKey<FormState> formKey) async{
+  Future<void> customSave(GlobalKey<FormState> formKey, BuildContext context) async{
     formKey.currentState!.save();
     List<Map<String, dynamic>> details = [];
     List<int> keys = values.keys.toList();
 
-    for(int i : keys)
+    keys.forEach((element) {
+      details.add(CustomLectureDetail(values[element]!['date'], values[element]!['start'], values[element]!['end'], values[element]!['location'], values[element]!['everyWeek']).toJson());
+    });
+    
+    if(customLectureName == null|| details.length == 0)
+      return;
+    
+    var body = CustomLecture(customLectureName!, customLectureStaff!, details).toJson();
+    
+    var response = await http.post(Uri.parse(constants.lectureUrl+"/custom/"+scheduleProvider!.currentGroup.id.toString()), body: jsonEncode(body), headers: header);
 
+    if(response.statusCode != 200) {
+      print(response.body);
 
-
+    }
+    scheduleProvider?.getLectures(null, null);
+    Navigator.pop(context);
 
   }
 

@@ -22,15 +22,23 @@ class CustomLectureDetail {
   String start;
   String end;
   String location;
+  bool everyWeek;
 
-  CustomLectureDetail(this.date, this.start, this.end, this.location);
+  CustomLectureDetail(
+      this.date, this.start, this.end, this.location, this.everyWeek);
 
   CustomLectureDetail.fromJson(Map<String, dynamic> json)
       : date = json['date'],
         start = json['start'],
         end = json['end'],
-        location = json['location'];
+        location = json['location'],
+        everyWeek = json['everyWeek'];
 
-  Map<String, dynamic> toJson() =>
-      {"date": date, "start": start, "end": end, "location": location};
+  Map<String, dynamic> toJson() => {
+        "date": date,
+        "start": start,
+        "end": end,
+        "location": location,
+        "everyWeek": everyWeek
+      };
 }

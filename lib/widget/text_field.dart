@@ -40,7 +40,7 @@ class CustomTextFormField extends StatelessWidget {
         obscureText: obscure,
         enableSuggestions: suggestion,
         autocorrect: autoCorrect,
-        onSaved: (value) => onSave(),
+        onSaved: (value) => onSave(value),
       ),
       margin: margin,
     );

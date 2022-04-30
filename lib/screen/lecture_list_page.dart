@@ -80,6 +80,7 @@ class CustomLectureAdd extends StatelessWidget {
                                 obscure: false,
                                 suggestion: true,
                                 autoCorrect: true,
+                                onSave: context.read<LectureProvider>().lectureNameChange,
                               ),
                             ),
                             SliverToBoxAdapter(
@@ -90,6 +91,7 @@ class CustomLectureAdd extends StatelessWidget {
                                 obscure: false,
                                 suggestion: true,
                                 autoCorrect: true,
+                                onSave: context.read<LectureProvider>().lectureStaffChange,
                               ),
                             ),
                             SliverFixedExtentList(
@@ -131,7 +133,7 @@ class CustomLectureAdd extends StatelessWidget {
                               ))),
                       Expanded(
                           child: TextButton(
-                              onPressed: () {},
+                              onPressed: ()  => context.read<LectureProvider>().customSave(formKey, context),
                               child: Text("OK", style: style.defaultTextStyle)))
                     ],
                   )
@@ -313,7 +315,7 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                 obscure: false,
                 suggestion: true,
                 autoCorrect: true,
-                onSave: () => context.read<LectureProvider>().lectureLocationChange(locationController.text),
+                onSave: () => context.read<LectureProvider>().lectureDetailChange(this.widget.index, "location", locationController.text),
               )),
               Container(
                   width: style.checkBoxWidth(context),
