@@ -80,7 +80,9 @@ class CustomLectureAdd extends StatelessWidget {
                                 obscure: false,
                                 suggestion: true,
                                 autoCorrect: true,
-                                onSave: context.read<LectureProvider>().lectureNameChange,
+                                onSave: context
+                                    .read<LectureProvider>()
+                                    .lectureNameChange,
                               ),
                             ),
                             SliverToBoxAdapter(
@@ -91,7 +93,9 @@ class CustomLectureAdd extends StatelessWidget {
                                 obscure: false,
                                 suggestion: true,
                                 autoCorrect: true,
-                                onSave: context.read<LectureProvider>().lectureStaffChange,
+                                onSave: context
+                                    .read<LectureProvider>()
+                                    .lectureStaffChange,
                               ),
                             ),
                             SliverFixedExtentList(
@@ -133,7 +137,9 @@ class CustomLectureAdd extends StatelessWidget {
                               ))),
                       Expanded(
                           child: TextButton(
-                              onPressed: ()  => context.read<LectureProvider>().customSave(formKey, context),
+                              onPressed: () => context
+                                  .read<LectureProvider>()
+                                  .customSave(formKey, context),
                               child: Text("OK", style: style.defaultTextStyle)))
                     ],
                   )
@@ -187,6 +193,13 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
   TextEditingController startController = TextEditingController();
   TextEditingController endController = TextEditingController();
   TextEditingController locationController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<LectureProvider>().changeEveryweek(this.widget.index, false);
+  }
 
   void dateModal() {
     showModalBottomSheet(
@@ -253,16 +266,16 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                   label: "Date",
                   onTap: dateModal,
                   controller: dateController,
-                  onSave: ()=> context.read<LectureProvider>().lectureDetailChange(this.widget.index, "date", dateTime),
+                  onSave: () => context
+                      .read<LectureProvider>()
+                      .lectureDetailChange(this.widget.index, "date", dateTime),
                 ),
                 DisabledTextBox(
                   margin: style.disabeldTextBox,
                   label: "Start",
                   onTap: () {
                     Future<TimeOfDay?> selectedTime = showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                        initialEntryMode: TimePickerEntryMode.input);
+                        context: context, initialTime: TimeOfDay.now());
 
                     selectedTime.then((timeOfDay) {
                       String minute = timeOfDay!.minute.toString();
@@ -277,7 +290,9 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                     });
                   },
                   controller: startController,
-                  onSave: () => context.read<LectureProvider>().lectureDetailChange(this.widget.index, "start", start),
+                  onSave: () => context
+                      .read<LectureProvider>()
+                      .lectureDetailChange(this.widget.index, "start", start),
                 ),
                 Text("~"),
                 DisabledTextBox(
@@ -285,9 +300,7 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                   label: "End",
                   onTap: () {
                     Future<TimeOfDay?> selectedTime = showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                        initialEntryMode: TimePickerEntryMode.input);
+                        context: context, initialTime: TimeOfDay.now());
 
                     selectedTime.then((timeOfDay) {
                       String minute = timeOfDay!.minute.toString();
@@ -302,7 +315,9 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                     });
                   },
                   controller: endController,
-                  onSave: () => context.read<LectureProvider>().lectureDetailChange(this.widget.index, "end", end),
+                  onSave: () => context
+                      .read<LectureProvider>()
+                      .lectureDetailChange(this.widget.index, "end", end),
                 ),
               ]),
           Row(
@@ -315,7 +330,9 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                 obscure: false,
                 suggestion: true,
                 autoCorrect: true,
-                onSave: () => context.read<LectureProvider>().lectureDetailChange(this.widget.index, "location", locationController.text),
+                onSave: (value) => context
+                    .read<LectureProvider>()
+                    .lectureDetailChange(this.widget.index, "location", value),
               )),
               Container(
                   width: style.checkBoxWidth(context),
@@ -327,7 +344,9 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                         setState(() {
                           checked = value!;
                         });
-                        context.read<LectureProvider>().changeEveryweek(this.widget.index, value);
+                        context
+                            .read<LectureProvider>()
+                            .changeEveryweek(this.widget.index, value);
                       })),
               Container(
                   margin: style.locationMargin,

@@ -18,7 +18,7 @@ class CustomLecture {
 }
 
 class CustomLectureDetail {
-  DateTime date;
+  String date;
   String start;
   String end;
   String location;

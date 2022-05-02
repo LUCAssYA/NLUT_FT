@@ -100,7 +100,6 @@ class TodaySchedule extends StatelessWidget {
       children: [
         Expanded(
           child: Text(schedule.name),
-          flex: 2,
         ),
         Expanded(
           child: Text(schedule.startTime +
@@ -108,8 +107,7 @@ class TodaySchedule extends StatelessWidget {
               schedule.endTime +
               "(" +
               schedule.location +
-              ")"),
-          flex: 1,
+              ")", textAlign: TextAlign.end,),
         )
       ],
     ));

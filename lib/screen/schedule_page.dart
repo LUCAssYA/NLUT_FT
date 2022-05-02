@@ -81,6 +81,8 @@ class _SchedulePageState extends State<SchedulePage> {
         });
       });
     }
+    else
+      print(context.read<ScheduleProvider>().currentGroup.toJson());
   }
 
   void showSetting() {
@@ -168,8 +170,8 @@ class _CalendarState extends State<Calendar> {
           ),
           appointmentTextStyle: style.appointmentTextStyle,
           showDatePickerButton: true,
-          minDate: widget.start,
-          maxDate: widget.end,
+          minDate: context.watch<ScheduleProvider>().currentGroup.startDate,
+          maxDate: context.watch<ScheduleProvider>().currentGroup.endDate,
           showCurrentTimeIndicator: false,
           onViewChanged: (ViewChangedDetails details) {
             context.read<ScheduleProvider>().getLectures(

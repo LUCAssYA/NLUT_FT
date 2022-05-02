@@ -6,9 +6,9 @@ class ScheduleModel {
   DateTime start;
   DateTime end;
   Color color;
-  String staff;
-  String location;
-  String note;
+  String? staff;
+  String? location;
+  String? note;
   bool dday;
 
   ScheduleModel(this.id, this.name, this.start, this.end, this.color,

@@ -10,7 +10,7 @@ import 'package:urooster/screen/lecture_list_page.dart';
 import 'package:urooster/utils/constants.dart' as constants;
 import 'package:http/http.dart' as http;
 
-class LectureProvider with ChangeNotifier{
+class LectureProvider with ChangeNotifier {
   List<LectureListModel> lectureList = [];
   SimpleModel? currentFaculty;
   List<SimpleModel> facultyList = [];
@@ -20,7 +20,6 @@ class LectureProvider with ChangeNotifier{
   Map<int, TimeAndPlace> widgets = {};
 
   Map<int, Map<String, dynamic>> values = {};
-
 
   int tempIndex = 0;
   AuthProvider? auth;
@@ -42,28 +41,35 @@ class LectureProvider with ChangeNotifier{
     return this;
   }
 
-  Future<void> getLecture(int i) async{
+  Future<void> getLecture(int i) async {
     tempIndex = i;
 
-    var body = {"timetable": currentCourse?.id, "year": scheduleProvider?.currentGroup.year, "semester": scheduleProvider?.currentGroup.semester};
+    var body = {
+      "timetable": currentCourse?.id,
+      "year": scheduleProvider?.currentGroup.year,
+      "semester": scheduleProvider?.currentGroup.semester
+    };
 
-    var response = await http.post(Uri.parse(constants.lectureUrl+"/list?page="+tempIndex.toString()+"&size=20"), headers: header, body: jsonEncode(body));
+    var response = await http.post(
+        Uri.parse(constants.lectureUrl +
+            "/list?page=" +
+            tempIndex.toString() +
+            "&size=20"),
+        headers: header,
+        body: jsonEncode(body));
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       checkToken(response);
 
       lectureList = [];
 
-      jsonDecode(response.body)['response'].forEach((element){
+      jsonDecode(response.body)['response'].forEach((element) {
         lectureList.add(LectureListModel.fromJson(element));
       });
-    }
-    else
+    } else
       print(response.body);
 
     notifyListeners();
-
-
   }
 
   void onClickAddAndTime() {
@@ -80,41 +86,40 @@ class LectureProvider with ChangeNotifier{
     }
   }
 
-  Future<void> getFaculty() async{
-    var response = await http.get(Uri.parse(constants.getUniversitiesUrl+"/faculty"), headers: header);
+  Future<void> getFaculty() async {
+    var response = await http.get(
+        Uri.parse(constants.getUniversitiesUrl + "/faculty"),
+        headers: header);
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       checkToken(response);
 
       var body = jsonDecode(response.body)['response'];
       facultyList = [];
-      body['facultyList'].forEach((element){
+      body['facultyList'].forEach((element) {
         facultyList.add(SimpleModel.fromJson(element));
       });
       currentFaculty = facultyList[body['idx'] as int];
-    }
-    else
+    } else
       print(response.body);
     notifyListeners();
   }
 
   Future<void> getTimeTable() async {
+    if (currentFaculty == {}) return;
 
-    if(currentFaculty == {})
-      return;
+    var response = await http.get(
+        Uri.parse(constants.timeTableUrl + "/" + currentFaculty!.id.toString()),
+        headers: header);
 
-    var response = await http.get(Uri.parse(constants.timeTableUrl+"/"+currentFaculty!.id.toString()), headers: header);
-
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       checkToken(response);
 
       courses = [];
-      jsonDecode(response.body)['response'].forEach((element){
+      jsonDecode(response.body)['response'].forEach((element) {
         courses.add(SimpleModel.fromJson(element));
       });
-
-    }
-    else
+    } else
       print(response);
 
     notifyListeners();
@@ -124,7 +129,6 @@ class LectureProvider with ChangeNotifier{
     currentFaculty = value;
     currentCourse = null;
     getTimeTable();
-
   }
 
   void courseOnChange(value) {
@@ -133,11 +137,14 @@ class LectureProvider with ChangeNotifier{
   }
 
   Future<void> addLecture(int idx, BuildContext context) async {
-    var body = {"group": scheduleProvider!.currentGroup.id, "lecture": lectureList[idx].id};
-    var response = await http.post(Uri.parse(constants.scheduleUrl), body: jsonEncode(body), headers: header);
+    var body = {
+      "group": scheduleProvider!.currentGroup.id,
+      "lecture": lectureList[idx].id
+    };
+    var response = await http.post(Uri.parse(constants.scheduleUrl),
+        body: jsonEncode(body), headers: header);
 
-    if(response.statusCode != 200)
-      print(response.body);
+    if (response.statusCode != 200) print(response.body);
 
     scheduleProvider?.getLectures(null, null);
     Navigator.pop(context);
@@ -148,49 +155,64 @@ class LectureProvider with ChangeNotifier{
     values.remove(idx);
     notifyListeners();
   }
+
   void lectureNameChange(value) {
     customLectureName = value;
   }
 
   void lectureStaffChange(value) {
-    customLectureStaff =  value;
+    customLectureStaff = value;
   }
 
   void lectureDetailChange(index, name, value) {
-    if(!values.keys.contains(index))
-      values[index] = {};
+    if (!values.keys.contains(index)) values[index] = {};
     values[index]![name] = value;
   }
+
   void changeEveryweek(index, value) {
-    if(!values.keys.contains(index))
-      values[index] = {};
+    if (!values.keys.contains(index)) values[index] = {};
     values[index]!["everyWeek"] = value;
   }
 
-  Future<void> customSave(GlobalKey<FormState> formKey, BuildContext context) async{
+  Future<void> customSave(
+      GlobalKey<FormState> formKey, BuildContext context) async {
     formKey.currentState!.save();
     List<Map<String, dynamic>> details = [];
     List<int> keys = values.keys.toList();
 
+
     keys.forEach((element) {
-      details.add(CustomLectureDetail(values[element]!['date'], values[element]!['start'], values[element]!['end'], values[element]!['location'], values[element]!['everyWeek']).toJson());
+      details.add(CustomLectureDetail(
+              values[element]!['date'],
+              values[element]!['start'],
+              values[element]!['end'],
+              values[element]!['location'],
+              values[element]!['everyWeek'])
+          .toJson());
     });
-    
-    if(customLectureName == null|| details.length == 0)
-      return;
-    
-    var body = CustomLecture(customLectureName!, customLectureStaff!, details).toJson();
-    
-    var response = await http.post(Uri.parse(constants.lectureUrl+"/custom/"+scheduleProvider!.currentGroup.id.toString()), body: jsonEncode(body), headers: header);
 
-    if(response.statusCode != 200) {
+    if (customLectureName == null || details.length == 0) return;
+
+    var body = CustomLecture(customLectureName!, customLectureStaff!, details)
+        .toJson();
+    print(body);
+
+    var response = await http.post(
+        Uri.parse(constants.lectureUrl +
+            "/custom/" +
+            scheduleProvider!.currentGroup.id.toString()),
+        body: jsonEncode(body),
+        headers: header);
+
+    if (response.statusCode != 200) {
       print(response.body);
-
     }
-    scheduleProvider?.getLectures(null, null);
+    print("aa");
     Navigator.pop(context);
+    Navigator.pop(context);
+    scheduleProvider?.getLectures(null, null);
+    widgets = {};
+    values = {};
 
   }
-
-
 }
