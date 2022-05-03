@@ -54,18 +54,19 @@ class LectureProvider with ChangeNotifier {
         Uri.parse(constants.lectureUrl +
             "/list?page=" +
             tempIndex.toString() +
-            "&size=20"),
+            "&size=9"),
         headers: header,
         body: jsonEncode(body));
 
     if (response.statusCode == 200) {
       checkToken(response);
 
-      lectureList = [];
+      if (jsonDecode(response.body)['response'].length != 0) {
 
-      jsonDecode(response.body)['response'].forEach((element) {
-        lectureList.add(LectureListModel.fromJson(element));
-      });
+        jsonDecode(response.body)['response'].forEach((element) {
+          lectureList.add(LectureListModel.fromJson(element));
+        });
+      }
     } else
       print(response.body);
 
@@ -87,13 +88,14 @@ class LectureProvider with ChangeNotifier {
   }
 
   Future<void> getFaculty() async {
+
     var response = await http.get(
         Uri.parse(constants.getUniversitiesUrl + "/faculty"),
         headers: header);
 
     if (response.statusCode == 200) {
       checkToken(response);
-
+      lectureList = [];
       var body = jsonDecode(response.body)['response'];
       facultyList = [];
       body['facultyList'].forEach((element) {
@@ -126,12 +128,14 @@ class LectureProvider with ChangeNotifier {
   }
 
   void facultyOnChange(value) {
+    lectureList = [];
     currentFaculty = value;
     currentCourse = null;
     getTimeTable();
   }
 
   void courseOnChange(value) {
+    lectureList = [];
     currentCourse = value;
     getLecture(0);
   }
@@ -180,7 +184,6 @@ class LectureProvider with ChangeNotifier {
     List<Map<String, dynamic>> details = [];
     List<int> keys = values.keys.toList();
 
-
     keys.forEach((element) {
       details.add(CustomLectureDetail(
               values[element]!['date'],
@@ -213,6 +216,5 @@ class LectureProvider with ChangeNotifier {
     scheduleProvider?.getLectures(null, null);
     widgets = {};
     values = {};
-
   }
 }

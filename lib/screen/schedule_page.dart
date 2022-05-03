@@ -213,9 +213,13 @@ class _BottomModalState extends State<BottomModal> {
 
   @override
   Widget build(BuildContext context) {
-    String date = format.ddMMMMyyyy.format(widget.schedule.start);
-    String start = format.hhmm.format(widget.schedule.start);
-    String end = format.hhmm.format(widget.schedule.end);
+    String date = widget.schedule.start!= null?format.ddMMMMyyyy.format(widget.schedule.start):"";
+    String start = widget.schedule.start!=null?format.hhmm.format(widget.schedule.start):"";
+    String end = widget.schedule.start!=null?format.hhmm.format(widget.schedule.end):"";
+    String note = widget.schedule.note??"";
+    String staff = widget.schedule.staff??"";
+
+    print(widget.schedule.toJson());
     return Container(
       height: style.modalHeight(context),
       padding: style.modalContainerPadding,
@@ -241,12 +245,12 @@ class _BottomModalState extends State<BottomModal> {
           )),
           Expanded(
               child: Text(
-            widget.schedule.staff,
+            staff,
             style: style.modalItemTextStyle,
           )),
           Expanded(
               child:
-                  Text(widget.schedule.note, style: style.modalItemTextStyle)),
+                  Text(note, style: style.modalItemTextStyle)),
           Expanded(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.start,

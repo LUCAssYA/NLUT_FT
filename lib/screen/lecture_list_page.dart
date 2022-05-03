@@ -426,6 +426,7 @@ class _LectureList extends State<LectureList> {
       if (scrollController.position.maxScrollExtent ==
           scrollController.position.pixels) {
         print("max");
+        context.read<LectureProvider>().getLecture(context.read<LectureProvider>().tempIndex+1);
       }
     });
   }
