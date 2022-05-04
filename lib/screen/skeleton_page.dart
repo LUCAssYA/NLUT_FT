@@ -2,6 +2,7 @@ import 'dart:js';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:urooster/screen/eval_page.dart';
 import 'package:urooster/screen/main_page.dart';
 import 'package:urooster/screen/schedule_page.dart';
 import 'package:urooster/style/widget_style.dart' as style;
@@ -17,7 +18,7 @@ class _SkeletonPageState extends State<SkeletonPage> {
   final List pages = [
     MainPage(),
     SchedulePage(),
-    Text("Evaluation"),
+    EvalPage(),
     Text("Notification")
   ];
   int index = 0;

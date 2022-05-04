@@ -10,7 +10,7 @@ import 'package:urooster/screen/group_list_page.dart';
 import 'package:urooster/screen/main_page.dart';
 import 'package:urooster/screen/register_page.dart';
 import 'package:urooster/screen/signin_page.dart';
-import 'package:urooster/style/skeleton_page.dart';
+import 'package:urooster/screen/skeleton_page.dart';
 
 void main() {
   runApp(MultiProvider(
