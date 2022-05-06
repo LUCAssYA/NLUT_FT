@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:urooster/provider/eval_provider.dart';
+import 'package:urooster/provider/lecture_provider.dart';
 import 'package:urooster/widget/text_field.dart';
 import 'package:urooster/style/eval_style.dart' as style;
 
@@ -44,9 +47,26 @@ class EvalSearch extends StatelessWidget {
   }
 }
 
-class LectureList extends StatelessWidget {
+class LectureList extends StatefulWidget {
   const LectureList({Key? key}) : super(key: key);
 
+  @override
+  State<LectureList> createState() => _LectureListState();
+}
+
+class _LectureListState extends State<LectureList> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    scrollController.addListener(() {
+      if(scrollController.position.maxScrollExtent == scrollController.position.pixels) {
+        context.read<EvalProvider>().findLecture(null, context.read<EvalProvider>().idx+1);
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Container(

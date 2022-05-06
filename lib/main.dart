@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/auth_provider.dart';
+import 'package:urooster/provider/eval_provider.dart';
 import 'package:urooster/provider/home_provider.dart';
 import 'package:urooster/provider/lecture_provider.dart';
 import 'package:urooster/provider/register_provider.dart';
@@ -24,7 +25,11 @@ void main() {
       ChangeNotifierProxyProvider<AuthProvider, ScheduleProvider>(
           create: (_) => ScheduleProvider(),
           update: (_, auth, schedule) => schedule!.update(auth)),
-      ChangeNotifierProxyProvider2<AuthProvider, ScheduleProvider, LectureProvider>(create: (_)=>LectureProvider(), update: (_, auth, schedule, lecture) =>lecture!.update(auth, schedule))
+      ChangeNotifierProxyProvider2<AuthProvider, ScheduleProvider, LectureProvider>(create: (_)=>LectureProvider(), update: (_, auth, schedule, lecture) =>lecture!.update(auth, schedule)),
+      ChangeNotifierProxyProvider<AuthProvider, EvalProvider>(
+        create: (_) => EvalProvider(),
+        update: (_, auth, eval) => eval!.update(auth)
+      )
     ],
     child: MaterialApp(
         debugShowCheckedModeBanner: false,
