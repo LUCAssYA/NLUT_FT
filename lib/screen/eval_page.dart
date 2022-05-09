@@ -25,7 +25,9 @@ class EvalPage extends StatelessWidget {
 }
 
 class EvalSearch extends StatelessWidget {
-  const EvalSearch({Key? key}) : super(key: key);
+  EvalSearch({Key? key}) : super(key: key);
+
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +36,16 @@ class EvalSearch extends StatelessWidget {
         children: [
           Expanded(child: CustomTextFormField(
             label: "Lecture or Staff",
-            controller: null,
+            controller: controller,
             obscure: false,
             suggestion: true,
             autoCorrect: true,
             onSave: () {},
           )),
-          IconButton(onPressed: (){}, icon: Icon(Icons.search))
+          IconButton(onPressed: (){
+            if(controller.text != null)
+              context.read<EvalProvider>().findLecture(controller.text, 0);
+          }, icon: Icon(Icons.search))
         ],
       ),
     );
