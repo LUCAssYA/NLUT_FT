@@ -33,6 +33,8 @@ class EvalProvider with ChangeNotifier {
     if(response.statusCode == 200 ){
       lectureList.add(LectureListModel.fromJson(jsonDecode(response.body)['response']));
     }
+    else
+      print(response.body);
 
     notifyListeners();
   }

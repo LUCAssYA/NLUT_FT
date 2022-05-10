@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/eval_provider.dart';
 import 'package:urooster/provider/lecture_provider.dart';
@@ -78,7 +79,19 @@ class _LectureListState extends State<LectureList> {
       child: CustomScrollView(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        slivers: [],
+        slivers: [
+          SliverFixedExtentList(delegate: SliverChildBuilderDelegate((c, i){
+            return Container(
+              child: OutlinedButton(child: Column(
+                children: [
+                  Text(context.read<EvalProvider>().lectureList[i].name),
+                  Text(context.read<EvalProvider>().lectureList[i].staff),
+                  RatingBarIndicator(itemBuilder: (context, index) => Icon(Icons.star, color: Colors.amber,)))
+                ],
+              ), onPressed: (){}),
+            );
+          }, childCount: context.watch<EvalProvider>().lectureList.length), itemExtent: MediaQuery.of(context).size.height / 12)
+        ],
       ),
     );
   }
