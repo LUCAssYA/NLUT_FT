@@ -86,7 +86,7 @@ class _LectureListState extends State<LectureList> {
                 children: [
                   Text(context.read<EvalProvider>().lectureList[i].name),
                   Text(context.read<EvalProvider>().lectureList[i].staff),
-                  RatingBarIndicator(itemBuilder: (context, index) => Icon(Icons.star, color: Colors.amber,)))
+                  RatingBarIndicator(itemBuilder: (context, index) => Icon(Icons.star, color: Colors.amber,))
                 ],
               ), onPressed: (){}),
             );
