@@ -1,7 +1,7 @@
 class LectureListModel {
   int id;
   String name;
-  String staff;
+  String? staff;
   double score;
 
   LectureListModel(this.id, this.name, this.staff, this.score);

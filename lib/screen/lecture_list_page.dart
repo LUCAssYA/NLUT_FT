@@ -459,7 +459,7 @@ class _LectureList extends State<LectureList> {
                             context
                                 .watch<LectureProvider>()
                                 .lectureList[i]
-                                .staff,
+                                .staff??"",
                             style: style.staffText,
                           )
                         ],

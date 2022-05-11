@@ -40,11 +40,11 @@ class _SkeletonPageState extends State<SkeletonPage> {
           currentIndex: index,
           onTap: onTab,
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "home"),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.table_chart), label: "timetable"),
+                icon: Icon(Icons.table_chart), label: "Timetable"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.school_outlined), label: "lecture evaluation"),
+                icon: Icon(Icons.school_outlined), label: "Lecture review"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.notifications), label: "Notification"),
           ]

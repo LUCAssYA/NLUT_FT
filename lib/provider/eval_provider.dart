@@ -24,14 +24,20 @@ class EvalProvider with ChangeNotifier {
 
   Future<void> findLecture(String? name, int idx) async {
     this.idx = idx;
-    if(name != null)
+    if(name != null) {
+      lectureList = [];
       this.name = name;
+    }
 
     var response = await http.get(Uri.parse(constants.lectureUrl+"/"+this.name+"?page="+idx.toString()+"&size=9"), headers: header);
 
+    print(response.body);
+
 
     if(response.statusCode == 200 ){
-      lectureList.add(LectureListModel.fromJson(jsonDecode(response.body)['response']));
+      jsonDecode(response.body)['response'].forEach((element){
+        lectureList.add(LectureListModel.fromJson(element));
+      });
     }
     else
       print(response.body);
