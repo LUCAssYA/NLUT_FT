@@ -95,31 +95,40 @@ class _LectureListState extends State<LectureList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text(context
-                                .read<EvalProvider>()
-                                .lectureList[i]
-                                .name, style: style.lectureNameText,),
-                            Text(context
+                            Text(
+                              context.read<EvalProvider>().lectureList[i].name,
+                              style: style.lectureNameText,
+                            ),
+                            Text(
+                              context
+                                      .read<EvalProvider>()
+                                      .lectureList[i]
+                                      .staff ??
+                                  "",
+                              style: style.staffNameText,
+                            ),
+                            RatingBarIndicator(
+                                rating: context
                                     .read<EvalProvider>()
                                     .lectureList[i]
-                                    .staff ??
-                                "", style: style.staffNameText,),
-                            RatingBarIndicator(
-                              rating: context
-                                  .read<EvalProvider>()
-                                  .lectureList[i]
-                                  .score,
-                              itemBuilder: (context, index) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              itemCount: 5,
-                              itemSize: 15
-                            ),
+                                    .score,
+                                itemBuilder: (context, index) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                itemCount: 5,
+                                itemSize: 15),
                           ],
                         )
                       ]),
-                      onPressed: () {}),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EvalDetail(
+                                    lectureDetail: context
+                                        .read<EvalProvider>()
+                                        .lectureList[i],
+                                  )))),
                 );
               }, childCount: context.watch<EvalProvider>().lectureList.length),
               itemExtent: MediaQuery.of(context).size.height / 10)
@@ -139,22 +148,78 @@ class EvalDetail extends StatefulWidget {
 }
 
 class _EvalDetailState extends State<EvalDetail> {
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    context.read<EvalProvider>().evalDetail(this.widget.lectureDetail.id);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(context),
       body: Container(
+          child: SingleChildScrollView(
         child: Column(
-          children: [],
+          children: [LectureDetail()],
         ),
-      ),
+      )),
     );
   }
 }
 
+class LectureDetail extends StatelessWidget {
+  const LectureDetail({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: style.mainMargin,
+        width: MediaQuery.of(context).size.width,
+        decoration: style.containerDecoration(),
+        margin: style.mainMargin,
+        height: 100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 3,
+                child: Text(
+              context.watch<EvalProvider>().lecture.name,
+              style: style.detailNameText,
+            )),
+            Expanded(
+              flex: 2,
+                child: Text(
+              context.watch<EvalProvider>().lecture.staff ?? "",
+              style: style.detailStaffText,
+            )),
+            Expanded(
+              flex: 2,
+                child: RatingBarIndicator(
+                    rating: context.watch<EvalProvider>().lecture.score,
+                    itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                    itemCount: 5,
+                    itemSize: 20))
+          ],
+        ));
+  }
+}
+
+class evalList extends StatelessWidget {
+  const evalList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: style.containerDecoration(),
+      child: ListView.separated(itemBuilder: (BuildContext context, int index){
+        return Container();
+      }, separatorBuilder: (BuildContext context, int index)=> const Divider(), itemCount: context.watch<EvalProvider>().evalList.length),
+    );
+  }
+}

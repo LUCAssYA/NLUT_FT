@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:urooster/model/custom_lecture_model.dart';
 import 'package:urooster/model/lecture_list_model.dart';
 import 'package:urooster/model/simple_model.dart';
@@ -16,14 +17,14 @@ class LectureProvider with ChangeNotifier {
   List<SimpleModel> facultyList = [];
   List<SimpleModel> courses = [];
   SimpleModel? currentCourse;
-  List<Map> controllerList = [];
-  Map<int, TimeAndPlace> widgets = {};
-
-  Map<int, Map<String, dynamic>> values = {};
 
   int tempIndex = 0;
   AuthProvider? auth;
   ScheduleProvider? scheduleProvider;
+  List<Map> controllerList = [];
+  Map<int, TimeAndPlace> widgets = {};
+
+  Map<int, Map<String, dynamic>> values = {};
 
   String? customLectureName;
   String? customLectureStaff;
@@ -149,6 +150,7 @@ class LectureProvider with ChangeNotifier {
         body: jsonEncode(body), headers: header);
 
     if (response.statusCode != 200) print(response.body);
+    else checkToken(response);
 
     scheduleProvider?.getLectures(null, null);
     Navigator.pop(context);
@@ -210,7 +212,7 @@ class LectureProvider with ChangeNotifier {
     if (response.statusCode != 200) {
       print(response.body);
     }
-    print("aa");
+    else checkToken(response);
     Navigator.pop(context);
     Navigator.pop(context);
     scheduleProvider?.getLectures(null, null);

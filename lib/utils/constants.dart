@@ -13,5 +13,6 @@ final scheduleUrl = baseUrl+"schedule";
 final groupUrl = baseUrl+"schedule-group";
 final timeTableUrl = baseUrl+"timetable";
 final lectureUrl = baseUrl+"lecture";
+final evalUrl = baseUrl+"eval";
 
 final tokenHeaderName = "x-auth-token";
