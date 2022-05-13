@@ -162,7 +162,7 @@ class _EvalDetailState extends State<EvalDetail> {
       body: Container(
           child: SingleChildScrollView(
         child: Column(
-          children: [LectureDetail()],
+          children: [LectureDetail(), EvalList()],
         ),
       )),
     );
@@ -184,19 +184,19 @@ class LectureDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              flex: 3,
+                flex: 3,
                 child: Text(
-              context.watch<EvalProvider>().lecture.name,
-              style: style.detailNameText,
-            )),
+                  context.watch<EvalProvider>().lecture.name,
+                  style: style.detailNameText,
+                )),
             Expanded(
-              flex: 2,
+                flex: 2,
                 child: Text(
-              context.watch<EvalProvider>().lecture.staff ?? "",
-              style: style.detailStaffText,
-            )),
+                  context.watch<EvalProvider>().lecture.staff ?? "",
+                  style: style.detailStaffText,
+                )),
             Expanded(
-              flex: 2,
+                flex: 2,
                 child: RatingBarIndicator(
                     rating: context.watch<EvalProvider>().lecture.score,
                     itemBuilder: (context, index) => Icon(
@@ -210,16 +210,52 @@ class LectureDetail extends StatelessWidget {
   }
 }
 
-class evalList extends StatelessWidget {
-  const evalList({Key? key}) : super(key: key);
+class EvalList extends StatelessWidget {
+  EvalList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: style.containerDecoration(),
-      child: ListView.separated(itemBuilder: (BuildContext context, int index){
-        return Container();
-      }, separatorBuilder: (BuildContext context, int index)=> const Divider(), itemCount: context.watch<EvalProvider>().evalList.length),
+      margin: style.mainMargin,
+      padding: style.mainMargin,
+      child: Column(children: [
+        Container(
+          height: style.labelHeight,
+          child: Row(
+            children: [
+              Text("Review", style: style.detailStaffText),
+
+            ],
+          ),
+        ),
+        ListView.separated(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                height: style.itemHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RatingBarIndicator(
+                        rating: context.watch<EvalProvider>().evalList[index].score,
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemCount: 5,
+                        itemSize: 15),
+                    Text(context.watch<EvalProvider>().evalList[index].description, style: style.descriptionText,)
+                  ],
+                )
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+            const Divider(),
+            itemCount: context.watch<EvalProvider>().evalList.length),
+      ],)
     );
   }
 }

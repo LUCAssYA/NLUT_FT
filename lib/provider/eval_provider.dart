@@ -61,6 +61,7 @@ class EvalProvider with ChangeNotifier {
       checkToken(response);
       evalList = [];
       var body = jsonDecode(response.body)['response'];
+      print(body);
       
       lecture = LectureListModel.fromJson(body);
       body['list'].forEach((element){
