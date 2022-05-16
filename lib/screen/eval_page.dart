@@ -213,49 +213,107 @@ class LectureDetail extends StatelessWidget {
 class EvalList extends StatelessWidget {
   EvalList({Key? key}) : super(key: key);
 
+  void newReview(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            margin: style.mainMargin,
+            padding: style.mainMargin,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text("Review", style: style.detailNameText,),
+                Text("Score"),
+                RatingBar.builder(
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {},
+                  initialRating: 0,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  itemCount: 5,
+                ),
+                TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLength: 512,
+                  decoration: style.textFieldDecoration,
+                  maxLines: 5,
+                ),
+                ElevatedButton(onPressed: (){}, child: Text("Submit"))
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: style.containerDecoration(),
-      margin: style.mainMargin,
-      padding: style.mainMargin,
-      child: Column(children: [
-        Container(
-          height: style.labelHeight,
-          child: Row(
-            children: [
-              Text("Review", style: style.detailStaffText),
-
-            ],
-          ),
-        ),
-        ListView.separated(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                height: style.itemHeight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RatingBarIndicator(
-                        rating: context.watch<EvalProvider>().evalList[index].score,
-                        itemBuilder: (context, index) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
+        decoration: style.containerDecoration(),
+        margin: style.mainMargin,
+        padding: style.mainMargin,
+        child: Column(
+          children: [
+            Container(
+              height: style.labelHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Review", style: style.reviewText),
+                  ElevatedButton(
+                      onPressed: () => newReview(context),
+                      child: Text("New Review"),
+                      style: style.newReivewButton)
+                ],
+              ),
+            ),
+            Container(
+              padding: style.mainMargin,
+              child: ListView.separated(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: RatingBarIndicator(
+                              rating: context
+                                  .watch<EvalProvider>()
+                                  .evalList[index]
+                                  .score,
+                              itemBuilder: (context, index) => Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                              itemCount: 5,
+                              itemSize: 15),
+                          margin: style.listItemMargin,
                         ),
-                        itemCount: 5,
-                        itemSize: 15),
-                    Text(context.watch<EvalProvider>().evalList[index].description, style: style.descriptionText,)
-                  ],
-                )
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) =>
-            const Divider(),
-            itemCount: context.watch<EvalProvider>().evalList.length),
-      ],)
-    );
+                        Container(
+                          child: Text(
+                            context
+                                .watch<EvalProvider>()
+                                .evalList[index]
+                                .description,
+                            style: style.descriptionText,
+                          ),
+                          margin: style.listItemMargin,
+                        )
+                      ],
+                    ));
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                  itemCount: context.watch<EvalProvider>().evalList.length),
+            ),
+          ],
+        ));
   }
 }
