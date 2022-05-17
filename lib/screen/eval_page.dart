@@ -210,43 +210,69 @@ class LectureDetail extends StatelessWidget {
   }
 }
 
-class EvalList extends StatelessWidget {
+class EvalList extends StatefulWidget {
   EvalList({Key? key}) : super(key: key);
 
+  @override
+  State<EvalList> createState() => _EvalListState();
+}
+
+class _EvalListState extends State<EvalList> {
   void newReview(BuildContext context) {
+    var controller = TextEditingController();
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Container(
+          return Scaffold(
+              body: Container(
             margin: style.mainMargin,
             padding: style.mainMargin,
+            height: style.modalHeight(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Review", style: style.detailNameText,),
-                Text("Score"),
+                Text(
+                  context.read<EvalProvider>().lecture.name,
+                  style: style.detailNameText,
+                ),
+                Text(context.read<EvalProvider>().lecture.staff ?? "",
+                    style: style.detailStaffText),
                 RatingBar.builder(
                   itemBuilder: (context, _) => Icon(
                     Icons.star,
                     color: Colors.amber,
                   ),
-                  onRatingUpdate: (rating) {},
+                  onRatingUpdate: (rating) {
+                    context.read<EvalProvider>().changeScore(rating);
+                  },
                   initialRating: 0,
                   minRating: 1,
                   direction: Axis.horizontal,
                   itemCount: 5,
+                  itemSize: 25,
                 ),
                 TextField(
+                  controller: controller,
                   keyboardType: TextInputType.multiline,
                   maxLength: 512,
                   decoration: style.textFieldDecoration,
                   maxLines: 5,
                 ),
-                ElevatedButton(onPressed: (){}, child: Text("Submit"))
+                Container(
+                    width: style.maxWidth(context),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context
+                            .read<EvalProvider>()
+                            .submitNewEval(controller.text, context);
+                      },
+                      child: Text("Submit"),
+                      style: style.submitButtonStyle,
+                    ))
               ],
             ),
-          );
+          ));
         });
   }
 

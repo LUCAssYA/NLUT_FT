@@ -16,8 +16,10 @@ var reviewText = TextStyle(color: Colors.black87, fontSize: 20, height: 1);
 var newReivewButton = ElevatedButton.styleFrom(primary: Colors.black38, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)));
 var textFieldDecoration = InputDecoration(
   border: OutlineInputBorder(),
-  labelText: "Review",
+  hintText: "Review",
 );
+var maxWidth = (context) => MediaQuery.of(context).size.width;
+var modalHeight = (context) => MediaQuery.of(context).size.height*0.45;
 
 BoxDecoration containerDecoration() {
   return BoxDecoration(
@@ -28,3 +30,5 @@ BoxDecoration containerDecoration() {
     borderRadius: BorderRadius.circular(10)
   );
 }
+
+var submitButtonStyle = ElevatedButton.styleFrom(primary: Colors.black54);

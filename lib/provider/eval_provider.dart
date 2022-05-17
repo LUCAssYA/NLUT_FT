@@ -11,6 +11,7 @@ class EvalProvider with ChangeNotifier {
   AuthProvider? auth;
   var header = {"content-type": "application/json"};
   int idx = 0;
+  double newEvalScore = 0;
 
   List<LectureListModel> lectureList = [];
   List<EvalDetailModel> evalList = [];
@@ -79,6 +80,36 @@ class EvalProvider with ChangeNotifier {
     if (auth?.token != token && token != null) {
       auth?.changeToken(token);
     }
+  }
+
+  void changeScore(double rating) {
+    newEvalScore = rating;
+  }
+  
+  Future<void> submitNewEval(String description, BuildContext context) async{
+    if(newEvalScore == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please check score")));
+      return;
+    }
+
+    var response = await http.post(Uri.parse(constants.evalUrl+"/"+lecture.id.toString()), headers: header, body: jsonEncode(EvalDetailModel.of(newEvalScore, description).toJson()));
+    if(response.statusCode == 200 ){
+      checkToken(response);
+
+      var body = jsonDecode(response.body)['response'];
+
+      lecture = LectureListModel.fromJson(body);
+      evalList = [];
+      body['list'].forEach((element){
+        evalList.add(EvalDetailModel.fromJson(element));
+      });
+
+      notifyListeners();
+
+      Navigator.pop(context);
+    }
+    else
+      print(response.body);
   }
 
 }

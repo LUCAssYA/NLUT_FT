@@ -12,4 +12,8 @@ class EvalDetailModel {
 
   Map<String, dynamic> toJson() =>
       {"id": id, "score": score, "description": description};
+
+  factory EvalDetailModel.of(score, description) {
+    return EvalDetailModel(null, score, description);
+  }
 }
