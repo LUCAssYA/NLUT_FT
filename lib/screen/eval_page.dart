@@ -221,13 +221,12 @@ class _EvalListState extends State<EvalList> {
   void newReview(BuildContext context) {
     var controller = TextEditingController();
     showModalBottomSheet(
+        shape: style.modalShape,
         context: context,
         builder: (BuildContext context) {
-          return Scaffold(
-              body: Container(
+          return Container(
             margin: style.mainMargin,
             padding: style.mainMargin,
-            height: style.modalHeight(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -257,7 +256,7 @@ class _EvalListState extends State<EvalList> {
                   keyboardType: TextInputType.multiline,
                   maxLength: 512,
                   decoration: style.textFieldDecoration,
-                  maxLines: 5,
+                  maxLines: 8,
                 ),
                 Container(
                     width: style.maxWidth(context),
@@ -272,7 +271,7 @@ class _EvalListState extends State<EvalList> {
                     ))
               ],
             ),
-          ));
+          );
         });
   }
 

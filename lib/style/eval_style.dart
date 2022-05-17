@@ -32,3 +32,10 @@ BoxDecoration containerDecoration() {
 }
 
 var submitButtonStyle = ElevatedButton.styleFrom(primary: Colors.black54);
+
+var modalShape = RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      top: Radius.circular(25.0),
+      bottom: Radius.circular(25.0),
+    )
+);
