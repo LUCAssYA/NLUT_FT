@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -218,6 +219,27 @@ class EvalList extends StatefulWidget {
 }
 
 class _EvalListState extends State<EvalList> {
+  void removeDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Do you want to remove your review?"),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancel")),
+              TextButton(
+                  onPressed: () {
+                    context.read<EvalProvider>().removeEval();
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"))
+            ],
+          );
+        });
+  }
+
   void newReview(BuildContext context) {
     var controller = TextEditingController();
     showModalBottomSheet(
@@ -227,36 +249,58 @@ class _EvalListState extends State<EvalList> {
           return Container(
             margin: style.mainMargin,
             padding: style.mainMargin,
+            height: style.modalHeight(context),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  context.read<EvalProvider>().lecture.name,
-                  style: style.detailNameText,
-                ),
-                Text(context.read<EvalProvider>().lecture.staff ?? "",
-                    style: style.detailStaffText),
-                RatingBar.builder(
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.read<EvalProvider>().lecture.name,
+                        style: style.newEvalLectureText,
+                      ),
+                      Text(context.read<EvalProvider>().lecture.staff ?? "",
+                          style: style.newEvalStaffText),
+                    ],
                   ),
-                  onRatingUpdate: (rating) {
-                    context.read<EvalProvider>().changeScore(rating);
-                  },
-                  initialRating: 0,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  itemCount: 5,
-                  itemSize: 25,
                 ),
-                TextField(
-                  controller: controller,
-                  keyboardType: TextInputType.multiline,
-                  maxLength: 512,
-                  decoration: style.textFieldDecoration,
-                  maxLines: 8,
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RatingBar.builder(
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) {
+                          context.read<EvalProvider>().changeScore(rating);
+                        },
+                        initialRating: 0,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        itemCount: 5,
+                        itemSize: 25,
+                      ),
+                      Container(
+                        margin: style.textBoxMargin,
+                        height: style.modalHeight(context) / 1.9,
+                        child: TextField(
+                          controller: controller,
+                          keyboardType: TextInputType.multiline,
+                          maxLength: 512,
+                          decoration: style.textFieldDecoration,
+                          minLines: null,
+                          maxLines: null,
+                          expands: true,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 Container(
                     width: style.maxWidth(context),
@@ -290,7 +334,9 @@ class _EvalListState extends State<EvalList> {
                 children: [
                   Text("Review", style: style.reviewText),
                   ElevatedButton(
-                      onPressed: () => newReview(context),
+                      onPressed: context.watch<EvalProvider>().written
+                          ? null
+                          : () => newReview(context),
                       child: Text("New Review"),
                       style: style.newReivewButton)
                 ],
@@ -302,37 +348,96 @@ class _EvalListState extends State<EvalList> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          child: RatingBarIndicator(
-                              rating: context
+                    if (context.watch<EvalProvider>().written && index == 0) {
+                      return Container(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RatingBarIndicator(
+                                      rating: context
+                                          .watch<EvalProvider>()
+                                          .evalList[index]
+                                          .score,
+                                      itemBuilder: (context, index) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                      itemCount: 5,
+                                      itemSize: 15),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(
+                                              Icons.edit,
+                                              color: style.defaultColor,
+                                              size: 18.0,
+                                            )),
+                                        IconButton(
+                                            onPressed: () => removeDialog(),
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: style.defaultColor,
+                                              size: 18,
+                                            ))
+                                      ],
+                                    ),
+                                  )
+                                ]),
+                            margin: style.listItemMargin,
+                          ),
+                          Container(
+                            child: Text(
+                              context
                                   .watch<EvalProvider>()
                                   .evalList[index]
-                                  .score,
-                              itemBuilder: (context, index) => Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                              itemCount: 5,
-                              itemSize: 15),
-                          margin: style.listItemMargin,
-                        ),
-                        Container(
-                          child: Text(
-                            context
-                                .watch<EvalProvider>()
-                                .evalList[index]
-                                .description,
-                            style: style.descriptionText,
+                                  .description,
+                              style: style.descriptionText,
+                            ),
+                            margin: style.listItemMargin,
+                          )
+                        ],
+                      ));
+                    } else {
+                      return Container(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: RatingBarIndicator(
+                                rating: context
+                                    .watch<EvalProvider>()
+                                    .evalList[index]
+                                    .score,
+                                itemBuilder: (context, index) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                itemCount: 5,
+                                itemSize: 15),
+                            margin: style.listItemMargin,
                           ),
-                          margin: style.listItemMargin,
-                        )
-                      ],
-                    ));
+                          Container(
+                            child: Text(
+                              context
+                                  .watch<EvalProvider>()
+                                  .evalList[index]
+                                  .description,
+                              style: style.descriptionText,
+                            ),
+                            margin: style.listItemMargin,
+                          )
+                        ],
+                      ));
+                    }
                   },
                   separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),

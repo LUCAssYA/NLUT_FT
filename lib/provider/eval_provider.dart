@@ -20,6 +20,7 @@ class EvalProvider with ChangeNotifier {
 
   String name = "";
 
+  bool written = true;
 
   EvalProvider update(AuthProvider auth) {
     this.auth = auth;
@@ -65,6 +66,7 @@ class EvalProvider with ChangeNotifier {
       print(body);
       
       lecture = LectureListModel.fromJson(body);
+      written = body['written'];
       body['list'].forEach((element){
         evalList.add(EvalDetailModel.fromJson(element));
       });
@@ -100,6 +102,7 @@ class EvalProvider with ChangeNotifier {
 
       lecture = LectureListModel.fromJson(body);
       evalList = [];
+      written = body['written'];
       body['list'].forEach((element){
         evalList.add(EvalDetailModel.fromJson(element));
       });
@@ -107,6 +110,28 @@ class EvalProvider with ChangeNotifier {
       notifyListeners();
 
       Navigator.pop(context);
+    }
+    else
+      print(response.body);
+  }
+
+  Future<void> removeEval() async {
+    var response = await http.delete(Uri.parse(constants.evalUrl+"/"+evalList[0].id.toString()), headers: header);
+
+    if(response.statusCode == 200) {
+      checkToken(response);
+
+      var body = jsonDecode(response.body)['response'];
+      print(body);
+
+      lecture = LectureListModel.fromJson(body);
+      evalList = [];
+      written = body['written'];
+      body['list'].forEach((element) {
+        evalList.add(EvalDetailModel.fromJson(element));
+      });
+
+      notifyListeners();
     }
     else
       print(response.body);

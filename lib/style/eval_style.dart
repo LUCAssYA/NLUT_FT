@@ -13,6 +13,9 @@ var listItemMargin = EdgeInsets.symmetric(vertical: 5);
 
 var reviewText = TextStyle(color: Colors.black87, fontSize: 20, height: 1);
 
+var newEvalLectureText = TextStyle(color: Colors.black, fontSize: 23, height: 1.5);
+var newEvalStaffText = TextStyle(color: Colors.black54, fontSize: 18, height: 1.5);
+
 var newReivewButton = ElevatedButton.styleFrom(primary: Colors.black38, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)));
 var textFieldDecoration = InputDecoration(
   border: OutlineInputBorder(),
@@ -39,3 +42,6 @@ var modalShape = RoundedRectangleBorder(
       bottom: Radius.circular(25.0),
     )
 );
+
+var textBoxMargin = EdgeInsets.fromLTRB(0, 5, 0, 0);
+var defaultColor = Colors.black54;
