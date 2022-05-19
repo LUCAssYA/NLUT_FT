@@ -88,13 +88,18 @@ class EvalProvider with ChangeNotifier {
     newEvalScore = rating;
   }
   
-  Future<void> submitNewEval(String description, BuildContext context) async{
+  Future<void> submitNewEval(String description, BuildContext context, int? id) async{
+    var response;
     if(newEvalScore == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please check score")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(behavior: SnackBarBehavior.floating,margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height-100),content: Text("Please check score")));
       return;
     }
 
-    var response = await http.post(Uri.parse(constants.evalUrl+"/"+lecture.id.toString()), headers: header, body: jsonEncode(EvalDetailModel.of(newEvalScore, description).toJson()));
+    if(id == null)
+      response = await http.post(Uri.parse(constants.evalUrl+"/"+lecture.id.toString()), headers: header, body: jsonEncode(EvalDetailModel.of(newEvalScore, description).toJson()));
+    else
+      response = await http.put(Uri.parse(constants.evalUrl+"/"+id.toString()), headers: header, body: jsonEncode(EvalDetailModel.of(newEvalScore, description).toJson()));
+
     if(response.statusCode == 200 ){
       checkToken(response);
 
@@ -106,6 +111,7 @@ class EvalProvider with ChangeNotifier {
       body['list'].forEach((element){
         evalList.add(EvalDetailModel.fromJson(element));
       });
+      newEvalScore = 0;
 
       notifyListeners();
 

@@ -24,6 +24,12 @@ var textFieldDecoration = InputDecoration(
 var maxWidth = (context) => MediaQuery.of(context).size.width;
 var modalHeight = (context) => MediaQuery.of(context).size.height*0.45;
 
+var toastDecoration = BoxDecoration(
+  borderRadius: BorderRadius.circular(10),
+  color: Colors.white70
+);
+var toastTextStyle = TextStyle(color: Colors.black, fontSize: 20);
+
 BoxDecoration containerDecoration() {
   return BoxDecoration(
     border: Border.all(

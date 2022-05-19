@@ -7,6 +7,7 @@ import 'package:urooster/provider/lecture_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/widget/text_field.dart';
 import 'package:urooster/style/eval_style.dart' as style;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class EvalPage extends StatelessWidget {
   const EvalPage({Key? key}) : super(key: key);
@@ -219,6 +220,16 @@ class EvalList extends StatefulWidget {
 }
 
 class _EvalListState extends State<EvalList> {
+  late FToast fToast;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);
+  }
+
   void removeDialog() {
     showDialog(
         context: context,
@@ -240,7 +251,7 @@ class _EvalListState extends State<EvalList> {
         });
   }
 
-  void newReview(BuildContext context) {
+  void newReview(BuildContext context, int? id) {
     var controller = TextEditingController();
     showModalBottomSheet(
         shape: style.modalShape,
@@ -306,9 +317,29 @@ class _EvalListState extends State<EvalList> {
                     width: style.maxWidth(context),
                     child: ElevatedButton(
                       onPressed: () {
+                        if (context.read<EvalProvider>().newEvalScore == 0) {
+                          fToast.showToast(
+                              child: Container(
+                                height: 50,
+                                width: 300,
+                                decoration: style.toastDecoration,
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Please check score",
+                                        style: style.toastTextStyle,
+                                        textAlign: TextAlign.center,
+                                      )
+                                    ]),
+                              ),
+                              gravity: ToastGravity.TOP,
+                              toastDuration: Duration(seconds: 1));
+                          return;
+                        }
                         context
                             .read<EvalProvider>()
-                            .submitNewEval(controller.text, context);
+                            .submitNewEval(controller.text, context, id);
                       },
                       child: Text("Submit"),
                       style: style.submitButtonStyle,
@@ -336,7 +367,7 @@ class _EvalListState extends State<EvalList> {
                   ElevatedButton(
                       onPressed: context.watch<EvalProvider>().written
                           ? null
-                          : () => newReview(context),
+                          : () => newReview(context, null),
                       child: Text("New Review"),
                       style: style.newReivewButton)
                 ],
@@ -374,7 +405,12 @@ class _EvalListState extends State<EvalList> {
                                     child: Row(
                                       children: [
                                         IconButton(
-                                            onPressed: () {},
+                                            onPressed: () => newReview(
+                                                context,
+                                                context
+                                                    .read<EvalProvider>()
+                                                    .evalList[index]
+                                                    .id),
                                             icon: Icon(
                                               Icons.edit,
                                               color: style.defaultColor,
