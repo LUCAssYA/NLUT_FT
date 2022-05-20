@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:urooster/screen/eval_page.dart';
 import 'package:urooster/screen/main_page.dart';
+import 'package:urooster/screen/notification_page.dart';
 import 'package:urooster/screen/schedule_page.dart';
 import 'package:urooster/style/widget_style.dart' as style;
 
@@ -19,7 +20,7 @@ class _SkeletonPageState extends State<SkeletonPage> {
     MainPage(),
     SchedulePage(),
     EvalPage(),
-    Text("Notification")
+    NotificationPage()
   ];
   int index = 0;
 
