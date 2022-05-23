@@ -4,6 +4,7 @@ import 'package:urooster/provider/auth_provider.dart';
 import 'package:urooster/provider/eval_provider.dart';
 import 'package:urooster/provider/home_provider.dart';
 import 'package:urooster/provider/lecture_provider.dart';
+import 'package:urooster/provider/notification_provider.dart';
 import 'package:urooster/provider/register_provider.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/screen/find_password_page.dart';
@@ -29,7 +30,8 @@ void main() {
       ChangeNotifierProxyProvider<AuthProvider, EvalProvider>(
         create: (_) => EvalProvider(),
         update: (_, auth, eval) => eval!.update(auth)
-      )
+      ),
+      ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(create: (_) => NotificationProvider(), update: (_, auth, notification) => notification!.update(auth))
     ],
     child: MaterialApp(
         debugShowCheckedModeBanner: false,
