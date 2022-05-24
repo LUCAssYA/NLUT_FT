@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:urooster/model/friend_model.dart';
@@ -36,6 +37,8 @@ class NotificationProvider with ChangeNotifier {
       notifyListeners();
 
     }
+    else
+      print(response.body);
   }
 
   void checkToken(http.Response response) {
@@ -44,6 +47,25 @@ class NotificationProvider with ChangeNotifier {
     if (auth?.token != token && token != null) {
       auth?.changeToken(token);
     }
+  }
+
+  Future<void> rejectAndAccept(String result, int index) async {
+    var response = await http.patch(Uri.parse(constants.friendUrl+"/"+result+"/"+friendList[index].id.toString()), headers: header);
+
+    if(response.statusCode == 200) {
+      checkToken(response);
+
+      friendList = [];
+      var body = jsonDecode(response.body)['response'];
+
+      body.forEach((element){
+        friendList.add(FriendModel.fromJson(element));
+      });
+
+      notifyListeners();
+    }
+    else
+      print(response.body);
   }
 
 }

@@ -26,7 +26,8 @@ class _NotificationPageState extends State<NotificationPage> {
       child: Column(
         children: [
           OutlinedButton(
-              onPressed: () {},
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => FriendListPage())),
               child: Container(
                 padding: style.friendButtonPadding,
                 height: style.friendButtonHeight(context),
@@ -72,19 +73,51 @@ class FriendListPage extends StatelessWidget {
     return Scaffold(
       appBar: customAppBar(context),
       body: Container(
+        decoration: style.listContainerDecoration(),
+        margin: style.listMargin,
         child: SingleChildScrollView(
-          child: Container(
-            child: ListView.separated(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container();
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(),
-                itemCount:
-                    context.watch<NotificationProvider>().friendList.length),
-          ),
+          child: ListView.separated(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  height: style.listHeight(context),
+                    margin: style.listMargin,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                              context
+                                  .watch<NotificationProvider>()
+                                  .friendList[index]
+                                  .name,
+                              style: style.listTextStyle),
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () => context.read<NotificationProvider>().rejectAndAccept("accept", index),
+                                  child: Text("Confirm"),
+                                  style: style.confirmButtonStyle),
+                              OutlinedButton(
+                                  onPressed: () => context.read<NotificationProvider>().rejectAndAccept("reject", index),
+                                  child: Text("Delete"),
+                                  style: style.deleteButtonStyle)
+                            ],
+                          ),
+                        )
+                      ],
+                    ));
+              },
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(),
+              itemCount:
+                  context.watch<NotificationProvider>().friendList.length),
         ),
       ),
     );
