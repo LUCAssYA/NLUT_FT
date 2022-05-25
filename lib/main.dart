@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/auth_provider.dart';
 import 'package:urooster/provider/eval_provider.dart';
+import 'package:urooster/provider/friend_schedule_provider.dart';
 import 'package:urooster/provider/home_provider.dart';
 import 'package:urooster/provider/lecture_provider.dart';
 import 'package:urooster/provider/notification_provider.dart';
 import 'package:urooster/provider/register_provider.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/screen/find_password_page.dart';
+import 'package:urooster/screen/friend_schedule_page.dart';
 import 'package:urooster/screen/group_list_page.dart';
 import 'package:urooster/screen/main_page.dart';
 import 'package:urooster/screen/register_page.dart';
@@ -31,7 +33,8 @@ void main() {
         create: (_) => EvalProvider(),
         update: (_, auth, eval) => eval!.update(auth)
       ),
-      ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(create: (_) => NotificationProvider(), update: (_, auth, notification) => notification!.update(auth))
+      ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(create: (_) => NotificationProvider(), update: (_, auth, notification) => notification!.update(auth)),
+      ChangeNotifierProxyProvider<AuthProvider, FriendScheduleProvider>(create: (_) => FriendScheduleProvider(), update: (_, auth, friend) => friend!.update(auth))
     ],
     child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/provider/home_provider.dart';
+import 'package:urooster/screen/friend_schedule_page.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/main_page_style.dart' as style;
 
@@ -149,7 +150,7 @@ class Friend extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(child: Text(data)),
+          Expanded(child: TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => FriendSchedulPage())), child: Text(data, style: style.friendText,), style: style.friendTextButton)),
           Container(
               child: IconButton(
             onPressed: () {

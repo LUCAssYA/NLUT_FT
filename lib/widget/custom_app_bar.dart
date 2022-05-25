@@ -113,3 +113,22 @@ PreferredSizeWidget lectureListAppBar(
     ],
   );
 }
+
+PreferredSizeWidget friendScheduleAppbar(context, onChange, items, label, margin, value) {
+  return AppBar(
+    backgroundColor: style.appBarBackgroundColor,
+    primary: false,
+    elevation: 0,
+    automaticallyImplyLeading: false,
+    title: SelectBox(
+      onChange: onChange,
+      items: items,
+      label: label,
+      margin: margin,
+      value: value,
+    ),
+    actions: [
+      IconButton(onPressed: () => Navigator.pop(context),icon: Icon(Icons.close, color: style.appBarIconColor,))
+    ],
+  );
+}

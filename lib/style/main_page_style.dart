@@ -25,3 +25,6 @@ var labelTextStyle = TextStyle(color: Colors.black54, fontSize: 16);
 var listMargin = EdgeInsets.symmetric(horizontal: 7, vertical: 3);
 var ddayText = TextStyle(color:  Colors.red, letterSpacing: 1.5);
 var addFriendfieldMargin = EdgeInsets.fromLTRB(0, 5, 0, 0);
+
+var friendTextButton = TextButton.styleFrom(alignment: Alignment.centerLeft);
+var friendText = TextStyle(color: Colors.black, fontSize: 15);
