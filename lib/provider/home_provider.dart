@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:urooster/model/dday_model.dart';
+import 'package:urooster/model/friend_model.dart';
 import 'package:urooster/model/today_schedule_model.dart';
 import 'package:urooster/provider/auth_provider.dart';
 import 'package:urooster/screen/main_page.dart';
@@ -14,9 +15,8 @@ class HomeProvider with ChangeNotifier {
   AuthProvider? auth;
 
   List schedule = [];
-  List friend = [];
+  List<FriendModel> friend = [];
   List dday = [];
-  List requestedFriend = [];
 
   var header = {"content-type": "application/json"};
 
@@ -50,7 +50,6 @@ class HomeProvider with ChangeNotifier {
 
   Future<void> getFriends() async{
     friend = [];
-    requestedFriend = [];
     var response = await http.get(Uri.parse(constants.friendUrl+"/list"), headers: header);
 
     if(response.statusCode == 200) {
@@ -60,10 +59,7 @@ class HomeProvider with ChangeNotifier {
 
 
       friends.forEach((f){
-        if(f['status'] == 'REQUESTED')
-          requestedFriend.add(f);
-        else
-          friend.add(f);
+        friend.add(FriendModel.fromJson(f));
       });
 
       notifyListeners();
@@ -131,7 +127,7 @@ class HomeProvider with ChangeNotifier {
   }
 
   Future<void> deleteFriend(BuildContext context, int index) async {
-    var response = await http.delete(Uri.parse(constants.friendUrl+"/delete/"+friend[index]['id'].toString()), headers: header);
+    var response = await http.delete(Uri.parse(constants.friendUrl+"/delete/"+friend[index].id.toString()), headers: header);
 
     if(response.statusCode == 200) {
       List friends = jsonDecode(response.body)['response'];
@@ -141,10 +137,7 @@ class HomeProvider with ChangeNotifier {
 
 
       friends.forEach((f){
-        if(f['status'] == 'REQUESTED')
-          requestedFriend.add(f);
-        else
-          friend.add(f);
+          friend.add(FriendModel.fromJson(f));
       });
 
       notifyListeners();

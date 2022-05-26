@@ -103,12 +103,15 @@ class TodaySchedule extends StatelessWidget {
           child: Text(schedule.name),
         ),
         Expanded(
-          child: Text(schedule.startTime +
-              "~" +
-              schedule.endTime +
-              "(" +
-              schedule.location +
-              ")", textAlign: TextAlign.end,),
+          child: Text(
+            schedule.startTime +
+                "~" +
+                schedule.endTime +
+                "(" +
+                schedule.location +
+                ")",
+            textAlign: TextAlign.end,
+          ),
         )
       ],
     ));
@@ -150,7 +153,19 @@ class Friend extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => FriendSchedulPage())), child: Text(data, style: style.friendText,), style: style.friendTextButton)),
+          Expanded(
+              child: TextButton(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => FriendSchedulPage(
+                                id: context.read<HomeProvider>().friend[index].id,
+                              ))),
+                  child: Text(
+                    data,
+                    style: style.friendText,
+                  ),
+                  style: style.friendTextButton)),
           Container(
               child: IconButton(
             onPressed: () {
@@ -239,8 +254,7 @@ class FriendList extends StatelessWidget {
                     delegate: SliverChildBuilderDelegate((c, i) {
                       return Friend(
                           index: i,
-                          data: context.watch<HomeProvider>().friend[i]
-                              ['name']);
+                          data: context.watch<HomeProvider>().friend[i].name);
                     }, childCount: context.watch<HomeProvider>().friend.length),
                     itemExtent: style.labelHeight)
               ],
