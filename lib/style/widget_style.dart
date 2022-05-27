@@ -11,3 +11,4 @@ var selectBoxMargin = EdgeInsets.symmetric(horizontal: 5);
 var calendarWidth = (context) => MediaQuery.of(context).size.width*0.5;
 var calendarMargin = EdgeInsets.fromLTRB(10, 10, 0,0);
 var iconMargin = EdgeInsets.fromLTRB(10, 0, 0, 0);
+var friendScheduleAppBarMargin = EdgeInsets.symmetric(vertical: 10);

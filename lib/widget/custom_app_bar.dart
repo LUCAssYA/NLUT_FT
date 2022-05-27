@@ -120,12 +120,14 @@ PreferredSizeWidget friendScheduleAppbar(context, onChange, items, label, margin
     primary: false,
     elevation: 0,
     automaticallyImplyLeading: false,
-    title: SelectBox(
-      onChange: onChange,
-      items: items,
-      label: label,
-      margin: margin,
-      value: value,
+    title: Container(
+      child: SelectBox(
+        onChange: onChange,
+        items: items,
+        label: label,
+        margin: style.friendScheduleAppBarMargin,
+        value: value,
+      ),
     ),
     actions: [
       IconButton(onPressed: onClose,icon: Icon(Icons.close, color: style.appBarIconColor,))
