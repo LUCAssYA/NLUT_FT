@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:urooster/screen/eval_page.dart';
 import 'package:urooster/screen/main_page.dart';
+import 'package:urooster/screen/my_page.dart';
 import 'package:urooster/screen/notification_page.dart';
 import 'package:urooster/screen/schedule_page.dart';
 import 'package:urooster/style/widget_style.dart' as style;
@@ -20,7 +21,8 @@ class _SkeletonPageState extends State<SkeletonPage> {
     MainPage(),
     SchedulePage(),
     EvalPage(),
-    NotificationPage()
+    NotificationPage(),
+    MyPage()
   ];
   int index = 0;
 
@@ -48,6 +50,7 @@ class _SkeletonPageState extends State<SkeletonPage> {
                 icon: Icon(Icons.school_outlined), label: "Lecture review"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.notifications), label: "Notification"),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: "My page"),
           ]
       ),
 

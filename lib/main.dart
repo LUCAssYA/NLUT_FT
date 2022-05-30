@@ -5,6 +5,7 @@ import 'package:urooster/provider/eval_provider.dart';
 import 'package:urooster/provider/friend_schedule_provider.dart';
 import 'package:urooster/provider/home_provider.dart';
 import 'package:urooster/provider/lecture_provider.dart';
+import 'package:urooster/provider/my_provider.dart';
 import 'package:urooster/provider/notification_provider.dart';
 import 'package:urooster/provider/register_provider.dart';
 import 'package:urooster/provider/schedule_provider.dart';
@@ -34,7 +35,8 @@ void main() {
         update: (_, auth, eval) => eval!.update(auth)
       ),
       ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(create: (_) => NotificationProvider(), update: (_, auth, notification) => notification!.update(auth)),
-      ChangeNotifierProxyProvider<AuthProvider, FriendScheduleProvider>(create: (_) => FriendScheduleProvider(), update: (_, auth, friend) => friend!.update(auth))
+      ChangeNotifierProxyProvider<AuthProvider, FriendScheduleProvider>(create: (_) => FriendScheduleProvider(), update: (_, auth, friend) => friend!.update(auth)),
+      ChangeNotifierProxyProvider<AuthProvider, MyPageProvider>(create: (_) => MyPageProvider(), update: (_, auth, mypage) => mypage!.update(auth))
     ],
     child: MaterialApp(
         debugShowCheckedModeBanner: false,

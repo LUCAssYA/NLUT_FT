@@ -10,7 +10,11 @@ PreferredSizeWidget customAppBar(BuildContext context) {
       automaticallyImplyLeading: false,
       actions: [
         IconButton(
-            onPressed: () => Navigator.pop(context), icon: Icon(Icons.close, color: style.appBarIconColor,)),
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.close,
+              color: style.appBarIconColor,
+            )),
       ]);
 }
 
@@ -82,18 +86,18 @@ PreferredSizeWidget lectureListAppBar(
         children: [
           Expanded(
             child: Container(
-              margin: style.selectBoxMargin,
+                margin: style.selectBoxMargin,
                 child: SelectBox(
-              validator: null,
-              items: facultyItem,
-              onChange: facultyOnChange,
-              label: "Faculty",
-              margin: null,
-            )),
+                  validator: null,
+                  items: facultyItem,
+                  onChange: facultyOnChange,
+                  label: "Faculty",
+                  margin: null,
+                )),
           ),
           Expanded(
               child: Container(
-                margin: style.selectBoxMargin,
+                  margin: style.selectBoxMargin,
                   child: SelectBox(
                       validator: null,
                       items: courseItem,
@@ -114,7 +118,8 @@ PreferredSizeWidget lectureListAppBar(
   );
 }
 
-PreferredSizeWidget friendScheduleAppbar(context, onChange, items, label, margin, value, onClose) {
+PreferredSizeWidget friendScheduleAppbar(
+    context, onChange, items, label, margin, value, onClose) {
   return AppBar(
     backgroundColor: style.appBarBackgroundColor,
     primary: false,
@@ -130,7 +135,23 @@ PreferredSizeWidget friendScheduleAppbar(context, onChange, items, label, margin
       ),
     ),
     actions: [
-      IconButton(onPressed: onClose,icon: Icon(Icons.close, color: style.appBarIconColor,))
+      IconButton(
+          onPressed: onClose,
+          icon: Icon(
+            Icons.close,
+            color: style.appBarIconColor,
+          ))
     ],
   );
+}
+PreferredSizeWidget textAppBar(String title) {
+  return AppBar(
+      centerTitle: true,
+      backgroundColor: style.appBarBackgroundColor,
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      title: Text(
+        title,
+        style: style.titleStyle,
+      ));
 }
