@@ -14,7 +14,7 @@ class MyPage extends StatelessWidget {
       body: Container(
         margin: style.mainMargin,
         child: Column(
-          children: [Profile()],
+          children: [Profile(), AccountSetting()],
         ),
       ),
     );
@@ -39,6 +39,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: style.containerMargin,
       padding: style.itemPadding,
       decoration: style.containerDecoration(),
       child: Row(
@@ -59,24 +60,86 @@ class _ProfileState extends State<Profile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.watch<MyPageProvider>().user.email),
                 Row(
                   children: [
-                    Text(context.watch<MyPageProvider>().user.name),
+                    Text(
+                      context.watch<MyPageProvider>().user.name,
+                      style: style.titleTextStyle,
+                    ),
                     Text("/"),
-                    Text(context.watch<MyPageProvider>().user.nickName),
+                    Text(
+                      context.watch<MyPageProvider>().user.nickName,
+                      style: style.titleTextStyle,
+                    ),
                   ],
+                ),
+                Text(
+                  context.watch<MyPageProvider>().user.email,
+                  style: style.itemTextStyle,
                 ),
                 Row(
                   children: [
-                    Text(context.watch<MyPageProvider>().user.faculty),
+                    Text(
+                      context.watch<MyPageProvider>().user.faculty,
+                      style: style.itemTextStyle,
+                    ),
                     Text("/"),
-                    Text(context.watch<MyPageProvider>().user.university)
+                    Text(
+                      context.watch<MyPageProvider>().user.university,
+                      style: style.itemTextStyle,
+                    )
                   ],
                 )
               ],
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class AccountSetting extends StatelessWidget {
+  const AccountSetting({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: style.containerMargin,
+      decoration: style.containerDecoration(),
+      child: Column(
+        children: [
+          Text("Account"),
+          Row(children: [
+            Expanded(
+                child: TextButton(
+              onPressed: () {},
+              child: Text("Change User Information"),
+              style: style.textButtonStyle,
+            )),
+          ]),
+          Row(children: [
+            Expanded(
+                child: TextButton(
+              onPressed: () {},
+              child: Text("Change Password"),
+              style: style.textButtonStyle,
+            )),
+          ]),
+          Row(children: [
+            Expanded(
+                child: TextButton(
+                    onPressed: () {},
+                    child: Text("Withdraw"),
+                    style: style.textButtonStyle)),
+          ]),
+          Row(children: [
+            Expanded(
+                child: TextButton(
+                    onPressed: () {},
+                    child: Text("Sign out"),
+                    style: style.textButtonStyle))
+          ])
         ],
       ),
     );
