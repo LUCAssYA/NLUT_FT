@@ -106,15 +106,25 @@ class AccountSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: style.containerMargin,
+      padding: style.itemPadding,
       decoration: style.containerDecoration(),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Account"),
+          Container(
+              margin: style.itemPadding,
+              child: Text(
+                "Account",
+                style: style.labelTextStyle,
+              )),
           Row(children: [
             Expanded(
                 child: TextButton(
               onPressed: () {},
-              child: Text("Change User Information"),
+              child: Text(
+                "Change User Information",
+                style: style.textButtonTextStyle,
+              ),
               style: style.textButtonStyle,
             )),
           ]),
@@ -122,7 +132,10 @@ class AccountSetting extends StatelessWidget {
             Expanded(
                 child: TextButton(
               onPressed: () {},
-              child: Text("Change Password"),
+              child: Text(
+                "Change Password",
+                style: style.textButtonTextStyle,
+              ),
               style: style.textButtonStyle,
             )),
           ]),
@@ -130,18 +143,34 @@ class AccountSetting extends StatelessWidget {
             Expanded(
                 child: TextButton(
                     onPressed: () {},
-                    child: Text("Withdraw"),
+                    child: Text(
+                      "Withdraw",
+                      style: style.textButtonTextStyle,
+                    ),
                     style: style.textButtonStyle)),
           ]),
           Row(children: [
             Expanded(
                 child: TextButton(
-                    onPressed: () {},
-                    child: Text("Sign out"),
-                    style: style.textButtonStyle))
+              onPressed: () {},
+              child: Text(
+                "Sign out",
+                style: style.textButtonTextStyle,
+              ),
+              style: style.textButtonStyle,
+            ))
           ])
         ],
       ),
     );
+  }
+}
+
+class UserInfoChange extends StatelessWidget {
+  const UserInfoChange({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

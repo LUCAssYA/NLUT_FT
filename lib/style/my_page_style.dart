@@ -24,4 +24,8 @@ var containerMargin = EdgeInsets.symmetric(vertical: 10);
 
 var containerWidth = (context) => MediaQuery.of(context).size.width;
 
-var textButtonStyle = TextButton.styleFrom(alignment: Alignment.centerLeft);
+var textButtonStyle = TextButton.styleFrom(alignment: Alignment.centerLeft, minimumSize: Size(100, 50));
+
+var labelTextStyle = TextStyle(fontSize: 19, color: Colors.black87, fontWeight: FontWeight.bold);
+
+var textButtonTextStyle = TextStyle(fontSize: 15, color: Colors.black, height: 1);
