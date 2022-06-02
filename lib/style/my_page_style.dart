@@ -29,3 +29,6 @@ var textButtonStyle = TextButton.styleFrom(alignment: Alignment.centerLeft, mini
 var labelTextStyle = TextStyle(fontSize: 19, color: Colors.black87, fontWeight: FontWeight.bold);
 
 var textButtonTextStyle = TextStyle(fontSize: 15, color: Colors.black, height: 1);
+
+
+var actionButton = TextStyle(color: defaultColor, fontWeight: FontWeight.bold);

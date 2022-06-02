@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:urooster/provider/my_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/my_page_style.dart' as style;
+import 'package:urooster/widget/text_field.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -99,8 +100,48 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-class AccountSetting extends StatelessWidget {
+class AccountSetting extends StatefulWidget {
   const AccountSetting({Key? key}) : super(key: key);
+
+  @override
+  State<AccountSetting> createState() => _AccountSettingState();
+}
+
+class _AccountSettingState extends State<AccountSetting> {
+
+  void changeUserInfoDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              title: Text("Change User Information"),
+              content: UserInfoChange(),
+              actions: [
+                Row(
+                  children: [
+                    Expanded(
+                        child: TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(
+                              "Cancel",
+                              style: style.actionButton,
+                            ))),
+                    Expanded(
+                        child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "OK",
+                        style: style.actionButton,
+                      ),
+                    ))
+                  ],
+                )
+              ]);
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +161,7 @@ class AccountSetting extends StatelessWidget {
           Row(children: [
             Expanded(
                 child: TextButton(
-              onPressed: () {},
+              onPressed: () => changeUserInfoDialog(),
               child: Text(
                 "Change User Information",
                 style: style.textButtonTextStyle,
@@ -166,11 +207,45 @@ class AccountSetting extends StatelessWidget {
   }
 }
 
-class UserInfoChange extends StatelessWidget {
-  const UserInfoChange({Key? key}) : super(key: key);
+class UserInfoChange extends StatefulWidget {
+  UserInfoChange({Key? key}) : super(key: key);
+
+  @override
+  State<UserInfoChange> createState() => _UserInfoChangeState();
+}
+
+class _UserInfoChangeState extends State<UserInfoChange> {
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      height: MediaQuery.of(context).size.height / 4,
+      width: MediaQuery.of(context).size.width * 0.9,
+      child: Form(
+        key: formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CustomTextFormField(
+              label: "Name",
+              obscure: false,
+              suggestion: true,
+              autoCorrect: true,
+            ),
+            CustomTextFormField(
+              label: "Nickname",
+              obscure: false,
+              suggestion: true,
+              autoCorrect: true,
+            ),
+            SelectBox(
+              label: "Faculty",
+              items: [],
+            ),
+          ],
+        ),,
+      )
+    );
   }
 }
