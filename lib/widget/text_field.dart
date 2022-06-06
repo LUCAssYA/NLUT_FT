@@ -14,7 +14,8 @@ class CustomTextFormField extends StatelessWidget {
       this.suggestion,
       this.autoCorrect,
       this.onChange,
-      this.onSave})
+      this.onSave,
+      this.value})
       : super(key: key);
   final validator;
   final label;
@@ -25,6 +26,7 @@ class CustomTextFormField extends StatelessWidget {
   final autoCorrect;
   final onChange;
   final onSave;
+  final value;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class CustomTextFormField extends StatelessWidget {
         enableSuggestions: suggestion,
         autocorrect: autoCorrect,
         onSaved: (value) => onSave(value),
+        initialValue: value,
       ),
       margin: margin,
     );

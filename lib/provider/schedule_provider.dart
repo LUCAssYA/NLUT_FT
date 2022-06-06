@@ -37,6 +37,7 @@ class ScheduleProvider with ChangeNotifier {
         headers: header);
 
     if (response.statusCode == 200) {
+      print(response.body);
       checkToken(response);
       var body = jsonDecode(response.body)['response'];
       currentGroup = GroupDetail.fromJson(body['currentGroup']);

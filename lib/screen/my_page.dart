@@ -218,6 +218,13 @@ class _UserInfoChangeState extends State<UserInfoChange> {
   final formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<MyPageProvider>().getFaculty();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 4,
@@ -232,19 +239,23 @@ class _UserInfoChangeState extends State<UserInfoChange> {
               obscure: false,
               suggestion: true,
               autoCorrect: true,
+              value: context.read<MyPageProvider>().user.name,
             ),
             CustomTextFormField(
               label: "Nickname",
               obscure: false,
               suggestion: true,
               autoCorrect: true,
+              value: context.read<MyPageProvider>().user.nickName,
             ),
             SelectBox(
               label: "Faculty",
-              items: [],
+              items: context.watch<MyPageProvider>().facultyList,
+              value: context.watch<MyPageProvider>().facultyList.length == 0?null:context.read<MyPageProvider>().currentFaculty as Object?,
+              onChange: (){},
             ),
           ],
-        ),,
+        ),
       )
     );
   }
