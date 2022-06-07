@@ -16,16 +16,22 @@ class MyPageProvider with ChangeNotifier {
 
   UserModel user = UserModel("", "", "", "", "");
 
+  String? password;
+
   MyPageProvider update(AuthProvider auth) {
     this.auth = auth;
-    header = {"content-type": "application/json", constants.tokenHeaderName: auth.token};
+    header = {
+      "content-type": "application/json",
+      constants.tokenHeaderName: auth.token
+    };
     return this;
   }
 
   Future<void> getProfile() async {
-    var response = await http.get(Uri.parse(constants.getDetailUrl), headers: header);
+    var response =
+        await http.get(Uri.parse(constants.getDetailUrl), headers: header);
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       checkToken(response);
 
       var body = jsonDecode(response.body)['response'];
@@ -34,13 +40,14 @@ class MyPageProvider with ChangeNotifier {
 
       notifyListeners();
     }
-
   }
 
   Future<void> getFaculty() async {
-    var response = await http.get(Uri.parse(constants.getUniversitiesUrl+"/faculty"), headers: header);
+    var response = await http.get(
+        Uri.parse(constants.getUniversitiesUrl + "/faculty"),
+        headers: header);
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       checkToken(response);
 
       facultyList = [];
@@ -50,12 +57,10 @@ class MyPageProvider with ChangeNotifier {
         facultyList.add(SimpleModel.fromJson(element));
       });
       currentFaculty = facultyList[body['idx'] as int];
-    }
-    else
+    } else
       print(response.body);
 
     notifyListeners();
-
   }
 
   void checkToken(http.Response response) {
@@ -64,6 +69,62 @@ class MyPageProvider with ChangeNotifier {
     if (auth?.token != token && token != null) {
       auth?.changeToken(token);
     }
+  }
+
+  void onChangeFaculty(value) {
+    currentFaculty = value;
+  }
+
+  Future<void> changeUserDetail(String name, String nickName) async {
+    var response = await http.put(Uri.parse(constants.getDetailUrl),
+        headers: header,
+        body: jsonEncode({
+          "name": name,
+          "nickName": nickName,
+          "faculty": currentFaculty!.id
+        }));
+    if(response.statusCode == 200) {
+      checkToken(response);
+
+      var body = jsonDecode(response.body)['response'];
+
+      user = UserModel.fromJson(body);
+    }
+    else
+      print(response.body);
+    notifyListeners();
+  }
+
+  String? defaultValidator(text) {
+    if(text == null) {
+      return "required";
+    }
+    if(text is String && text.isEmpty) {
+      return "required";
+    }
+    return null;
+  }
+
+  String? passwordValidator(text) {
+    if(text != null && text != password)
+      return "Password does not match";
+    if(text is String && text.isNotEmpty && text != password)
+      return "Password does not match";
+    return null;
+  }
+
+  Future<bool> changePassword(GlobalKey<FormState> formKey, old)  async{
+    var response = await http.patch(Uri.parse(constants.changePasswordUrl), headers: header, body: jsonEncode({"password": old, "newPassword": password}));
+
+    if(response.statusCode == 200) {
+      checkToken(response);
+      return true;
+    }
+    else{
+      print(response.body);
+      return false;
+    }
+
   }
 
 }
