@@ -30,15 +30,9 @@ class LectureProvider with ChangeNotifier {
   String? customLectureStaff;
   int customIndex = 0;
 
-  var header = {"content-type": "application/json"};
-
   LectureProvider update(AuthProvider auth, ScheduleProvider scheduleProvider) {
     this.scheduleProvider = scheduleProvider;
     this.auth = auth;
-    header = {
-      'content-type': 'application/json',
-      constants.tokenHeaderName: auth.token
-    };
     return this;
   }
 
@@ -56,7 +50,7 @@ class LectureProvider with ChangeNotifier {
             "/list?page=" +
             tempIndex.toString() +
             "&size=9"),
-        headers: header,
+        headers: auth!.header,
         body: jsonEncode(body));
 
     if (response.statusCode == 200) {
@@ -92,7 +86,7 @@ class LectureProvider with ChangeNotifier {
 
     var response = await http.get(
         Uri.parse(constants.getUniversitiesUrl + "/faculty"),
-        headers: header);
+        headers: auth!.header);
 
     if (response.statusCode == 200) {
       checkToken(response);
@@ -113,7 +107,7 @@ class LectureProvider with ChangeNotifier {
 
     var response = await http.get(
         Uri.parse(constants.timeTableUrl + "/" + currentFaculty!.id.toString()),
-        headers: header);
+        headers: auth!.header);
 
     if (response.statusCode == 200) {
       checkToken(response);
@@ -147,7 +141,7 @@ class LectureProvider with ChangeNotifier {
       "lecture": lectureList[idx].id
     };
     var response = await http.post(Uri.parse(constants.scheduleUrl),
-        body: jsonEncode(body), headers: header);
+        body: jsonEncode(body), headers: auth!.header);
 
     if (response.statusCode != 200) print(response.body);
     else checkToken(response);
@@ -207,7 +201,7 @@ class LectureProvider with ChangeNotifier {
             "/custom/" +
             scheduleProvider!.currentGroup.id.toString()),
         body: jsonEncode(body),
-        headers: header);
+        headers: auth!.header);
 
     if (response.statusCode != 200) {
       print(response.body);
@@ -218,5 +212,25 @@ class LectureProvider with ChangeNotifier {
     scheduleProvider?.getLectures(null, null);
     widgets = {};
     values = {};
+  }
+
+  void signOut() {
+    lectureList = [];
+    currentFaculty = null;
+    facultyList = [];
+    courses = [];
+    currentCourse = null;
+
+    tempIndex = 0;
+    auth = null;
+    scheduleProvider = null;
+    controllerList = [];
+    widgets = {};
+
+    values = {};
+
+    customLectureName = null;
+    customLectureStaff = null;
+    customIndex = 0;
   }
 }

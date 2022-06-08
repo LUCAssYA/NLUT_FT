@@ -32,3 +32,9 @@ var textButtonTextStyle = TextStyle(fontSize: 15, color: Colors.black, height: 1
 
 
 var actionButton = TextStyle(color: defaultColor, fontWeight: FontWeight.bold);
+
+var toastDecoration = BoxDecoration(
+    borderRadius: BorderRadius.circular(10),
+    color: Colors.white70
+);
+var toastTextStyle = TextStyle(color: Colors.black, fontSize: 20);

@@ -11,8 +11,6 @@ import '../model/group_detail_model.dart';
 
 class FriendScheduleProvider with ChangeNotifier {
   AuthProvider? auth;
-
-  var header = {"content-type": "application/json"};
   List<GroupDetail> groups = [];
   GroupDetail? currentGroup;
 
@@ -20,12 +18,11 @@ class FriendScheduleProvider with ChangeNotifier {
 
   FriendScheduleProvider update(AuthProvider auth) {
     this.auth = auth;
-    header = {'content-type': 'application/json', constants.tokenHeaderName: auth.token};
     return this;
   }
 
   Future<void> getFriendGroup(int id) async {
-    var response = await http.get(Uri.parse(constants.groupUrl+"/friend/"+id.toString()), headers: header);
+    var response = await http.get(Uri.parse(constants.groupUrl+"/friend/"+id.toString()), headers: auth!.header);
 
     if(response.statusCode == 200) {
       checkToken(response);
@@ -59,7 +56,7 @@ class FriendScheduleProvider with ChangeNotifier {
 
   Future<void> getFriendScheduleList(DateTime start, DateTime end) async{
     var body = {"start": format.yyyyMMdd.format(start).toString(), "end": format.yyyyMMdd.format(end).toString()};
-    var response = await http.post(Uri.parse(constants.scheduleUrl+"/friend/"+currentGroup!.id.toString()), headers: header, body: jsonEncode(body));
+    var response = await http.post(Uri.parse(constants.scheduleUrl+"/friend/"+currentGroup!.id.toString()), headers: auth!.header, body: jsonEncode(body));
 
     if(response.statusCode == 200) {
       checkToken(response);
@@ -80,4 +77,13 @@ class FriendScheduleProvider with ChangeNotifier {
     currentGroup = value;
     notifyListeners();
   }
+
+  void signOut() {
+    auth = null;
+    groups = [];
+    currentGroup = null;
+
+    schedules = [];
+  }
+
 }

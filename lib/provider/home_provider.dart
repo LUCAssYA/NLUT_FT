@@ -18,16 +18,13 @@ class HomeProvider with ChangeNotifier {
   List<FriendModel> friend = [];
   List dday = [];
 
-  var header = {"content-type": "application/json"};
-
   HomeProvider update(AuthProvider auth) {
     this.auth = auth;
-    header = {'content-type': 'application/json', constants.tokenHeaderName: auth.token};
     return this;
   }
 
   Future<void> getDday() async{
-    var response = await http.get(Uri.parse(constants.scheduleUrl+"/dday"), headers: header);
+    var response = await http.get(Uri.parse(constants.scheduleUrl+"/dday"), headers: auth!.header);
     dday = [];
 
     if(response.statusCode == 200) {
@@ -50,7 +47,7 @@ class HomeProvider with ChangeNotifier {
 
   Future<void> getFriends() async{
     friend = [];
-    var response = await http.get(Uri.parse(constants.friendUrl+"/list"), headers: header);
+    var response = await http.get(Uri.parse(constants.friendUrl+"/list"), headers: auth!.header);
 
     if(response.statusCode == 200) {
       List friends = jsonDecode(response.body)['response'];
@@ -73,7 +70,7 @@ class HomeProvider with ChangeNotifier {
   }
 
   Future<void> getToday() async{
-    var response = await http.get(Uri.parse(constants.scheduleUrl), headers: header);
+    var response = await http.get(Uri.parse(constants.scheduleUrl), headers: auth!.header);
     schedule = [];
 
     if(response.statusCode == 200) {
@@ -104,7 +101,7 @@ class HomeProvider with ChangeNotifier {
 
   Future<void> deleteDday(int index) async{
     var response = await http.put(Uri.parse(constants.scheduleUrl+"/dday/delete/"+dday[index].id.toString()),
-        headers: header);
+        headers: auth!.header);
 
     if(response.statusCode == 200) {
       dday = [];
@@ -127,7 +124,7 @@ class HomeProvider with ChangeNotifier {
   }
 
   Future<void> deleteFriend(BuildContext context, int index) async {
-    var response = await http.delete(Uri.parse(constants.friendUrl+"/delete/"+friend[index].id.toString()), headers: header);
+    var response = await http.delete(Uri.parse(constants.friendUrl+"/delete/"+friend[index].id.toString()), headers: auth!.header);
 
     if(response.statusCode == 200) {
       List friends = jsonDecode(response.body)['response'];
@@ -151,7 +148,7 @@ class HomeProvider with ChangeNotifier {
   }
   
   Future<void> addFriend(BuildContext context, String text) async {
-    var response = await http.post(Uri.parse(constants.friendUrl+"/request"), headers: header, body: jsonEncode({"email": text}));
+    var response = await http.post(Uri.parse(constants.friendUrl+"/request"), headers: auth!.header, body: jsonEncode({"email": text}));
     var body = jsonDecode(response.body)['response'];
 
 
@@ -168,6 +165,13 @@ class HomeProvider with ChangeNotifier {
     }
 
 
+  }
+  void signOut() {
+    auth = null;
+
+    schedule = [];
+    friend = [];
+    dday = [];
   }
 
 }

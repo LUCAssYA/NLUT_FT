@@ -6,6 +6,7 @@ final signOutUrl = baseUrl+"users/logout";
 final getDetailUrl = baseUrl+"users/user_info";
 final findPasswordUrl = baseUrl+"users/find-password";
 final changePasswordUrl = baseUrl+"users/change-password";
+final userUrl = baseUrl+"users";
 final getUniversitiesUrl = baseUrl+"university";
 final emailAuthUrl = baseUrl+"email";
 final friendUrl = baseUrl+"friend";

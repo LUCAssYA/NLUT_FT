@@ -9,20 +9,15 @@ import 'package:http/http.dart' as http;
 
 class NotificationProvider with ChangeNotifier {
   AuthProvider? auth;
-  var header = {"content-type": "application/json"};
   List<FriendModel> friendList = [];
 
   NotificationProvider update(AuthProvider auth) {
     this.auth = auth;
-    header = {
-      'content-type': 'application/json',
-      constants.tokenHeaderName: auth.token
-    };
     return this;
   }
 
   Future<void> getRequestedFriend() async{
-    var response = await http.get(Uri.parse(constants.friendUrl+"/request"), headers: header);
+    var response = await http.get(Uri.parse(constants.friendUrl+"/request"), headers: auth!.header);
 
     if(response.statusCode == 200) {
       checkToken(response);
@@ -50,7 +45,7 @@ class NotificationProvider with ChangeNotifier {
   }
 
   Future<void> rejectAndAccept(String result, int index) async {
-    var response = await http.patch(Uri.parse(constants.friendUrl+"/"+result+"/"+friendList[index].id.toString()), headers: header);
+    var response = await http.patch(Uri.parse(constants.friendUrl+"/"+result+"/"+friendList[index].id.toString()), headers: auth!.header);
 
     if(response.statusCode == 200) {
       checkToken(response);
@@ -66,6 +61,11 @@ class NotificationProvider with ChangeNotifier {
     }
     else
       print(response.body);
+  }
+
+  void signOut() {
+    auth = null;
+    friendList = [];
   }
 
 }

@@ -9,7 +9,6 @@ import "package:http/http.dart" as http;
 
 class EvalProvider with ChangeNotifier {
   AuthProvider? auth;
-  var header = {"content-type": "application/json"};
   int idx = 0;
   double newEvalScore = 0;
 
@@ -24,7 +23,6 @@ class EvalProvider with ChangeNotifier {
 
   EvalProvider update(AuthProvider auth) {
     this.auth = auth;
-    header = {'content-type': 'application/json', constants.tokenHeaderName: auth.token};
     return this;
   }
 
@@ -35,7 +33,7 @@ class EvalProvider with ChangeNotifier {
       this.name = name;
     }
 
-    var response = await http.get(Uri.parse(constants.lectureUrl+"/"+this.name+"?page="+idx.toString()+"&size=9"), headers: header);
+    var response = await http.get(Uri.parse(constants.lectureUrl+"/"+this.name+"?page="+idx.toString()+"&size=9"), headers: auth!.header);
 
     print(response.body);
 
@@ -57,7 +55,7 @@ class EvalProvider with ChangeNotifier {
   }
 
   Future<void> evalDetail(int id) async {
-    var response = await http.get(Uri.parse(constants.evalUrl+"/detail/"+id.toString()), headers: header);
+    var response = await http.get(Uri.parse(constants.evalUrl+"/detail/"+id.toString()), headers: auth!.header);
 
     if(response.statusCode == 200){
       checkToken(response);
@@ -96,9 +94,9 @@ class EvalProvider with ChangeNotifier {
     }
 
     if(id == null)
-      response = await http.post(Uri.parse(constants.evalUrl+"/"+lecture.id.toString()), headers: header, body: jsonEncode(EvalDetailModel.of(newEvalScore, description).toJson()));
+      response = await http.post(Uri.parse(constants.evalUrl+"/"+lecture.id.toString()), headers: auth!.header, body: jsonEncode(EvalDetailModel.of(newEvalScore, description).toJson()));
     else
-      response = await http.put(Uri.parse(constants.evalUrl+"/"+id.toString()), headers: header, body: jsonEncode(EvalDetailModel.of(newEvalScore, description).toJson()));
+      response = await http.put(Uri.parse(constants.evalUrl+"/"+id.toString()), headers: auth!.header, body: jsonEncode(EvalDetailModel.of(newEvalScore, description).toJson()));
 
     if(response.statusCode == 200 ){
       checkToken(response);
@@ -122,7 +120,7 @@ class EvalProvider with ChangeNotifier {
   }
 
   Future<void> removeEval() async {
-    var response = await http.delete(Uri.parse(constants.evalUrl+"/"+evalList[0].id.toString()), headers: header);
+    var response = await http.delete(Uri.parse(constants.evalUrl+"/"+evalList[0].id.toString()), headers: auth!.header);
 
     if(response.statusCode == 200) {
       checkToken(response);
@@ -142,5 +140,25 @@ class EvalProvider with ChangeNotifier {
     else
       print(response.body);
   }
+
+  void signOut() {
+    auth = null;
+    idx = 0;
+
+    newEvalScore = 0;
+
+    lectureList = [];
+    evalList = [];
+
+    lecture = LectureListModel(-1, "", "", 0);
+
+    name = "";
+
+    written = true;
+
+    notifyListeners();
+  }
+
+
 
 }

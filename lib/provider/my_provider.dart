@@ -9,7 +9,6 @@ import 'package:urooster/utils/constants.dart' as constants;
 
 class MyPageProvider with ChangeNotifier {
   AuthProvider? auth;
-  var header = {"content-type": "application/json"};
 
   List<SimpleModel> facultyList = [];
   SimpleModel? currentFaculty;
@@ -20,16 +19,12 @@ class MyPageProvider with ChangeNotifier {
 
   MyPageProvider update(AuthProvider auth) {
     this.auth = auth;
-    header = {
-      "content-type": "application/json",
-      constants.tokenHeaderName: auth.token
-    };
     return this;
   }
 
   Future<void> getProfile() async {
     var response =
-        await http.get(Uri.parse(constants.getDetailUrl), headers: header);
+        await http.get(Uri.parse(constants.getDetailUrl), headers: auth!.header);
 
     if (response.statusCode == 200) {
       checkToken(response);
@@ -45,7 +40,7 @@ class MyPageProvider with ChangeNotifier {
   Future<void> getFaculty() async {
     var response = await http.get(
         Uri.parse(constants.getUniversitiesUrl + "/faculty"),
-        headers: header);
+        headers: auth!.header);
 
     if (response.statusCode == 200) {
       checkToken(response);
@@ -77,7 +72,7 @@ class MyPageProvider with ChangeNotifier {
 
   Future<void> changeUserDetail(String name, String nickName) async {
     var response = await http.put(Uri.parse(constants.getDetailUrl),
-        headers: header,
+        headers: auth!.header,
         body: jsonEncode({
           "name": name,
           "nickName": nickName,
@@ -113,17 +108,58 @@ class MyPageProvider with ChangeNotifier {
     return null;
   }
 
-  Future<bool> changePassword(GlobalKey<FormState> formKey, old)  async{
-    var response = await http.patch(Uri.parse(constants.changePasswordUrl), headers: header, body: jsonEncode({"password": old, "newPassword": password}));
+  Future<String> changePassword(GlobalKey<FormState> formKey, old)  async{
+    if(formKey.currentState!.validate()) {
+      var response = await http.patch(
+          Uri.parse(constants.changePasswordUrl), headers: auth!.header,
+          body: jsonEncode({"password": old, "newPassword": password}));
 
-    if(response.statusCode == 200) {
-      checkToken(response);
-      return true;
+      if (response.statusCode == 200) {
+        checkToken(response);
+        return "";
+      }
+      else {
+        print(response.body);
+        return jsonDecode(response.body)['error']['message'];
+      }
     }
-    else{
-      print(response.body);
-      return false;
-    }
+    return "";
+
+  }
+
+  void onChangePassword(value) {
+    password = value;
+  }
+
+  Future<void> signOut() async{
+    var response = await http.post(Uri.parse(constants.signOutUrl), headers: auth!.header);
+
+    auth = null;
+
+    facultyList = [];
+    currentFaculty = null;
+
+    user = UserModel("", "", "", "", "");
+
+    password = null;
+
+    notifyListeners();
+  }
+  
+  Future<void> withDraw() async{
+    var response = await http.delete(Uri.parse(constants.userUrl), headers: auth!.header);
+    print(response.body);
+
+    auth = null;
+
+    facultyList = [];
+    currentFaculty = null;
+
+    user = UserModel("", "", "", "", "");
+
+    password = null;
+
+    notifyListeners();
 
   }
 

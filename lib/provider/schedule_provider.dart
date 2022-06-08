@@ -15,7 +15,6 @@ import '../model/schedule_model.dart';
 
 class ScheduleProvider with ChangeNotifier {
   AuthProvider? auth;
-  var header = {"content-type": "application/json"};
   GroupDetail currentGroup = GroupDetail(-1, "", "0", "0", "0", DateTime.now().add(Duration(days: -50)), DateTime.now().add(Duration(days:50)));
   List<GroupList> groupList = [];
   List<ScheduleModel> schedules = <ScheduleModel>[];
@@ -25,16 +24,12 @@ class ScheduleProvider with ChangeNotifier {
 
   ScheduleProvider update(AuthProvider auth) {
     this.auth = auth;
-    header = {
-      'content-type': 'application/json',
-      constants.tokenHeaderName: auth.token
-    };
     return this;
   }
 
   Future<void> getGroups() async {
     var response = await http.get(Uri.parse(constants.groupUrl + "/group-list"),
-        headers: header);
+        headers: auth!.header);
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -71,7 +66,7 @@ class ScheduleProvider with ChangeNotifier {
 
     var response = await http.post(
         Uri.parse(constants.scheduleUrl + "/" + currentGroup.id.toString()),
-        headers: header,
+        headers: auth!.header,
         body: jsonEncode({
           "start": format.yyyyMMdd.format(this.start!).toString(),
           "end": format.yyyyMMdd.format(this.end!).toString()
@@ -100,7 +95,7 @@ class ScheduleProvider with ChangeNotifier {
   Future<void> changeDday(schedule, dday, context) async {
     var response = await http.put(
         Uri.parse(constants.scheduleUrl + "/dday/" + schedule.id.toString()),
-        headers: header,
+        headers: auth!.header,
         body: jsonEncode({"dDay": dday}));
 
     if (response.statusCode == 200) {
@@ -114,7 +109,7 @@ class ScheduleProvider with ChangeNotifier {
   Future<void> removeOneSchedule(schedule, context) async{
     var response =  await http.delete(
         Uri.parse(constants.scheduleUrl + "/" + schedule.id.toString()),
-        headers: header);
+        headers: auth!.header);
     if(response.statusCode == 200) {
       checkToken(response);
       schedules.remove(schedule);
@@ -130,7 +125,7 @@ class ScheduleProvider with ChangeNotifier {
   Future<void> removeAllSchedule(schedule, context) async {
     var response = await http.post(
         Uri.parse(constants.scheduleUrl + "/all/" + schedule.id.toString()),
-        headers: header,
+        headers: auth!.header,
         body: jsonEncode({
           "start": format.yyyyMMdd.format(start!).toString(),
           "end": format.yyyyMMdd.format(end!).toString()
@@ -154,7 +149,7 @@ class ScheduleProvider with ChangeNotifier {
   }
 
   Future<void> updateScope(String scope, BuildContext context) async{
-    var response = await http.patch(Uri.parse(constants.groupUrl+"/update-scope/"+currentGroup.id.toString()), headers: header, body: jsonEncode({"scope": scope}));
+    var response = await http.patch(Uri.parse(constants.groupUrl+"/update-scope/"+currentGroup.id.toString()), headers: auth!.header, body: jsonEncode({"scope": scope}));
 
     if(response.statusCode == 200){
       checkToken(response);
@@ -169,7 +164,7 @@ class ScheduleProvider with ChangeNotifier {
   }
 
   Future<void> getGroupDetail(int id, BuildContext context) async{
-    var response = await http.get(Uri.parse(constants.groupUrl+"/detail/"+id.toString()), headers: header);
+    var response = await http.get(Uri.parse(constants.groupUrl+"/detail/"+id.toString()), headers: auth!.header);
 
     if(response.statusCode == 200) {
       checkToken(response);
@@ -185,6 +180,16 @@ class ScheduleProvider with ChangeNotifier {
     notifyListeners();
     Navigator.pop(context);
 
+  }
+
+  void signOut() {
+    auth = null;
+    currentGroup = GroupDetail(-1, "", "0", "0", "0", DateTime.now().add(Duration(days: -50)), DateTime.now().add(Duration(days:50)));
+    groupList = [];
+    schedules = <ScheduleModel>[];
+    start = null;
+    end = null;
+    currentDate = DateTime.now();
   }
 
 
