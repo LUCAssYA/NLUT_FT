@@ -21,6 +21,7 @@ class AuthProvider with ChangeNotifier {
       var body = jsonDecode(result.body);
 
       if (result.statusCode == 200) {
+
         token = result.headers[constant.tokenHeaderName] ?? "";
         header[constant.tokenHeaderName] = token;
         notifyListeners();

@@ -85,6 +85,7 @@ class Body extends StatelessWidget {
               onChange: context.read<RegisterProvider>().facultyOnChange,
               label: "Faculty",
               margin: style.textMargin,
+              value: context.watch<RegisterProvider>().faculty,
             ),
             EmailTextField(
                 buttonTheme: style.buttonTheme,

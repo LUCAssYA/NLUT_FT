@@ -13,7 +13,7 @@ class RegisterProvider with ChangeNotifier {
   List<UniversityModel> universities = [];
   List<SimpleModel> faculties = [];
   String? domain = "";
-  int? faculty;
+  SimpleModel? faculty;
   String? password;
   int? uni;
 
@@ -44,12 +44,14 @@ class RegisterProvider with ChangeNotifier {
   }
 
   Future<void> uniOnChange(value) async {
+    print(value);
     if (value != null) {
       var response = await http.get(
           Uri.parse(constant.getUniversitiesUrl + "/" + value.id.toString()),
           headers: header);
       var body = jsonDecode(response.body)['response'];
       faculties = [];
+      faculty = null;
       print(body);
       body.forEach((element){
         faculties.add(SimpleModel.fromJson(element));
@@ -61,7 +63,7 @@ class RegisterProvider with ChangeNotifier {
   }
 
   void facultyOnChange(value) {
-    faculty = value.id;
+    faculty = value;
     notifyListeners();
   }
 
@@ -96,7 +98,7 @@ class RegisterProvider with ChangeNotifier {
 
       var result = await http.post(Uri.parse(constant.signUpUrl),
           headers: header,
-          body: jsonEncode(RegisterModel(email + "@" + domain!, name, faculty!,
+          body: jsonEncode(RegisterModel(email + "@" + domain!, name, faculty!.id,
               uni!, nickName, password)));
 
       var body = jsonDecode(result.body);
@@ -105,6 +107,7 @@ class RegisterProvider with ChangeNotifier {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Register Success")));
         Navigator.pushNamed(context, "/signIn");
+        reset();
       }
 
       else {
@@ -140,4 +143,17 @@ class RegisterProvider with ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Verify Failed")));
     }
   }
+
+  void reset() {
+    verified = false;
+    universities = [];
+    faculties = [];
+    domain = "";
+    faculty = null;
+    password = null;
+    uni = null;
+
+    notifyListeners();
+  }
+
 }
