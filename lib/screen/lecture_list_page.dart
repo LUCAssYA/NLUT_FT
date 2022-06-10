@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:urooster/provider/lecture_provider.dart';
 import 'package:urooster/provider/schedule_provider.dart';
+import 'package:urooster/widget/bottom_modal.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/lecture_list_style.dart' as style;
 import 'package:urooster/utils/format.dart' as format;
@@ -175,6 +176,51 @@ class AddCustomLecture extends StatelessWidget {
   }
 }
 
+class DateModal extends StatelessWidget {
+  DateModal({Key? key, this.changeState, this.dateTime}) : super(key: key);
+  final changeState;
+  final dateTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: style.dateModalMargin,
+      height: style.dateModalHeight(context),
+      child: Column(
+        children: [
+          Expanded(
+              child: SfDateRangePicker(
+                minDate:
+                context.watch<ScheduleProvider>().currentGroup.startDate,
+                maxDate:
+                context.watch<ScheduleProvider>().currentGroup.endDate,
+                selectionMode: DateRangePickerSelectionMode.single,
+                onSelectionChanged: (args) {
+                  changeState(format.yyyyMMdd.format(args.value), TextEditingValue(text: dateTime.toString()));
+                },
+              )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    changeState(null, TextEditingValue.empty);
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancel", style: style.defaultTextStyle,)),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("OK", style: style.defaultTextStyle,),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
 class TimeAndPlace extends StatefulWidget {
   TimeAndPlace({Key? key, this.index}) : super(key: key);
 
@@ -201,52 +247,11 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
     context.read<LectureProvider>().changeEveryweek(this.widget.index, false);
   }
 
-  void dateModal() {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            margin: style.dateModalMargin,
-            height: style.dateModalHeight(context),
-            child: Column(
-              children: [
-                Expanded(
-                    child: SfDateRangePicker(
-                  minDate:
-                      context.watch<ScheduleProvider>().currentGroup.startDate,
-                  maxDate:
-                      context.watch<ScheduleProvider>().currentGroup.endDate,
-                  selectionMode: DateRangePickerSelectionMode.single,
-                  onSelectionChanged: (args) {
-                    setState(() {
-                      dateTime = format.yyyyMMdd.format(args.value);
-                      dateController.value =
-                          TextEditingValue(text: dateTime.toString());
-                    });
-                  },
-                )),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            dateTime = null;
-                            dateController.value = TextEditingValue.empty;
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: Text("Cancel")),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("OK"),
-                    )
-                  ],
-                )
-              ],
-            ),
-          );
-        });
+  void changeDateTime(dt, dc) {
+    setState(() {
+      dateTime = dt;
+      dateController.value = dc;
+    });
   }
 
   @override
@@ -264,7 +269,7 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                 DisabledTextBox(
                   margin: style.disabeldTextBox,
                   label: "Date",
-                  onTap: dateModal,
+                  onTap: () => modalBottomSheet(context, null, () => DateModal(changeState: changeDateTime, dateTime: dateTime,)),
                   controller: dateController,
                   onSave: () => context
                       .read<LectureProvider>()
