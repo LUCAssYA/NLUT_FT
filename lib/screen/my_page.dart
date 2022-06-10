@@ -12,7 +12,9 @@ import 'package:urooster/provider/register_provider.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/my_page_style.dart' as style;
+import 'package:urooster/widget/dialog.dart';
 import 'package:urooster/widget/text_field.dart';
+import 'package:urooster/widget/toast.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -124,154 +126,35 @@ class _AccountSettingState extends State<AccountSetting> {
   final newController = TextEditingController();
 
   final confirmController = TextEditingController();
-  late FToast fToast;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    fToast = FToast();
-    fToast.init(context);
+
+  void onClickUserInfoOK() {
+    context
+        .read<MyPageProvider>()
+        .changeUserDetail(nameController.text, nickNameController.text);
+    Navigator.pop(context);
   }
 
-  void changeUserInfoDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              title: Text("Change User Information"),
-              content: UserInfoChange(
-                nameController: nameController,
-                nickNameController: nickNameController,
-              ),
-              actions: [
-                Row(
-                  children: [
-                    Expanded(
-                        child: TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              "Cancel",
-                              style: style.actionButton,
-                            ))),
-                    Expanded(
-                        child: TextButton(
-                      onPressed: () {
-                        context.read<MyPageProvider>().changeUserDetail(
-                            nameController.text, nickNameController.text);
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        "OK",
-                        style: style.actionButton,
-                      ),
-                    ))
-                  ],
-                )
-              ]);
-        });
+  void onClickChangePasswordOK() async {
+    String result = await context
+        .read<MyPageProvider>()
+        .changePassword(formKey, oldController.text);
+    if (result != "") {
+      showToast(context, result);
+      return;
+    }
+    Navigator.pop(context);
   }
 
-  void changePasswordDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text("Change Password"),
-          content: ChangePassword(controller: oldController, newController: newController, confirmController: confirmController, formKey: formKey,),
-          actions: [
-            Row(
-              children: [
-                Expanded(
-                    child: TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(
-                          "Cancel",
-                          style: style.actionButton,
-                        ))),
-                Expanded(
-                    child: TextButton(
-                  onPressed: () async {
-                    String result = await context.read<MyPageProvider>().changePassword(formKey, oldController.text);
-                    if(result != "") {
-                      fToast.showToast(
-                          child: Container(
-                            height: 50,
-                            width: 300,
-                            decoration: style.toastDecoration,
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    result,
-                                    textAlign: TextAlign.center,
-                                    style: style.toastTextStyle,
-                                  )
-                                ]),
-                          ),
-                          gravity: ToastGravity.TOP,
-                          toastDuration: Duration(seconds: 1));
-                      return;
-                    }
-                    Navigator.pop(context);
-
-                  },
-                  child: Text(
-                    "OK",
-                    style: style.actionButton,
-                  ),
-                ))
-              ],
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  void withDrawDialog() {
-    showDialog(context: context, builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Withdraw"),
-        content: Text("Do you really want to withdraw?"),
-        actions: [
-          Row(
-            children: [
-              Expanded(
-                  child: TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        "Cancel",
-                        style: style.actionButton,
-                      ))),
-              Expanded(
-                  child: TextButton(
-                    onPressed: () {
-                      context.read<MyPageProvider>().withDraw().then((value){
-                        context.read<EvalProvider>().signOut();
-                        context.read<AuthProvider>().singOut();
-                        context.read<FriendScheduleProvider>().signOut();
-                        context.read<HomeProvider>().signOut();
-                        context.read<LectureProvider>().signOut();
-                        context.read<NotificationProvider>().signOut();
-                        context.read<ScheduleProvider>().signOut();
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      });
-                    },
-                    child: Text(
-                      "OK",
-                      style: style.actionButton,
-                    ),
-                  ))
-            ],
-          )
-        ],
-      );
+  void onClickWithDrawOK() {
+    context.read<MyPageProvider>().withDraw().then((value) {
+      context.read<EvalProvider>().signOut();
+      context.read<AuthProvider>().singOut();
+      context.read<FriendScheduleProvider>().signOut();
+      context.read<HomeProvider>().signOut();
+      context.read<LectureProvider>().signOut();
+      context.read<NotificationProvider>().signOut();
+      context.read<ScheduleProvider>().signOut();
+      Navigator.popUntil(context, (route) => route.isFirst);
     });
   }
 
@@ -293,7 +176,14 @@ class _AccountSettingState extends State<AccountSetting> {
           Row(children: [
             Expanded(
                 child: TextButton(
-              onPressed: () => changeUserInfoDialog(),
+              onPressed: () => dialog(
+                  context,
+                  Text("Change User Information"),
+                  UserInfoChange(
+                    nameController: nameController,
+                    nickNameController: nickNameController,
+                  ),
+                  onClickUserInfoOK),
               child: Text(
                 "Change User Information",
                 style: style.textButtonTextStyle,
@@ -304,7 +194,16 @@ class _AccountSettingState extends State<AccountSetting> {
           Row(children: [
             Expanded(
                 child: TextButton(
-              onPressed: () => changePasswordDialog(),
+              onPressed: () => dialog(
+                  context,
+                  Text("Change Password"),
+                  ChangePassword(
+                    controller: oldController,
+                    newController: newController,
+                    confirmController: confirmController,
+                    formKey: formKey,
+                  ),
+                  onClickChangePasswordOK),
               child: Text(
                 "Change Password",
                 style: style.textButtonTextStyle,
@@ -315,7 +214,7 @@ class _AccountSettingState extends State<AccountSetting> {
           Row(children: [
             Expanded(
                 child: TextButton(
-                    onPressed: () => withDrawDialog(),
+                    onPressed: () => dialog(context, Text("Withdraw"), Text("Do you really want to withdraw?"), onClickWithDrawOK),
                     child: Text(
                       "Withdraw",
                       style: style.textButtonTextStyle,
@@ -356,14 +255,12 @@ class UserInfoChange extends StatefulWidget {
   final nameController;
   final nickNameController;
 
-
   @override
   State<UserInfoChange> createState() => _UserInfoChangeState();
 }
 
 class _UserInfoChangeState extends State<UserInfoChange> {
   final formKey = GlobalKey<FormState>();
-
 
   @override
   void initState() {
@@ -414,7 +311,13 @@ class _UserInfoChangeState extends State<UserInfoChange> {
 }
 
 class ChangePassword extends StatefulWidget {
-  ChangePassword({Key? key, this.formKey, this.controller, this.newController, this.confirmController}) : super(key: key);
+  ChangePassword(
+      {Key? key,
+      this.formKey,
+      this.controller,
+      this.newController,
+      this.confirmController})
+      : super(key: key);
 
   final formKey;
   final controller;
@@ -426,47 +329,43 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height/3,
-      width: MediaQuery.of(context).size.width * 0.9,
-      child: Form(
-        key: widget.formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CustomTextFormField(
-              obscure: true,
-              suggestion: false,
-              autoCorrect: false,
-              label: "Old Password",
-              validator: context.read<MyPageProvider>().defaultValidator,
-              controller: widget.controller,
-            ),
-            CustomTextFormField(
-              obscure: true,
-              suggestion: false,
-              autoCorrect: false,
-              label: "New Password",
-              validator: context.read<MyPageProvider>().defaultValidator,
-              controller: widget.newController,
-              onChange: context.read<MyPageProvider>().onChangePassword,
-            ),
-            CustomTextFormField(
-              obscure: true,
-              suggestion: false,
-              autoCorrect: false,
-              label: "Confirm New Password",
-              validator: context.read<MyPageProvider>().passwordValidator,
-              controller: widget.confirmController,
-            )
-          ],
-        ),
-      )
-    );
+        height: MediaQuery.of(context).size.height / 3,
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: Form(
+          key: widget.formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomTextFormField(
+                obscure: true,
+                suggestion: false,
+                autoCorrect: false,
+                label: "Old Password",
+                validator: context.read<MyPageProvider>().defaultValidator,
+                controller: widget.controller,
+              ),
+              CustomTextFormField(
+                obscure: true,
+                suggestion: false,
+                autoCorrect: false,
+                label: "New Password",
+                validator: context.read<MyPageProvider>().defaultValidator,
+                controller: widget.newController,
+                onChange: context.read<MyPageProvider>().onChangePassword,
+              ),
+              CustomTextFormField(
+                obscure: true,
+                suggestion: false,
+                autoCorrect: false,
+                label: "Confirm New Password",
+                validator: context.read<MyPageProvider>().passwordValidator,
+                controller: widget.confirmController,
+              )
+            ],
+          ),
+        ));
   }
 }

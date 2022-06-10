@@ -5,6 +5,7 @@ import 'package:urooster/provider/home_provider.dart';
 import 'package:urooster/screen/friend_schedule_page.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/main_page_style.dart' as style;
+import 'package:urooster/widget/dialog.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -124,28 +125,6 @@ class Friend extends StatelessWidget {
   final data;
   final index;
 
-  void removeFriend(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Remove friend?"),
-          content:
-              Text("Are you sure want to remove " + data + " as your friend?"),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context), child: Text("Cancel")),
-            TextButton(
-                onPressed: () =>
-                    context.read<HomeProvider>().deleteFriend(context, index),
-                child: Text("OK"))
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -159,7 +138,10 @@ class Friend extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) => FriendSchedulPage(
-                                id: context.read<HomeProvider>().friend[index].id,
+                                id: context
+                                    .read<HomeProvider>()
+                                    .friend[index]
+                                    .id,
                               ))),
                   child: Text(
                     data,
@@ -168,9 +150,13 @@ class Friend extends StatelessWidget {
                   style: style.friendTextButton)),
           Container(
               child: IconButton(
-            onPressed: () {
-              removeFriend(context);
-            },
+            onPressed: () => dialog(
+                context,
+                Text("Remove friend?"),
+                Text(
+                    "Are you sure want to remove " + data + " as your friend?"),
+                () =>
+                    context.read<HomeProvider>().deleteFriend(context, index)),
             icon: Icon(Icons.person_remove),
             iconSize: 16,
           ))
@@ -183,37 +169,8 @@ class Friend extends StatelessWidget {
 class FriendList extends StatelessWidget {
   FriendList({Key? key}) : super(key: key);
 
-  void addFriend(BuildContext context) {
-    final controller = TextEditingController();
+  final controller = TextEditingController();
 
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Enter the friend's email you want to add"),
-            content: Container(
-              margin: style.addFriendfieldMargin,
-              height: 40,
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel")),
-              TextButton(
-                  onPressed: () => context
-                      .read<HomeProvider>()
-                      .addFriend(context, controller.text),
-                  child: Text("OK"))
-            ],
-          );
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +193,22 @@ class FriendList extends StatelessWidget {
                   height: 16,
                   child: IconButton(
                       padding: EdgeInsets.all(0),
-                      onPressed: () => addFriend(context),
+                      onPressed: () => dialog(
+                          context,
+                          Text("Enter the friend's email you want to add"),
+                          Container(
+                            margin: style.addFriendfieldMargin,
+                            height: 40,
+                            child: TextField(
+                              controller: controller,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          () => context
+                              .read<HomeProvider>()
+                              .addFriend(context, controller.text)),
                       icon: Icon(
                         Icons.add,
                         size: 16,

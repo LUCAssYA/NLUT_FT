@@ -153,6 +153,7 @@ class HomeProvider with ChangeNotifier {
 
 
     if(response.statusCode == 200) {
+      print(response.body);
       checkToken(response);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request Complete")));
@@ -160,7 +161,7 @@ class HomeProvider with ChangeNotifier {
     }
     else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(body["error"])));
+          .showSnackBar(SnackBar(content: Text(jsonDecode(response.body)['error']['message'])));
       Navigator.pop(context);
     }
 
