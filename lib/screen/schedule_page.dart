@@ -11,6 +11,7 @@ import 'package:urooster/model/schedule_model.dart';
 import 'package:urooster/provider/schedule_provider.dart';
 import 'package:urooster/screen/group_list_page.dart';
 import 'package:urooster/screen/lecture_list_page.dart';
+import 'package:urooster/widget/bottom_modal.dart';
 import 'package:urooster/widget/custom_app_bar.dart';
 import 'package:urooster/style/schedule_style.dart' as style;
 import 'package:urooster/utils/format.dart' as format;
@@ -28,16 +29,6 @@ class _SchedulePageState extends State<SchedulePage> {
   CalendarController _calendarController = CalendarController();
   DateTime initDate = DateTime.now();
 
-  void showLectureDetail(ScheduleModel schedule, context) {
-    bool dday = schedule.dday;
-
-    showModalBottomSheet(
-        shape: style.modalShape,
-        context: context,
-        builder: (BuildContext context) {
-          return BottomModal(schedule: schedule);
-        });
-  }
 
   void showGroupList() {
     Navigator.push(
@@ -106,7 +97,6 @@ class _SchedulePageState extends State<SchedulePage> {
           showAddLecture),
       body: Calendar(
         calendarController: _calendarController,
-        showLectureDetail: showLectureDetail,
         start: start,
         end: end,
       ),
@@ -118,13 +108,11 @@ class Calendar extends StatefulWidget {
   Calendar(
       {Key? key,
       this.calendarController,
-      this.showLectureDetail,
       this.start,
       this.end})
       : super(key: key);
 
   final calendarController;
-  final showLectureDetail;
   final start;
   final end;
 
@@ -180,7 +168,7 @@ class _CalendarState extends State<Calendar> {
           onTap: (CalendarTapDetails details) {
             dynamic appointments = details.appointments;
             if (appointments != null)
-              widget.showLectureDetail(appointments[0], context);
+              modalBottomSheet(context, style.modalShape, ()=> BottomModal(schedule:appointments[0]));
           },
         ));
   }
