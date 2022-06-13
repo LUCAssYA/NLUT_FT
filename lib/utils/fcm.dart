@@ -7,12 +7,18 @@ void fcmSetting() async {
   await Firebase.initializeApp();
 
   await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: true,
-    badge: true,
-    carPlay: true,
-    criticalAlert: true,
-    provisional: true,
-    sound: true
-  );
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: true,
+      criticalAlert: true,
+      provisional: true,
+      sound: true);
+
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      "high_importance_channel", "High Importance Notifications",
+      description: "This channel is used for important notifications",
+      importance: Importance.max);
+
+
 }
