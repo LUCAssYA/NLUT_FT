@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "637000776850",
+    "project_id": "urooster-9bd19",
+    "storage_bucket": "urooster-9bd19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637000776850:android:b92b50f71fce44f0e7ba4b",
+        "android_client_info": {
+          "package_name": "com.example.urooster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637000776850-jg9qkf1mkah6e8052d5ibhmcrud6v75v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ_rZcDYKuvlXh5bUrI-CfUpVhHeKoc5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637000776850-jg9qkf1mkah6e8052d5ibhmcrud6v75v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

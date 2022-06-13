@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:urooster/model/signin_model.dart';
 import "package:urooster/utils/constants.dart" as constant;
@@ -9,6 +10,30 @@ import "package:urooster/utils/constants.dart" as constant;
 class AuthProvider with ChangeNotifier {
   String token = "";
   var header = {"content-type": "application/json"};
+  static final storage = new FlutterSecureStorage();
+
+  Future<void> autoSignIn(BuildContext context, url) async{
+    String? userInfo = await storage.read(key: "login");
+
+    if(userInfo != null) {
+      String email = userInfo.split(" ")[1];
+      String password = userInfo.split(" ")[3];
+
+      var result = await http.post(Uri.parse(constant.signInUrl), body: jsonEncode(SignInModel(email, password).toJson()), headers: header);
+
+      if(result.statusCode == 200) {
+        token = result.headers[constant.tokenHeaderName]??"";
+        header[constant.tokenHeaderName] = token;
+        notifyListeners();
+
+        if(url != "") {
+          Navigator.pushNamed(context, url);
+        }
+      }
+    }
+
+
+  }
 
   Future<void> signIn(String email, String password,
       GlobalKey<FormState> formKey, BuildContext context) async {
@@ -21,7 +46,7 @@ class AuthProvider with ChangeNotifier {
       var body = jsonDecode(result.body);
 
       if (result.statusCode == 200) {
-
+        await storage.write(key: "login", value: "id "+email+" "+"password "+password);
         token = result.headers[constant.tokenHeaderName] ?? "";
         header[constant.tokenHeaderName] = token;
         notifyListeners();

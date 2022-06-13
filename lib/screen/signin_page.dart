@@ -4,8 +4,22 @@ import 'package:provider/provider.dart';
 import 'package:urooster/style/signin_page_style.dart' as style;
 import 'package:urooster/provider/auth_provider.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   SignInPage({Key? key}) : super(key: key);
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    context.read<AuthProvider>().autoSignIn(context, "/home");
+  }
 
   @override
   Widget build(BuildContext context) {
