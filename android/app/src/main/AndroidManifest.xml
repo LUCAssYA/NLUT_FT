@@ -2,7 +2,11 @@
     package="com.example.urooster">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-   <application
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <application
         android:label="urooster"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

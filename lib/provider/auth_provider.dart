@@ -11,6 +11,10 @@ class AuthProvider with ChangeNotifier {
   String token = "";
   var header = {"content-type": "application/json"};
   static final storage = new FlutterSecureStorage();
+  String fcmToken = "";
+
+
+  AuthProvider(this.fcmToken);
 
   Future<void> autoSignIn(BuildContext context, url) async{
     String? userInfo = await storage.read(key: "login");
