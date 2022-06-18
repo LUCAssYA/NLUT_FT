@@ -14,7 +14,7 @@ class AuthProvider with ChangeNotifier {
   String fcmToken = "";
 
 
-  AuthProvider(this.fcmToken);
+  AuthProvider();
 
   Future<void> autoSignIn(BuildContext context, url) async{
     String? userInfo = await storage.read(key: "login");
