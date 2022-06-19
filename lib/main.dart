@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urooster/provider/auth_provider.dart';
 import 'package:urooster/provider/eval_provider.dart';
 import 'package:urooster/provider/friend_schedule_provider.dart';
@@ -56,12 +57,20 @@ void main() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  String? token = prefs.getString("token");
+
+  if(token ==  null) {
+    token = await FirebaseMessaging.instance.getToken();
+  }
+
 
 
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (c) => AuthProvider()),
+      ChangeNotifierProvider(create: (c) => AuthProvider(token)),
       ChangeNotifierProvider(create: (c) => RegisterProvider()),
       ChangeNotifierProxyProvider<AuthProvider, HomeProvider>(
         create: (_) => HomeProvider(),

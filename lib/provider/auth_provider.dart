@@ -11,10 +11,10 @@ class AuthProvider with ChangeNotifier {
   String token = "";
   var header = {"content-type": "application/json"};
   static final storage = new FlutterSecureStorage();
-  String fcmToken = "";
+  String? fcmToken = "";
 
 
-  AuthProvider();
+  AuthProvider(this.fcmToken);
 
   Future<void> autoSignIn(BuildContext context, url) async{
     String? userInfo = await storage.read(key: "login");
@@ -23,7 +23,7 @@ class AuthProvider with ChangeNotifier {
       String email = userInfo.split(" ")[1];
       String password = userInfo.split(" ")[3];
 
-      var result = await http.post(Uri.parse(constant.signInUrl), body: jsonEncode(SignInModel(email, password).toJson()), headers: header);
+      var result = await http.post(Uri.parse(constant.signInUrl), body: jsonEncode(SignInModel(email, password, fcmToken).toJson()), headers: header);
 
       if(result.statusCode == 200) {
         token = result.headers[constant.tokenHeaderName]??"";
@@ -44,7 +44,7 @@ class AuthProvider with ChangeNotifier {
     if (formKey.currentState!.validate()) {
       header = {"content-type": "application/json"};
       var result = await http.post(Uri.parse(constant.signInUrl),
-          body: jsonEncode(SignInModel(email, password).toJson()),
+          body: jsonEncode(SignInModel(email, password, fcmToken).toJson()),
           headers: header);
 
       var body = jsonDecode(result.body);
