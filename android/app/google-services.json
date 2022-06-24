@@ -29,6 +29,13 @@
             {
               "client_id": "637000776850-jg9qkf1mkah6e8052d5ibhmcrud6v75v.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "637000776850-6uhum8575ulrggofgbri5agenuv94h88.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.urooster"
+              }
             }
           ]
         }
