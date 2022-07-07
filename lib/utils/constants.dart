@@ -1,4 +1,4 @@
-var baseUrl = "http://localhost:8080/api/";
+var baseUrl = "http://130.162.259.35:8081/api/";
 
 final signInUrl = baseUrl+"users/login";
 final signUpUrl = baseUrl+"users/signUp";
