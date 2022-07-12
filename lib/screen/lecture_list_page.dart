@@ -35,6 +35,7 @@ class _LectureListPageState extends State<LectureListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        margin: style.topMargin(context),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

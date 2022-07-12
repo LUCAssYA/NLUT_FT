@@ -18,7 +18,7 @@ var itemPadding = EdgeInsets.symmetric(vertical: 10, horizontal: 10);
 var itemMargin = EdgeInsets.symmetric(horizontal: 15);
 
 var titleTextStyle = TextStyle(fontSize: 20, letterSpacing: 1.5, fontWeight: FontWeight.bold, height: 1.5);
-var itemTextStyle = TextStyle(fontSize: 15, letterSpacing: 1.5, height: 1.5);
+var itemTextStyle = TextStyle(fontSize: 13, letterSpacing: 1.5, height: 1.5);
 
 var containerMargin = EdgeInsets.symmetric(vertical: 10);
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+var topMargin = (BuildContext context) => EdgeInsets.fromLTRB(0, MediaQuery.of(context).padding.top, 0, 0);
 var defaultColor = Colors.black54;
 var friendButtonHeight = (context) => MediaQuery.of(context).size.height/12;
 var friendButtonText = TextStyle(color: Colors.black87, fontSize: 18);

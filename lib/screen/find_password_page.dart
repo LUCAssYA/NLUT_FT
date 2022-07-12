@@ -7,16 +7,17 @@ import 'package:urooster/widget/custom_app_bar.dart';
 
 class FindPasswordPage extends StatelessWidget {
   FindPasswordPage({Key? key}) : super(key: key);
+  static final pformKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
-    final formKey = GlobalKey<FormState>();
+
 
     return Scaffold(
         appBar: customAppBar(context),
         body: Form(
-            key: formKey,
+            key: pformKey,
             child: Container(
               margin: style.containerMargin(context),
               child: Column(
@@ -40,7 +41,7 @@ class FindPasswordPage extends StatelessWidget {
                         onPressed: () {
                           context
                               .read<AuthProvider>()
-                              .findPassword(controller.text, formKey);
+                              .findPassword(controller.text, pformKey);
                           Navigator.pushNamed(context, "/resetComplete");
                         },
                         child: Text("Reset password"),

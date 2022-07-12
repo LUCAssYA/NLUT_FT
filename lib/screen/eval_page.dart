@@ -19,7 +19,7 @@ class EvalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: style.mainMargin,
+        margin: style.mainMargin(context),
         child: Column(
           children: [EvalSearch(), LectureList()],
         ),
@@ -180,10 +180,10 @@ class LectureDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: style.mainMargin,
+        padding: style.defauiltMargin,
         width: MediaQuery.of(context).size.width,
         decoration: style.containerDecoration(),
-        margin: style.mainMargin,
+        margin: style.defauiltMargin,
         height: 100,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,8 +225,8 @@ class NewReview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: style.mainMargin,
-      padding: style.mainMargin,
+      margin: style.defauiltMargin,
+      padding: style.defauiltMargin,
       height: style.modalHeight(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,8 +321,8 @@ class _EvalListState extends State<EvalList> {
   Widget build(BuildContext context) {
     return Container(
         decoration: style.containerDecoration(),
-        margin: style.mainMargin,
-        padding: style.mainMargin,
+        margin: style.defauiltMargin,
+        padding: style.defauiltMargin,
         child: Column(
           children: [
             Container(
@@ -342,7 +342,7 @@ class _EvalListState extends State<EvalList> {
               ),
             ),
             Container(
-              padding: style.mainMargin,
+              padding: style.defauiltMargin,
               child: ListView.separated(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,

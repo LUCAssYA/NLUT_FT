@@ -63,12 +63,12 @@ class Body extends StatelessWidget {
   final confirmController = TextEditingController();
   final nickNameController = TextEditingController();
 
-  final formKey = GlobalKey<FormState>();
+  static final rformKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Form(
-        key: formKey,
+        key: rformKey,
         child: Column(
           children: [
             SelectBox(
@@ -152,11 +152,11 @@ class Body extends StatelessWidget {
               width: style.buttonSize(context),
               margin: style.buttonMargin,
               onPress: () => context.read<RegisterProvider>().onButtonPress(
-                  emailController.text,
-                  passwordController.text,
-                  nameController.text,
-                  nickNameController.text,
-                  formKey,
+                  emailController.text.trim(),
+                  passwordController.text.trim(),
+                  nameController.text.trim(),
+                  nickNameController.text.trim(),
+                  rformKey,
                   context),
             )
           ],

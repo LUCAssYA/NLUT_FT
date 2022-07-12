@@ -95,12 +95,11 @@ class _ProfileState extends State<Profile> {
                       context.watch<MyPageProvider>().user.faculty,
                       style: style.itemTextStyle,
                     ),
-                    Text("/"),
-                    Text(
-                      context.watch<MyPageProvider>().user.university,
-                      style: style.itemTextStyle,
-                    )
                   ],
+                ),
+                Text(
+                  context.watch<MyPageProvider>().user.university,
+                  style: style.itemTextStyle,
                 )
               ],
             ),

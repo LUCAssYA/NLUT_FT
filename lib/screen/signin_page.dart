@@ -36,17 +36,24 @@ class _SignInPageState extends State<SignInPage> {
   }
 }
 
-class SignInBody extends StatelessWidget {
+class SignInBody extends StatefulWidget {
   SignInBody({Key? key}) : super(key: key);
 
-  final formKey = GlobalKey<FormState>();
+  static final formKey = GlobalKey<FormState>();
+
+  @override
+  State<SignInBody> createState() => _SignInBodyState();
+}
+
+class _SignInBodyState extends State<SignInBody> {
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Form(
-        key: formKey,
+        key: SignInBody.formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -89,9 +96,9 @@ class SignInBody extends StatelessWidget {
                 child: ElevatedButton(
                     onPressed: () => {
                           context.read<AuthProvider>().signIn(
-                              emailController.text,
-                              passwordController.text,
-                              formKey,
+                              emailController.text.trim(),
+                              passwordController.text.trim(),
+                              SignInBody.formKey,
                               context)
                         },
                     child: Text("Sign in"),

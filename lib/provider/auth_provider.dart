@@ -85,8 +85,9 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  void singOut() {
+  Future<void> singOut() async {
     token = "";
+    await storage.delete(key: "login");
     notifyListeners();
   }
 }

@@ -23,6 +23,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: style.topMargin(context),
       child: Column(
         children: [
           OutlinedButton(
