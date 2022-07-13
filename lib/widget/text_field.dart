@@ -127,8 +127,11 @@ class SelectBox extends StatelessWidget {
         itemHeight: 60,
         validator: (text) => validator(text),
         items: items
-            .map<DropdownMenuItem<Object?>>((item) =>
-                DropdownMenuItem<Object?>(child: Text(item.name), value: item))
+            .map<DropdownMenuItem<Object?>>((item) => DropdownMenuItem<Object?>(
+                  child: Container(
+                      margin: style.dropDownItemMargin, child: Text(item.name)),
+                  value: item,
+                ))
             .toList(),
         onChanged: (Object? value) => onChange(value),
         decoration:

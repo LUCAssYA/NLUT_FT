@@ -28,7 +28,6 @@ PreferredSizeWidget blankAppBar() {
 
 PreferredSizeWidget scheduleAppBar(title, setting, list, add) {
   return AppBar(
-    primary: false,
     title: Text(title, style: style.titleStyle),
     backgroundColor: style.appBarBackgroundColor,
     elevation: 0,
@@ -77,7 +76,6 @@ PreferredSizeWidget lectureListAppBar(
     facultyItem, facultyOnChange, courseItem, courseOnChange, context) {
   return AppBar(
     backgroundColor: style.appBarBackgroundColor,
-    primary: false,
     elevation: 0,
     automaticallyImplyLeading: false,
     title: Container(
@@ -122,7 +120,6 @@ PreferredSizeWidget friendScheduleAppbar(
     context, onChange, items, label, margin, value, onClose) {
   return AppBar(
     backgroundColor: style.appBarBackgroundColor,
-    primary: false,
     elevation: 0,
     automaticallyImplyLeading: false,
     title: Container(

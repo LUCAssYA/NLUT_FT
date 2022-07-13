@@ -22,3 +22,5 @@ var toastDecoration = BoxDecoration(
 var toastTextStyle = TextStyle(color: Colors.black, fontSize: 20);
 
 var dialogActionText = TextStyle(color: appBarIconColor, fontWeight: FontWeight.bold);
+
+var dropDownItemMargin = EdgeInsets.symmetric(vertical: 5);
