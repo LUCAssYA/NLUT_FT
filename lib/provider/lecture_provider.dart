@@ -127,12 +127,16 @@ class LectureProvider with ChangeNotifier {
     currentFaculty = value;
     currentCourse = null;
     getTimeTable();
+
+    notifyListeners();
   }
 
   void courseOnChange(value) {
     lectureList = [];
     currentCourse = value;
     getLecture(0);
+
+    notifyListeners();
   }
 
   Future<void> addLecture(int idx, BuildContext context) async {
@@ -158,20 +162,28 @@ class LectureProvider with ChangeNotifier {
 
   void lectureNameChange(value) {
     customLectureName = value;
+
+    notifyListeners();
   }
 
   void lectureStaffChange(value) {
     customLectureStaff = value;
+    notifyListeners();
   }
 
   void lectureDetailChange(index, name, value) {
     if (!values.keys.contains(index)) values[index] = {};
     values[index]![name] = value;
+
+    notifyListeners();
   }
 
   void changeEveryweek(index, value) {
     if (!values.keys.contains(index)) values[index] = {};
     values[index]!["everyWeek"] = value;
+
+
+    notifyListeners();
   }
 
   Future<void> customSave(
@@ -212,6 +224,8 @@ class LectureProvider with ChangeNotifier {
     scheduleProvider?.getLectures(null, null);
     widgets = {};
     values = {};
+
+    notifyListeners();
   }
 
   void signOut() {
@@ -232,5 +246,7 @@ class LectureProvider with ChangeNotifier {
     customLectureName = null;
     customLectureStaff = null;
     customIndex = 0;
+
+    notifyListeners();
   }
 }

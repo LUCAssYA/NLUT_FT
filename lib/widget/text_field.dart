@@ -124,7 +124,7 @@ class SelectBox extends StatelessWidget {
       margin: margin,
       child: DropdownButtonFormField<Object?>(
         value: value,
-        itemHeight: 60,
+        itemHeight: 80,
         validator: (text) => validator(text),
         items: items
             .map<DropdownMenuItem<Object?>>((item) => DropdownMenuItem<Object?>(
