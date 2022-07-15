@@ -5,7 +5,7 @@ var listMargin = EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0);
 var selectBoxMargin = EdgeInsets.fromLTRB(5, 10, 0, 5);
 var buttonStyle = ElevatedButton.styleFrom(primary: Colors.black54, onPrimary: Colors.black, padding: EdgeInsets.all(0), elevation: 0);
 var buttonTextStyle = TextStyle(color: Colors.white);
-var lectureText = TextStyle(fontSize: 20);
+var lectureText = TextStyle(fontSize: 15);
 var staffText = TextStyle(fontSize: 15);
 var addButtonMargin = EdgeInsets.symmetric(horizontal: 5, vertical: 10);
 var buttonHeight = 45.0;
@@ -23,6 +23,8 @@ var defaultTextStyle = TextStyle(color: Colors.black87);
 var addTimeAndPlace = TextStyle(color:Colors.deepOrange);
 
 var modalHeight = (context) => MediaQuery.of(context).size.height*0.7;
+
+var itemMargin = EdgeInsets.fromLTRB(0, 0, 5, 0);
 
 
 

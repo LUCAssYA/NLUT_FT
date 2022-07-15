@@ -35,14 +35,14 @@ class _LectureListPageState extends State<LectureListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: style.topMargin(context),
+          margin: style.topMargin(context),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            SelectFaculty(),
-            Expanded(child: LectureList()),
-            AddCustomLecture()
-          ])),
+                SelectFaculty(),
+                Expanded(child: LectureList()),
+                AddCustomLecture()
+              ])),
     );
   }
 }
@@ -191,15 +191,14 @@ class DateModal extends StatelessWidget {
         children: [
           Expanded(
               child: SfDateRangePicker(
-                minDate:
-                context.watch<ScheduleProvider>().currentGroup.startDate,
-                maxDate:
-                context.watch<ScheduleProvider>().currentGroup.endDate,
-                selectionMode: DateRangePickerSelectionMode.single,
-                onSelectionChanged: (args) {
-                  changeState(format.yyyyMMdd.format(args.value), TextEditingValue(text: dateTime.toString()));
-                },
-              )),
+            minDate: context.watch<ScheduleProvider>().currentGroup.startDate,
+            maxDate: context.watch<ScheduleProvider>().currentGroup.endDate,
+            selectionMode: DateRangePickerSelectionMode.single,
+            onSelectionChanged: (args) {
+              changeState(format.yyyyMMdd.format(args.value),
+                  TextEditingValue(text: dateTime.toString()));
+            },
+          )),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -208,10 +207,16 @@ class DateModal extends StatelessWidget {
                     changeState(null, TextEditingValue.empty);
                     Navigator.pop(context);
                   },
-                  child: Text("Cancel", style: style.defaultTextStyle,)),
+                  child: Text(
+                    "Cancel",
+                    style: style.defaultTextStyle,
+                  )),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text("OK", style: style.defaultTextStyle,),
+                child: Text(
+                  "OK",
+                  style: style.defaultTextStyle,
+                ),
               )
             ],
           )
@@ -220,7 +225,6 @@ class DateModal extends StatelessWidget {
     );
   }
 }
-
 
 class TimeAndPlace extends StatefulWidget {
   TimeAndPlace({Key? key, this.index}) : super(key: key);
@@ -270,7 +274,13 @@ class _TimeAndPlaceState extends State<TimeAndPlace> {
                 DisabledTextBox(
                   margin: style.disabeldTextBox,
                   label: "Date",
-                  onTap: () => modalBottomSheet(context, null, () => DateModal(changeState: changeDateTime, dateTime: dateTime,)),
+                  onTap: () => modalBottomSheet(
+                      context,
+                      null,
+                      () => DateModal(
+                            changeState: changeDateTime,
+                            dateTime: dateTime,
+                          )),
                   controller: dateController,
                   onSave: () => context
                       .read<LectureProvider>()
@@ -385,8 +395,7 @@ class SelectFaculty extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-                child: SelectBox(
+            child: SelectBox(
               validator: null,
               items: context.watch<LectureProvider>().facultyList,
               onChange: context.read<LectureProvider>().facultyOnChange,
@@ -395,17 +404,17 @@ class SelectFaculty extends StatelessWidget {
               value: context.read<LectureProvider>().facultyList.length == 0
                   ? null
                   : context.read<LectureProvider>().currentFaculty as Object?,
-            )),
+            ),
           ),
           Expanded(
-              child: Container(
-                  child: SelectBox(
-                      value: context.read<LectureProvider>().currentCourse,
-                      validator: null,
-                      items: context.watch<LectureProvider>().courses,
-                      onChange: context.read<LectureProvider>().courseOnChange,
-                      label: "Courses",
-                      margin: null))),
+              child: SelectBox(
+                  itemHeight: 85.0,
+                  value: context.read<LectureProvider>().currentCourse,
+                  validator: null,
+                  items: context.watch<LectureProvider>().courses,
+                  onChange: context.read<LectureProvider>().courseOnChange,
+                  label: "Courses",
+                  margin: null)),
           IconButton(
               onPressed: () => Navigator.pop(context), icon: Icon(Icons.close))
         ],
@@ -431,7 +440,9 @@ class _LectureList extends State<LectureList> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.position.pixels) {
-        context.read<LectureProvider>().getLecture(context.read<LectureProvider>().tempIndex+1);
+        context
+            .read<LectureProvider>()
+            .getLecture(context.read<LectureProvider>().tempIndex + 1);
       }
     });
   }
@@ -451,32 +462,25 @@ class _LectureList extends State<LectureList> {
                       child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
+                      Expanded(
+                        child: Container(
+                          margin: style.itemMargin,
+                          child: Text(
                               context
                                   .watch<LectureProvider>()
                                   .lectureList[i]
                                   .name,
                               style: style.lectureText),
-                          Text(
-                            context
-                                .watch<LectureProvider>()
-                                .lectureList[i]
-                                .staff??"",
-                            style: style.staffText,
-                          )
-                        ],
+                        ),
                       ),
-                      ElevatedButton(
+                      Container(
+                          child: ElevatedButton(
                         onPressed: () => context
                             .read<LectureProvider>()
                             .addLecture(i, context),
                         child: Text("Add", style: style.buttonTextStyle),
                         style: style.buttonStyle,
-                      )
+                      ))
                     ],
                   ));
                 },

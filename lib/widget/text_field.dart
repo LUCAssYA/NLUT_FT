@@ -109,7 +109,9 @@ class SelectBox extends StatelessWidget {
       this.items,
       this.label,
       this.margin,
-      this.value})
+      this.value,
+      this.itemHeight
+      })
       : super(key: key);
   final validator;
   final onChange;
@@ -117,19 +119,20 @@ class SelectBox extends StatelessWidget {
   final label;
   final margin;
   final value;
+  final itemHeight;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
       child: DropdownButtonFormField<Object?>(
+        isExpanded: true,
         value: value,
-        itemHeight: 80,
+        itemHeight: itemHeight==null?60:itemHeight,
         validator: (text) => validator(text),
         items: items
             .map<DropdownMenuItem<Object?>>((item) => DropdownMenuItem<Object?>(
-                  child: Container(
-                      margin: style.dropDownItemMargin, child: Text(item.name)),
+                  child:Text(item.name),
                   value: item,
                 ))
             .toList(),
