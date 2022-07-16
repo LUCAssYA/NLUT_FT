@@ -105,6 +105,8 @@ class LectureProvider with ChangeNotifier {
   Future<void> getTimeTable() async {
     if (currentFaculty == {}) return;
 
+    print(currentFaculty!.id.toString());
+
     var response = await http.get(
         Uri.parse(constants.timeTableUrl + "/" + currentFaculty!.id.toString()),
         headers: auth!.header);
@@ -116,8 +118,11 @@ class LectureProvider with ChangeNotifier {
       jsonDecode(response.body)['response'].forEach((element) {
         courses.add(SimpleModel.fromJson(element));
       });
-    } else
-      print(response);
+
+
+    } else {
+      print(response.body);
+    }
 
     notifyListeners();
   }

@@ -26,6 +26,8 @@ var modalHeight = (context) => MediaQuery.of(context).size.height*0.7;
 
 var itemMargin = EdgeInsets.fromLTRB(0, 0, 5, 0);
 
+var dropDownMargin = EdgeInsets.symmetric(vertical: 5);
+
 
 
 var modalShape = RoundedRectangleBorder(

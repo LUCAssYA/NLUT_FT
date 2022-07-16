@@ -385,7 +385,7 @@ class _GroupScopeState extends State<GroupScope> {
         children: [
           Expanded(
               child: RadioListTile(
-            title: Text("Public"),
+            title: Text("Public", style: style.scopeStyle,),
             onChanged: (value) {
               setState(() {
                 _scope = (value as String?)!;
@@ -396,7 +396,7 @@ class _GroupScopeState extends State<GroupScope> {
           )),
           Expanded(
               child: RadioListTile(
-            title: Text("Private"),
+            title: Text("Private", style: style.scopeStyle,),
             onChanged: (value) {
               setState(() {
                 _scope = (value as String?)!;

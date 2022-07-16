@@ -395,26 +395,37 @@ class SelectFaculty extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: SelectBox(
-              validator: null,
-              items: context.watch<LectureProvider>().facultyList,
-              onChange: context.read<LectureProvider>().facultyOnChange,
-              label: "Faculty",
-              margin: null,
-              value: context.read<LectureProvider>().facultyList.length == 0
-                  ? null
-                  : context.read<LectureProvider>().currentFaculty as Object?,
+            child: Column(
+              children: [
+                Container(
+                  margin: style.dropDownMargin,
+                  child: SelectBox(
+                    validator: null,
+                    items: context.watch<LectureProvider>().facultyList,
+                    onChange: context.read<LectureProvider>().facultyOnChange,
+                    label: "Faculty",
+                    margin: null,
+                    value:
+                        context.read<LectureProvider>().facultyList.length == 0
+                            ? null
+                            : context.read<LectureProvider>().currentFaculty
+                                as Object?,
+                  ),
+                ),
+                Container(
+                    margin: style.dropDownMargin,
+                    child: SelectBox(
+                        itemHeight: 95.0,
+                        value: context.read<LectureProvider>().currentCourse,
+                        validator: null,
+                        items: context.watch<LectureProvider>().courses,
+                        onChange:
+                            context.read<LectureProvider>().courseOnChange,
+                        label: "Courses",
+                        margin: null)),
+              ],
             ),
           ),
-          Expanded(
-              child: SelectBox(
-                  itemHeight: 85.0,
-                  value: context.read<LectureProvider>().currentCourse,
-                  validator: null,
-                  items: context.watch<LectureProvider>().courses,
-                  onChange: context.read<LectureProvider>().courseOnChange,
-                  label: "Courses",
-                  margin: null)),
           IconButton(
               onPressed: () => Navigator.pop(context), icon: Icon(Icons.close))
         ],

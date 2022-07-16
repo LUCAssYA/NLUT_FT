@@ -31,3 +31,5 @@ var modalHeight = (context) {
 };
 var modalButtonMargin = EdgeInsets.fromLTRB(0, 10, 0, 5);
 var switchColor = Colors.indigo;
+
+var scopeStyle = TextStyle(fontSize: 14);
