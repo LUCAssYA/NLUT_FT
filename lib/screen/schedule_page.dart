@@ -232,11 +232,6 @@ class _BottomModalState extends State<BottomModal> {
             style: style.modalItemTextStyle,
           )),
           Expanded(
-              child: Text(
-            staff,
-            style: style.modalItemTextStyle,
-          )),
-          Expanded(
               child:
                   Text(note, style: style.modalItemTextStyle)),
           Expanded(

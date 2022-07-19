@@ -11,8 +11,8 @@ var contextMargin = (context) {
 
 var modalShape = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(
-      top: Radius.circular(25.0),
-      bottom: Radius.circular(25.0),
+      top: Radius.circular(50.0),
+      bottom: Radius.circular(50.0),
     )
 );
 
