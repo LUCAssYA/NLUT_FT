@@ -168,6 +168,7 @@ class _CalendarState extends State<Calendar> {
           onTap: (CalendarTapDetails details) {
             dynamic appointments = details.appointments;
             if (appointments != null)
+
               modalBottomSheet(context, style.modalShape, ()=> BottomModal(schedule:appointments[0]));
           },
         ));
