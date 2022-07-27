@@ -20,10 +20,10 @@ class ScheduleModel {
         start = DateTime.parse(json['start'] as String),
         end = DateTime.parse(json['end'] as String),
         color = Color(json['color']),
-        staff = json['staff'],
-        location = json['location'],
-        note = json['note'],
-        dday = json['dday'];
+        staff = json['staff']==null?"":json['staff'],
+        location = json['location']==null?"":json['location'],
+        note = json['note']==null?"":json['note'],
+        dday = json['dday']==null?"":json['dday'];
 
   Map<String, dynamic> toJson() => {
         "id": id,

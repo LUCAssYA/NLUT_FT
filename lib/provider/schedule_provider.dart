@@ -77,6 +77,7 @@ class ScheduleProvider with ChangeNotifier {
       var body = jsonDecode(response.body)['response'];
 
       body.forEach((element) {
+        print(element);
         schedules.add(ScheduleModel.fromJson(element));
       });
     } else
