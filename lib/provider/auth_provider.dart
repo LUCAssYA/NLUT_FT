@@ -16,6 +16,23 @@ class AuthProvider with ChangeNotifier {
 
   AuthProvider(this.fcmToken);
 
+  Future<void> renewToken(BuildContext context) async {
+    String? userInfo = await storage.read(key: "login");
+
+    if(userInfo != null) {
+      String email = userInfo.split(" ")[1];
+      String password = userInfo.split(" ")[3];
+
+      var result = await http.post(Uri.parse(constant.signInUrl), body: jsonEncode(SignInModel(email, password, fcmToken).toJson()), headers: header);
+
+      if(result.statusCode == 200) {
+        token = result.headers[constant.tokenHeaderName]??"";
+        header[constant.tokenHeaderName] = token;
+        notifyListeners();
+      }
+    }
+  }
+
   Future<void> autoSignIn(BuildContext context, url) async{
     String? userInfo = await storage.read(key: "login");
 
